@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/plugins/PlanningToolClass" >
+        <file>icons/icon2.png</file>
+        <file>icons/cross.png</file>
+        <file>icons/cross2.png</file>
+        <file>icons/house.png</file>
+        <file>icons/house2.png</file>
+        <file>icons/tree.png</file>
+        <file>icons/tree2.png</file>
+        <file>icons/couple.png</file>
+        <file>icons/couple2.png</file>
+        <file>icons/youarehere.png</file>
+        <file>icons/youarehere2.png</file>
+        <file>icons/112.PNG</file>
+        <file>icons/weather.PNG</file>
+        <file>icons/weather2.PNG</file>
+        <file>icons/weather3.PNG</file>
+        <file>icons/weather4.PNG</file>
+        <file>icons/navigation.jpg</file>
+        <file>icons/route.PNG</file>
+    </qresource>
+</RCC>
