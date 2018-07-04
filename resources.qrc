@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/plugins/PlanningToolClass" >
-        <file>icons/icon2.png</file>
+        <file>icons/pt_icon.png</file>
+        <file>icons/magnifier.png</file>
+        <file>icons/zoom_icon.png</file>
+        <file>icons/calculator.png</file>
         <file>icons/cross.png</file>
         <file>icons/cross2.png</file>
         <file>icons/house.png</file>

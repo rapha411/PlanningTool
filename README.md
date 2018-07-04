@@ -4,6 +4,7 @@ The ‘Planning Tool’ plugin is an extension for QGIS, an open source GIS pack
 The recommended version of QGIS for installation is 2.18 LTR (Long Term Release).
 
 The ‘Planning Tool’ plugin is not available from the official QGIS plugins repository and must be downloaded from this site:
+https://github.com/rapha411/PlanningTool/releases
 
 After downloading it, you must install the plugin in the QGIS plugins folder, located under your user profile in: .qgis2/python/plugins. Simply unzip the PlanningTool.zip file and move the folder into this folder, then start QGIS and load the plugin ‘Planning Tool’ from the ‘Plugins Manager’ window.
 

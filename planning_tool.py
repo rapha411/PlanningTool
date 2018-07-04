@@ -31,7 +31,7 @@ import resources
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import PlanningToolClassDockWidget
-from planning_tool_dockwidget import NewDialog
+from planning_tool_dockwidget import IndicatorsDialog
 import os.path
 
 
@@ -72,11 +72,10 @@ class PlanningToolClass:
         self.actions = []
         self.menu = self.transl(u'&Planning Tool')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'PTToolbar')
-        self.toolbar.setObjectName(u'mPTToolbar')
+        self.planning_toolbar = self.iface.addToolBar(u'PTToolbar')
+        self.planning_toolbar.setObjectName(u'mPTToolbar')
+        # TODO: add the necessary navigation tools to the
 
-        # self.toolbar.addToolBar("My tools")
-        # self.toolbar.setObjectName("My tools")
 
         # print "** INITIALIZING PlanningToolClass"
 
@@ -162,7 +161,7 @@ class PlanningToolClass:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
-            self.toolbar.addAction(action)
+            self.planning_toolbar.addAction(action)
 
         if add_to_menu:
             self.iface.addPluginToMenu(
@@ -179,12 +178,32 @@ class PlanningToolClass:
 
         # DO NOT FORGET TO ALSO CHANGE ICON PATH IN resources.qrc AND metadata.txt FILES
         # text is the text that appears when you hover over the plugin icon in the toolbar
-        icon_path = ':/plugins/PlanningToolClass/icons/icon2.png'
+        icon_path = ':/plugins/PlanningToolClass/icons/pt_icon.png'
         self.add_action(
             icon_path,
             text=self.transl(u'Planning Tool'),
             callback=self.run,
             parent=self.iface.mainWindow())
+
+
+        icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Calculate Indicators'),
+            callback=self.openIndicatorDialog,
+            parent=self.iface.mainWindow())
+
+
+        # add the map navigation actions
+        self.planning_toolbar.addSeparator()
+        self.planning_toolbar.addAction(self.iface.actionPan())
+        self.planning_toolbar.addAction(self.iface.actionPanToSelected())
+        self.planning_toolbar.addAction(self.iface.actionZoomIn())
+        self.planning_toolbar.addAction(self.iface.actionZoomOut())
+        self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
+        self.planning_toolbar.addAction(self.iface.actionZoomFullExtent())
+
+
 
 
     #--------------------------------------------------------------------------
@@ -204,18 +223,15 @@ class PlanningToolClass:
         # when closing the docked window:
         # self.dockwidget = None
 
-        #toolbars = self.iface.mainWindow().findChildren(QToolBar)
-
+        # toolbars that were present before opening plugin are restored here
         for i, toolbar in enumerate(self.toolbars0):
             toolbar.setVisible(self.toolbars0_visible[i])
-            toolbar.setIconSize(QSize(32, 32))
+            toolbar.setIconSize(self.toolbars0_size[i])
+
+        # and put the planning_toolbar back in place, i.e. dock it
+        self.iface.addToolBar(self.planning_toolbar)
 
 
-
-        #TODO
-        # bring back all old toolbars here
-        # toolbars that were present before opening plugin need to be passed to this function
-        self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setVisible(True)
 
         self.pluginIsActive = False
 
@@ -231,7 +247,7 @@ class PlanningToolClass:
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
-        del self.toolbar
+        del self.planning_toolbar
 
     #--------------------------------------------------------------------------
 
@@ -249,16 +265,34 @@ class PlanningToolClass:
             # then set all of them invisible for the PlanningTool start
             self.toolbars0 = self.iface.mainWindow().findChildren(QToolBar)
             self.toolbars0_visible = []
+            self.toolbars0_size = []
+            # TODO also need to get the QSize of the existing toolbars so they will appear in the correct size again
 
             for toolbar in self.toolbars0:
                 self.toolbars0_visible.append(toolbar.isVisible())
                 toolbar.setVisible(False)
                 #print(toolbar.objectName())
+                self.toolbars0_size.append(toolbar.iconSize())
+                print(toolbar.iconSize())
 
-            #TODO
-            # add toolbars that are necessary for the plugin to interface (self.iface.mainWindow()) here
-            self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setVisible(True)
-            self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setIconSize(QSize(64,64))
+            # # add toolbars that are necessary for the plugin to interface (self.iface.mainWindow()) here
+            # self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setVisible(True)
+            # self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setIconSize(QSize(64,64))
+            # #TODO: could also change orientation and location of mMapNavToolBar to appear vertically on the right of the screen
+            # # http://pyqt.sourceforge.net/Docs/PyQt4/qtoolbar.html#allowedAreas
+
+            # following is taken from here: https://forum.qt.io/topic/4082/how-to-float-qtoolbar-on-creation
+
+            # self.navToolbar = self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar")
+            # t.setAllowedAreas(Qt.NoToolBarArea)
+            self.planning_toolbar.setAllowedAreas(Qt.AllToolBarAreas)
+            # self.navToolbar.setOrientation(Qt.Horizontal)
+            self.planning_toolbar.setIconSize(QSize(64,64))
+            p = self.planning_toolbar.mapToGlobal(QPoint(0, 0))
+            self.planning_toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint)
+            self.planning_toolbar.move(p.x() + 30, p.y() + 50)
+            self.planning_toolbar.adjustSize()
+            self.planning_toolbar.show()
 
 
 
@@ -271,14 +305,14 @@ class PlanningToolClass:
             if self.dockwidget == None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = PlanningToolClassDockWidget(self.iface)
-                self.dockwidget2 = NewDialog(self.dockwidget)
+                #self.dockwidget2 = IndicatorsDialog(self.dockwidget)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
 
             # show the dockwidget
             # TODO: fix to allow choice of dock location
-            self.iface.addDockWidget(Qt.TopDockWidgetArea, self.dockwidget)
+            self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
 
             #self.dockwidget.setFloating(True)
             #self.dockwidget.move(QPoint(0, 0))
@@ -289,3 +323,8 @@ class PlanningToolClass:
 
             self.dockwidget.setWindowTitle("Planning Tool")
             self.dockwidget.show()
+
+    def openIndicatorDialog(self):
+        self.nd = IndicatorsDialog(self.iface)
+        self.nd.show()
+        self.nd.move(QPoint(150, 150))

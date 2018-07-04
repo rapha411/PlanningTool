@@ -40,6 +40,11 @@ from . import utility_functions as uf
 
 import processing
 import random
+import numpy as np
+# matplotlib for the charts
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
@@ -57,10 +62,10 @@ class MapToolEmitPoint(QgsMapToolEmitPoint):
         super(MapToolEmitPoint, self).canvasDoubleClickEvent(event)
 
 
-class NewDialog(QtGui.QDialog, FORM_CLASS2):
-    def __init__(self, parent):
+class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
+    def __init__(self, iface, parent=None):
 
-        super(NewDialog, self).__init__(parent)
+        super(IndicatorsDialog, self).__init__(parent)
 
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
@@ -70,7 +75,56 @@ class NewDialog(QtGui.QDialog, FORM_CLASS2):
         self.setupUi(self)
 
 
-        print 'here'
+        # add matplotlib Figure to chartFrame
+        self.chart_figure = Figure()
+        # self.chart_subplot_hist = self.chart_figure.add_subplot(221)
+        # self.chart_subplot_line = self.chart_figure.add_subplot(222)
+        # self.chart_subplot_pie = self.chart_figure.add_subplot(224)
+        self.chart_subplot_bar = self.chart_figure.add_subplot(111)
+
+        #self.chart_figure.tight_layout()
+        self.chart_canvas = FigureCanvas(self.chart_figure)
+        self.chartLayout.addWidget(self.chart_canvas)
+        self.plotChart()
+
+
+    def plotChart(self):
+        N = 5
+        men_means = (20, 35, 30, 35, 27)
+        men_std = (2, 3, 4, 1, 2)
+
+        ind = np.arange(N)  # the x locations for the groups
+        width = 0.35  # the width of the bars
+
+        ax = self.chart_subplot_bar
+        rects1 = ax.bar(ind, men_means, width, color='r', yerr=men_std)
+
+        women_means = (25, 32, 34, 20, 25)
+        women_std = (3, 5, 2, 3, 3)
+        rects2 = ax.bar(ind + width, women_means, width, color='y', yerr=women_std)
+
+        # add some text for labels, title and axes ticks
+        ax.set_ylabel('Scores')
+        ax.set_xlabel('Indicators')
+        ax.set_title('Scores by organization')
+        ax.set_xticks(ind + width / 2)
+        ax.set_xticklabels(('I1', 'I2', 'I3', 'I4', 'I5'))
+
+        ax.legend((rects1[0], rects2[0]), ('Municipality', 'Province'))
+
+        def autolabel(rects):
+            """
+            Attach a text label above each bar displaying its height
+            """
+            for rect in rects:
+                height = rect.get_height()
+                ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
+                        '%d' % int(height),
+                        ha='center', va='bottom')
+
+        autolabel(rects1)
+        autolabel(rects2)
+
 
 
 class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, QgsMapLayerRegistry):
@@ -91,39 +145,9 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         # define globals
         self.iface = iface
-        #self.canvas = self.iface.mapCanvas()
-        self.canvas = self.pluginCanvas
+        self.canvas = self.iface.mapCanvas()
+        #self.canvas = self.pluginCanvas
 
-        #GUI
-        #uf.showMessage(self.iface, 'Strong winds! Keep out of red marked areas!', type='Info', lev=1, dur=10)
-
-
-        # change pages
-        # self.button_startNew1.clicked.connect(self.startNew)
-        # self.button_startNew2.clicked.connect(self.startNew)
-        # self.button_goBack3.clicked.connect(self.goBack)
-        # self.button_startNew4.clicked.connect(self.startNew)
-        # self.button_goBack5.clicked.connect(self.goBack)
-        # self.button_goBack6.clicked.connect(self.goBack)
-        # self.button_goBack7.clicked.connect(self.goBack)
-        # self.button_goBack8.clicked.connect(self.goBack)
-        # self.button_goBack9.clicked.connect(self.startNew)
-        # self.button_startNew10.clicked.connect(self.startNew)
-        # self.button_goBack11.clicked.connect(self.goBack)
-        # self.button_goBack12.clicked.connect(self.goBack)
-        # self.button_goBack13.clicked.connect(self.goBack)
-        # self.button_goBack14.clicked.connect(self.goBack)
-        # self.button_goBack15.clicked.connect(self.goBack)
-        # self.button_startNew17.clicked.connect(self.goBack)
-        # self.button_goBack18.clicked.connect(self.goBack)
-        # self.button_goBack19.clicked.connect(self.goBack)
-        # self.button_startNew20.clicked.connect(self.goBack)
-        # self.button_goBack21.clicked.connect(self.goBack)
-        # self.button_goBack22.clicked.connect(self.goBack)
-        # self.button_goBack23.clicked.connect(self.goBack)
-        # self.button_goBack24.clicked.connect(self.goBack)
-        # self.button_goBack25.clicked.connect(self.goBack)
-        # self.button_goBack26.clicked.connect(self.goBack)
 
 
 
@@ -144,129 +168,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
         #self.Pages.setCurrentIndex(0)
         self.activateCanvas()
 
-        '''
-        self.button_showMap.clicked.connect(self.showMap)
-        #self.button_showWeather.clicked.connect(self.showWeather)
-        self.button_needHelp.clicked.connect(self.needHelp)
-        self.button_needHelp.setStyleSheet("font: bold 14px;")
-        self.button_wantToHelp.clicked.connect(self.wantToHelp)
-        self.button_wantToHelp.setStyleSheet("font: bold 14px;")
-        #self.button_showWeather.setIcon(QtGui.QIcon(':/plugins/PlanningToolClass/icons/weather3.PNG'))
 
-
-
-        # page 1 - leave or stay
-        self.button_leave.clicked.connect(self.leaveLocation)
-        self.button_stay.clicked.connect(self.stayLocation)
-        self.label_here1.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/youarehere2.png'))
-
-        # page 2
-        self.button_correctLocation.clicked.connect(self.correctLocationRoute)
-        self.button_wrongLocation.clicked.connect(self.activateLocalization)
-        self.label_here2.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/youarehere2.png'))
-
-        # page 3 - choose destination of route
-        self.button_searchStreet.clicked.connect(self.searchStreet)
-        self.inputStreet.setText('search street')
-        self.button_chooseEnd.clicked.connect(self.chooseEnd)
-        self.button_endChosen.clicked.connect(self.showRouteInfo)
-
-        # page 4 - choose to report blocking or help out at an emergency
-        self.button_reportBlocking.clicked.connect(self.reportBlocking)
-        self.button_reportBlocking.setIcon(QtGui.QIcon(':/plugins/PlanningToolClass/icons/tree2.png'))
-        self.button_helpAtEmergency.clicked.connect(self.helpAtEmergency)
-        self.button_helpAtEmergency.setIcon(QtGui.QIcon(':/plugins/PlanningToolClass/icons/couple2.png'))
-        self.label_here4.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/youarehere2.png'))
-
-        # page 5 - choose and save blocking
-        self.button_chooseRoad.clicked.connect(self.activateLocalization)
-        self.button_saveBlocking.clicked.connect(self.saveBlocking)
-
-        # page 6 - route from streetname
-        self.button_startNavigation6.clicked.connect(self.startNavigation)
-
-        # page 7 - weather info
-        self.label_weather7.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/weather4.PNG'))
-
-        # page 8 - calling 112
-        self.policeLabel.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/112.PNG'))
-
-        # page 9 - provide additional information or call 112
-        self.button_saveInformation.clicked.connect(self.saveInformation)
-        self.button_call112.clicked.connect(self.call112)
-
-        # page 10 - where are you (to start helping out)
-        #self.button_correctLocation10.clicked.connect(self.showEmergency)
-        self.button_correctLocation10.clicked.connect(self.correctLocationHelp)
-        self.button_wrongLocation10.clicked.connect(self.activateLocalization)
-        self.label_here10.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/youarehere2.png'))
-
-        # page 11 - choose emergency and calculate route
-        self.table_emergencies.cellClicked.connect(self.selectSelectedItem)
-        self.button_calculateRoute11.clicked.connect(self.showRouteInfo)
-        self.button_deleteEmergencyCheck11.clicked.connect(self.deleteEmergencyCheck)
-        self.button_showOnMap.clicked.connect(self.showOnMap)
-
-        # page 12 - choose safehouse, hospital or other destination
-        self.button_showOther.clicked.connect(self.showOther)
-        self.button_showShelter.clicked.connect(self.showShelter)
-        self.button_showHospital.clicked.connect(self.showHospital)
-
-        self.button_showShelter.setIcon(QtGui.QIcon(':/plugins/PlanningToolClass/icons/house2.png'))
-        self.button_showHospital.setIcon(QtGui.QIcon(':/plugins/PlanningToolClass/icons/cross2.png'))
-
-        # page 13 - shelters
-        self.table_shelter.cellClicked.connect(self.selectSelectedItem)
-        self.button_calculateRoute13.clicked.connect(self.showRouteInfo)
-        self.button_showOnMap13.clicked.connect(self.showOnMap)
-
-        # page 14 - hospitals
-        self.table_hospital.cellClicked.connect(self.selectSelectedItem)
-        self.button_calculateRoute14.clicked.connect(self.showRouteInfo)
-        self.button_showOnMap14.clicked.connect(self.showOnMap)
-
-        # page 15 - delete emergency
-        self.button_deleteEmergency.clicked.connect(self.deleteEmergency)
-        self.button_notDeleteEmergency.clicked.connect(self.goBack)
-
-        # page 16 - shows full screen map
-        self.button_goBack16.clicked.connect(self.goBack)
-        self.label_here16.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/youarehere2.png'))
-
-        # page 17 - show route emergency
-        self.button_startNavigation.clicked.connect(self.startNavigation)
-
-        # page 18 - calculate route to shelter
-        self.button_calculateRoute18.clicked.connect(self.showRouteInfo)
-
-        # page 19 - navigation
-        self.label_navigation19.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/route.PNG'))
-
-        # page 20 - show selected thing on map
-        self.button_calculateRoute20.clicked.connect(self.showRouteInfo)
-        self.button_deleteEmergencyCheck20.clicked.connect(self.deleteEmergencyCheck)
-
-        # page 21 - calculate route to hospital
-        self.button_calculateRoute21.clicked.connect(self.showRouteInfo)
-
-        # page 22 - show route shelter
-        self.button_startNavigation22.clicked.connect(self.startNavigation)
-
-        # page 23 - show route hospital
-        self.button_startNavigation23.clicked.connect(self.startNavigation)
-
-        # page 24 - navigation
-        self.label_navigation24.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/route.PNG'))
-
-        # page 25 - navigation
-        self.label_navigation25.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/route.PNG'))
-
-        # page 26 - navigation
-        self.label_navigation26.setPixmap(QtGui.QPixmap(':/plugins/PlanningToolClass/icons/route.PNG'))
-        
-        '''
-
-        self.openButton.clicked.connect(self.open_new_dialog)
 
         # Add a custom toolbar
         # self.toolbar = self.iface.addToolBar("My tools")
@@ -277,11 +179,22 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
         # editMenu.menuAction().setVisible(False)
 
 
+    ### these two things were used to open the Indicators QDialog from the MainDockWidget in the beginning
+    #     self.openButton.clicked.connect(self.open_new_dialog)
+    #
+    #
+    #
+    # def open_new_dialog(self):
+    #     self.nd = IndicatorsDialog(self)
+    #     self.nd.show()
+    #     self.nd.move(QPoint(150, 150))
 
-    def open_new_dialog(self):
-        self.nd = NewDialog(self)
-        self.nd.show()
-        self.nd.move(QPoint(150, 150))
+
+
+
+
+
+
 
 
     def handleDoubleClick(self, point, buttons):
@@ -793,7 +706,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
 
     # page 2
-
     def correctLocationRoute(self):
 
         self.Pages.setCurrentIndex(1)
@@ -820,30 +732,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
 
 
-    # page 4 - choose report blocking or help at emergency
-    def reportBlocking(self):
-        self.Pages.setCurrentIndex(5)
 
-        # initialize obstacle_temp layer
-        obstacle_temp = uf.getLegendLayerByName(self.iface, "Obstacle_Temp")
-        if not obstacle_temp:
-            obstacle_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
-
-            obstacle_temp = uf.createTempLayer('Obstacle_Temp', 'POINT', obstacle_layer.crs().postgisSrid(), [], [])
-            symbol = QgsMarkerSymbolV2.createSimple({'name': 'circle', 'color': 'blue'})
-            symbol.setSize(3)
-            obstacle_temp.rendererV2().setSymbol(symbol)
-
-            uf.loadTempLayer(obstacle_temp)
-
-        self.activateCanvas()
-        self.zoomToLocation(500)
-
-    def helpAtEmergency(self):
-
-        self.Pages.setCurrentIndex(11)
-        self.activateCanvas()
-        self.showEmergency()
 
     # page 5 - choose location for blocking (activateLocalization) and save
     def saveBlocking(self):
