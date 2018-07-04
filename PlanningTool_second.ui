@@ -20,9 +20,9 @@
       <layout class="QVBoxLayout" name="chartLayout"/>
      </item>
      <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="closeIndicators">
        <property name="text">
-        <string>OK</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>

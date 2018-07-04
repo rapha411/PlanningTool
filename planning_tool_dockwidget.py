@@ -82,26 +82,38 @@ class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
         # self.chart_subplot_pie = self.chart_figure.add_subplot(224)
         self.chart_subplot_bar = self.chart_figure.add_subplot(111)
 
-        #self.chart_figure.tight_layout()
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.chartLayout.addWidget(self.chart_canvas)
         self.plotChart()
+        self.chart_figure.tight_layout()
+
+
+
+        #signal slot for closing indicator window
+        self.closeIndicators.clicked.connect(self.closeIndicatorDialog)
+
 
 
     def plotChart(self):
-        N = 5
-        men_means = (20, 35, 30, 35, 27)
-        men_std = (2, 3, 4, 1, 2)
-
-        ind = np.arange(N)  # the x locations for the groups
-        width = 0.35  # the width of the bars
 
         ax = self.chart_subplot_bar
-        rects1 = ax.bar(ind, men_means, width, color='r', yerr=men_std)
+
+        N = 5
+        ind = np.arange(N)  # the x locations for the groups
+        width = 0.25  # the width of the bars
+
+        men_means = (20, 35, 30, 35, 27)
+        men_std = (2, 3, 4, 1, 2)
+        rects1 = ax.bar(ind - width, men_means, width, color='b', yerr=men_std)
 
         women_means = (25, 32, 34, 20, 25)
         women_std = (3, 5, 2, 3, 3)
-        rects2 = ax.bar(ind + width, women_means, width, color='y', yerr=women_std)
+        rects2 = ax.bar(ind, women_means, width, color='g', yerr=women_std)
+
+        municipality_means = (11, 31, 44, 10, 19)
+        municipality_std = (6, 2, 5, 7, 3)
+        rects3 = ax.bar(ind + width, municipality_means, width, color='r', yerr=municipality_std)
+
 
         # add some text for labels, title and axes ticks
         ax.set_ylabel('Scores')
@@ -110,7 +122,7 @@ class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
         ax.set_xticks(ind + width / 2)
         ax.set_xticklabels(('I1', 'I2', 'I3', 'I4', 'I5'))
 
-        ax.legend((rects1[0], rects2[0]), ('Municipality', 'Province'))
+        ax.legend((rects1[0], rects2[0], rects3[0]), ('Ministry', 'Province', 'Municipality'))
 
         def autolabel(rects):
             """
@@ -124,6 +136,12 @@ class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
 
         autolabel(rects1)
         autolabel(rects2)
+        autolabel(rects3)
+
+
+
+    def closeIndicatorDialog(self):
+        self.hide()
 
 
 

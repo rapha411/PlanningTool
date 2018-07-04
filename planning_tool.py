@@ -74,7 +74,6 @@ class PlanningToolClass:
         # TODO: We are going to let the user set this up in a future iteration
         self.planning_toolbar = self.iface.addToolBar(u'PTToolbar')
         self.planning_toolbar.setObjectName(u'mPTToolbar')
-        # TODO: add the necessary navigation tools to the
 
 
         # print "** INITIALIZING PlanningToolClass"
@@ -197,6 +196,7 @@ class PlanningToolClass:
         # add the map navigation actions
         self.planning_toolbar.addSeparator()
         self.planning_toolbar.addAction(self.iface.actionPan())
+        #self.actions.append(self.iface.actionPan())
         self.planning_toolbar.addAction(self.iface.actionPanToSelected())
         self.planning_toolbar.addAction(self.iface.actionZoomIn())
         self.planning_toolbar.addAction(self.iface.actionZoomOut())
@@ -243,7 +243,7 @@ class PlanningToolClass:
 
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.transl(u'&Storm Help'),
+                self.transl(u'&Planning Tool'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
@@ -324,7 +324,11 @@ class PlanningToolClass:
             self.dockwidget.setWindowTitle("Planning Tool")
             self.dockwidget.show()
 
+            uf.showMessage(self.iface, 'Close main plugin window on the right to go back to QGIS', type='Info', lev=0, dur=10)
+
     def openIndicatorDialog(self):
         self.nd = IndicatorsDialog(self.iface)
         self.nd.show()
         self.nd.move(QPoint(150, 150))
+
+
