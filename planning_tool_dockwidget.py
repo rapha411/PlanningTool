@@ -324,8 +324,8 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
                     pass
 
         self.canvas = self.determineCanvas()
-        self.toolPan = QgsMapToolPan(self.canvas)
-        self.canvas.setMapTool(self.toolPan)
+        #self.toolPan = QgsMapToolPan(self.canvas)
+        #self.canvas.setMapTool(self.toolPan)
 
 
 
@@ -400,57 +400,42 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
     def activateCanvas(self):
 
-        #self.smallCanvas = self.determineCanvas()
+        pass
 
-        # add all the layers to the small canvas
-        layers = self.iface.legendInterface().layers()
-        canvas_layers = []
-        for layer in layers:
-            canvas_layers.append(QgsMapCanvasLayer(layer))
-        #self.smallCanvas.setLayerSet(canvas_layers[6:])
-        #self.smallCanvas.setLayerSet(canvas_layers)
-        self.canvas.setLayerSet(canvas_layers)
-
-        # roads_layer = uf.getLegendLayerByName(self.iface, "Roads")
-        #self.smallCanvas.setLayerSet([canvas_layers[1],])
-
-        #print self.smallCanvas.layers()
-
-
-        # print 'here'
+        # #self.smallCanvas = self.determineCanvas()
         #
-        # # toggle layer visibility
-        # ##doesn't work, bc doesn't have the correct canvas somehow
-        #ls = self.smallCanvas().layers()
-        #self.smallCanvas.refresh()
-        #roads_layer = uf.getCanvasLayerByName(self.iface, "Roads")
-        hospitals_layer = uf.getLegendLayerByName(self.iface, "Hospitals")
-
-
-        hospitals_layer_canvas = QgsMapCanvasLayer(hospitals_layer)
-
-        # legend = self.iface.legendInterface()
-        # # print legend.isLayerVisible(roads_layer)
-        # legend.setLayerVisible(roads_layer, False)
-
-        print hospitals_layer_canvas.isVisible()
-        hospitals_layer_canvas.setVisible(False)
-        hospitals_layer_canvas.setVisible(False)
-        print hospitals_layer_canvas.isVisible()
-
+        # # add all the layers to the small canvas
+        # layers = self.iface.legendInterface().layers()
+        # canvas_layers = []
+        # for layer in layers:
+        #     canvas_layers.append(QgsMapCanvasLayer(layer))
+        # #self.smallCanvas.setLayerSet(canvas_layers[6:])
+        # #self.smallCanvas.setLayerSet(canvas_layers)
+        # self.canvas.setLayerSet(canvas_layers)
         #
-        #self.smallCanvas.layerStateChange()
-        #self.smallCanvas.refreshAllLayers()
+        # # roads_layer = uf.getLegendLayerByName(self.iface, "Roads")
+        # #self.smallCanvas.setLayerSet([canvas_layers[1],])
         #
-        #self.smallCanvas.setLayerSet(canvas_layers)
-
-
-        # make the pan tool the current map tool
-        self.toolPan = QgsMapToolPan(self.canvas)
-        self.canvas.setMapTool(self.toolPan)
-
-        # refresh small canvas
-        self.canvas.refresh()
+        # #print self.smallCanvas.layers()
+        #
+        # # legend = self.iface.legendInterface()
+        # # # print legend.isLayerVisible(roads_layer)
+        # # legend.setLayerVisible(roads_layer, False)
+        #
+        #
+        # #
+        # #self.smallCanvas.layerStateChange()
+        # #self.smallCanvas.refreshAllLayers()
+        # #
+        # #self.smallCanvas.setLayerSet(canvas_layers)
+        #
+        #
+        # # make the pan tool the current map tool
+        # #self.toolPan = QgsMapToolPan(self.canvas)
+        # #self.canvas.setMapTool(self.toolPan)
+        #
+        # # refresh small canvas
+        # self.canvas.refresh()
 
 
 
@@ -466,7 +451,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'sample_data','project_file4.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'sample_data','project_file5.qgs')
 
 
         # check if file exists
@@ -535,7 +520,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
             self.Pages.setCurrentIndex(21)
             layer = uf.getLegendLayerByName(self.iface, "Hospitals")
 
-        self.activateCanvas()
         canvas = self.determineCanvas()
 
         self.canvas.zoomToSelected(layer)
@@ -631,7 +615,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
             self.chooseLocation(destination_layer, closePoint)
 
         routeLength = self.calculateRoute()
-        self.activateCanvas()
 
         # calculate route info
         routeLength = routeLength/1000
@@ -652,7 +635,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
     def showMap(self):
         self.Pages.setCurrentIndex(16)
         self.canvas = self.determineCanvas()
-        self.activateCanvas()
         location_layer = uf.getLegendLayerByName(self.iface, "Location")
         if not location_layer:
             self.randLocation2()
@@ -671,7 +653,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         self.Pages.setCurrentIndex(2)
         self.canvas = self.determineCanvas()
-        self.activateCanvas()
         location_layer = uf.getLegendLayerByName(self.iface, "Location")
         if not location_layer:
             self.randLocation2()
@@ -683,7 +664,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         self.Pages.setCurrentIndex(10)
         self.canvas = self.determineCanvas()
-        self.activateCanvas()
         location_layer = uf.getLegendLayerByName(self.iface, "Location")
         if not location_layer:
             self.randLocation2()

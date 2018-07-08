@@ -195,6 +195,7 @@ class PlanningToolClass:
 
         # add the map navigation actions
         self.planning_toolbar.addSeparator()
+        self.planning_toolbar.addAction(self.iface.actionTouch())
         self.planning_toolbar.addAction(self.iface.actionPan())
         #self.actions.append(self.iface.actionPan())
         self.planning_toolbar.addAction(self.iface.actionPanToSelected())
@@ -202,6 +203,12 @@ class PlanningToolClass:
         self.planning_toolbar.addAction(self.iface.actionZoomOut())
         self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
         self.planning_toolbar.addAction(self.iface.actionZoomFullExtent())
+        self.planning_toolbar.addAction(self.iface.actionZoomToLayer())
+        self.planning_toolbar.addAction(self.iface.actionZoomToSelected())
+        self.planning_toolbar.addAction(self.iface.actionDraw())
+        self.planning_toolbar.addSeparator()
+        self.planning_toolbar.addAction(self.iface.actionIdentify())
+        self.planning_toolbar.addAction(self.iface.actionSelect())
 
 
 
@@ -212,7 +219,7 @@ class PlanningToolClass:
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
 
-        #print "** CLOSING PlanningToolClass"
+        print "** CLOSING PlanningToolClass"
 
         # disconnects
         self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
@@ -225,13 +232,16 @@ class PlanningToolClass:
 
         # toolbars that were present before opening plugin are restored here
         for i, toolbar in enumerate(self.toolbars0):
+            print "set toolbars visible"
             toolbar.setVisible(self.toolbars0_visible[i])
+            print self.toolbars0_visible[i]
             toolbar.setIconSize(self.toolbars0_size[i])
+
+        ### layer tree icon size
+        self.iface.layerTreeView().setIconSize(self.tree_size)
 
         # and put the planning_toolbar back in place, i.e. dock it
         self.iface.addToolBar(self.planning_toolbar)
-
-
 
         self.pluginIsActive = False
 
@@ -239,7 +249,11 @@ class PlanningToolClass:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
-        #print "** UNLOAD PlanningToolClass"
+        print "** UNLOAD PlanningToolClass"
+
+        if self.pluginIsActive:
+            print "active"
+            self.onClosePlugin()
 
         for action in self.actions:
             self.iface.removePluginMenu(
@@ -266,35 +280,29 @@ class PlanningToolClass:
             self.toolbars0 = self.iface.mainWindow().findChildren(QToolBar)
             self.toolbars0_visible = []
             self.toolbars0_size = []
-            # TODO also need to get the QSize of the existing toolbars so they will appear in the correct size again
+
+            #### layertree icon size
+            self.tree_size = self.iface.layerTreeView().iconSize()
+            self.iface.layerTreeView().setIconSize(QSize(50, 50))
 
             for toolbar in self.toolbars0:
+                print "set toolbars invisible"
                 self.toolbars0_visible.append(toolbar.isVisible())
                 toolbar.setVisible(False)
                 #print(toolbar.objectName())
                 self.toolbars0_size.append(toolbar.iconSize())
-                print(toolbar.iconSize())
 
-            # # add toolbars that are necessary for the plugin to interface (self.iface.mainWindow()) here
-            # self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setVisible(True)
-            # self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar").setIconSize(QSize(64,64))
-            # #TODO: could also change orientation and location of mMapNavToolBar to appear vertically on the right of the screen
-            # # http://pyqt.sourceforge.net/Docs/PyQt4/qtoolbar.html#allowedAreas
 
             # following is taken from here: https://forum.qt.io/topic/4082/how-to-float-qtoolbar-on-creation
-
             # self.navToolbar = self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar")
             # t.setAllowedAreas(Qt.NoToolBarArea)
             self.planning_toolbar.setAllowedAreas(Qt.AllToolBarAreas)
             # self.navToolbar.setOrientation(Qt.Horizontal)
             self.planning_toolbar.setIconSize(QSize(64,64))
-            p = self.planning_toolbar.mapToGlobal(QPoint(0, 0))
             self.planning_toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint)
-            self.planning_toolbar.move(p.x() + 30, p.y() + 50)
+            self.planning_toolbar.move(QPoint(200,150))
             self.planning_toolbar.adjustSize()
             self.planning_toolbar.show()
-
-
 
             ### start plugin
             #print "** STARTING PlanningToolClass"
