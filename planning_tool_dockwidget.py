@@ -164,9 +164,20 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
         # define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
-        #self.canvas = self.pluginCanvas
 
 
+        self.comboBoxType.addItems(["A","B","C","D","E"])
+        #self.comboBoxValue.addItems(["I","II","III","IV"])
+        #self.comboBoxValue.resize(200,30)
+
+        model = self.comboBoxValue.model()
+        for index in range(10):
+            item = QtGui.QStandardItem(str(index))
+            item.setForeground(QtGui.QColor('red'))
+            font = item.font()
+            font.setPointSize(30)
+            item.setFont(font)
+            model.appendRow(item)
 
 
         # actions
@@ -451,7 +462,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'sample_data','project_file5.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'sample_data','project_file6.qgs')
 
 
         # check if file exists
