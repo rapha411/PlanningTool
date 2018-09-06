@@ -1080,3 +1080,18 @@ def calculateIntersection(iface, cutter, layer):
         updateField(dissolved_layer, "area", "$area")
 
 
+
+
+def zoomToLayer(iface, name):
+
+    canvas = iface.mapCanvas()
+
+    layer = getLegendLayerByName(iface, name)
+
+    layer.dataProvider().updateExtents()
+
+    canvas.setExtent(layer.extent())
+    canvas.zoomToSelected()
+    #self.canvas.zoomByFactor(0.3)
+    #self.canvas.zoomScale(scale)
+    canvas.refresh()

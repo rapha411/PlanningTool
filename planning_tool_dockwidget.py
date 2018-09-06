@@ -180,43 +180,12 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
             model.appendRow(item)
 
 
-        # actions
-        #self.toolPan = QgsMapToolPan(self.canvas)
-        #self.toolZoom = QgsMapToolZoom(self.canvas, 0)
-        #self.canvas.setMapTool(self.toolZoom)
 
-        #self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        #self.emitPoint.canvasClicked.connect(self.getPoint)
-
-        #maptool = MapToolEmitPoint(self.canvas)
-        #self.canvas.setMapTool(maptool)
-        #maptool.canvasDoubleClicked.connect(self.handleDoubleClick)
 
 
         # page 0 - choose to give or take help
         #self.Pages.setCurrentIndex(0)
         self.activateCanvas()
-
-
-
-        # Add a custom toolbar
-        # self.toolbar = self.iface.addToolBar("My tools")
-        # self.toolbar.setObjectName("My tools")
-        # self.toolbar.addAction(self.action)
-
-        # editMenu = self.iface.editMenu()
-        # editMenu.menuAction().setVisible(False)
-
-
-    ### these two things were used to open the Indicators QDialog from the MainDockWidget in the beginning
-    #     self.openButton.clicked.connect(self.open_new_dialog)
-    #
-    #
-    #
-    # def open_new_dialog(self):
-    #     self.nd = IndicatorsDialog(self)
-    #     self.nd.show()
-    #     self.nd.move(QPoint(150, 150))
 
 
 
@@ -462,7 +431,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'sample_data','project_file6.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file9.qgs')
 
 
         # check if file exists
