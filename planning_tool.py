@@ -190,112 +190,6 @@ class PlanningToolClass:
 
 
 
-        self.planning_toolbar.addSeparator()
-
-
-        ##toolbar icons /  add the map navigation actions
-
-
-        # zoom to infrastructure investments / home
-        icon_path = ':/plugins/PlanningToolClass/icons/home.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Zoom to Infrastructure Investments'),
-            callback=self.zoomToInfrastructureInvestments,
-            parent=self.iface.mainWindow())
-
-        # zoom window
-        self.planning_toolbar.addAction(self.iface.actionZoomIn())
-
-        # pan
-        self.planning_toolbar.addAction(self.iface.actionTouch())
-        self.planning_toolbar.addAction(self.iface.actionPan())
-        #self.actions.append(self.iface.actionPan())
-
-        # zoom to previous extent
-        self.planning_toolbar.addAction(self.iface.actionZoomLast())
-
-        # identify features
-        self.planning_toolbar.addAction(self.iface.actionIdentify())
-
-        ###
-        # bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
-        self.municipalityCombo = QComboBox(self.iface.mainWindow())
-        self.municipalityComboAction = self.planning_toolbar.addWidget(self.municipalityCombo)
-        self.municipalityCombo.setToolTip("Municipalities")
-
-        layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Projects")
-
-        idx = layer_housing.fieldNameIndex('GEMEENTE')
-        municipalities = layer_housing.uniqueValues(idx)
-        for municipality in municipalities:
-            #print str(municipality)
-            self.municipalityCombo.addItem("'"+str(municipality)+"'")
-
-        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Zoom to Municipality'),
-            callback=self.zoomToMunicipality,
-            parent=self.iface.mainWindow())
-
-        ###
-        # select package
-        self.packageCombo = QComboBox(self.iface.mainWindow())
-        self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
-        self.packageCombo.setToolTip("Packages")
-
-        layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
-
-        idx = layer_infra.fieldNameIndex('Package')
-        packages = layer_infra.uniqueValues(idx)
-        for package in packages:
-            #print str(package)
-            self.packageCombo.addItem("'"+str(package)+"'")
-
-        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Zoom to Package'),
-            callback=self.zoomToPackage,
-            parent=self.iface.mainWindow())
-
-
-        self.planning_toolbar.addSeparator()
-
-        icon_path = ':/plugins/PlanningToolClass/icons/hp.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Calculate Indicators'),
-            callback=self.openIndicatorDialog,
-            parent=self.iface.mainWindow())
-
-        icon_path = ':/plugins/PlanningToolClass/icons/ii.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Calculate Indicators'),
-            callback=self.openIndicatorDialog,
-            parent=self.iface.mainWindow())
-
-        icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Calculate Indicators'),
-            callback=self.openIndicatorDialog,
-            parent=self.iface.mainWindow())
-
-
-        # self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
-        # self.planning_toolbar.addAction(self.iface.actionZoomFullExtent())
-        # self.planning_toolbar.addAction(self.iface.actionZoomToLayer())
-        # self.planning_toolbar.addAction(self.iface.actionZoomToSelected())
-        # self.planning_toolbar.addAction(self.iface.actionDraw())
-        # self.planning_toolbar.addSeparator()
-        # self.planning_toolbar.addAction(self.iface.actionSelect())
-
-
-
-
     #--------------------------------------------------------------------------
     # unload plugin
 
@@ -305,22 +199,28 @@ class PlanningToolClass:
         print "** CLOSING PlanningToolClass"
 
         # disconnects
-        self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
+        #self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
 
-        # remove this statement if dockwidget is to remain
-        # for reuse if plugin is reopened
-        # Commented next statement since it causes QGIS crashe
-        # when closing the docked window:
-        # self.dockwidget = None
+        # skip first action, because it is the plugin icon itself
+        iterAction = iter(self.actions)
+        next(iterAction)
+        for action in iterAction:
+            self.iface.removePluginMenu(
+                self.transl(u'&Planning Tool'),
+                action)
+            print action
+            #self.iface.removeToolBarIcon(action)       # this was the old syntax which doesn't work
+            self.planning_toolbar.removeAction(action)
 
-        self.planning_toolbar.setAllowedAreas(Qt.TopToolBarArea)
+        for separator in self.separators:
+            self.planning_toolbar.removeAction(separator)
+
 
         # toolbars that were present before opening plugin are restored here
         for i, toolbar in enumerate(self.toolbars0):
             print toolbar.objectName()
             toolbar.setVisible(self.toolbars0_visible[i])
             print self.toolbars0_visible[i]
-            toolbar.setIconSize(self.toolbars0_size[i])
 
         ### layer tree icon size
         self.iface.layerTreeView().setIconSize(self.tree_size)
@@ -363,6 +263,8 @@ class PlanningToolClass:
         if not self.pluginIsActive:
             self.pluginIsActive = True
 
+            # load project file
+            self.loadProjectFile()
 
             #### toolbar stuff:
             # gathering all toolbars of the QGIS GUI and their visibility state
@@ -370,69 +272,54 @@ class PlanningToolClass:
             # then set all of them invisible for the PlanningTool start
             self.toolbars0 = self.iface.mainWindow().findChildren(QToolBar)
             self.toolbars0_visible = []
-            self.toolbars0_size = []
 
             #### layertree icon size
             self.tree_size = self.iface.layerTreeView().iconSize()
             self.iface.layerTreeView().setIconSize(QSize(50, 50))
 
-            print "set toolbars invisible"
+            # set toolbars invisible
             for toolbar in self.toolbars0:
                 self.toolbars0_visible.append(toolbar.isVisible())
                 toolbar.setVisible(False)
-                #print(toolbar.objectName())
-                self.toolbars0_size.append(toolbar.iconSize())
 
-
-            # adjust planning toolbar
-            # following is taken from here: https://forum.qt.io/topic/4082/how-to-float-qtoolbar-on-creation
-            # # self.navToolbar = self.iface.mainWindow().findChild(QToolBar, "mMapNavToolBar")
-            # # t.setAllowedAreas(Qt.NoToolBarArea)
-            # self.planning_toolbar.setAllowedAreas(Qt.AllToolBarAreas)
-            # # self.navToolbar.setOrientation(Qt.Horizontal)
-            # self.planning_toolbar.setIconSize(QSize(64,64))
-            # self.planning_toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint)
-            # self.planning_toolbar.move(QPoint(200,150))
-            # self.planning_toolbar.adjustSize()
+            # show planning toolbar
             self.planning_toolbar.show()
+            # update/ add additional stuff to planning toolbar
+            self.updateToolbar()
 
 
-            ### start plugin
-            #print "** STARTING PlanningToolClass"
-
-            # dockwidget may not exist if:
-            #    first run of plugin
-            #    removed on close (see self.onClosePlugin method)
-            if self.dockwidget == None:
-                # Create the dockwidget (after translation) and keep reference
-                self.dockwidget = PlanningToolClassDockWidget(self.iface)
-                #self.dockwidget2 = IndicatorsDialog(self.dockwidget)
-
-            # connect to provide cleanup on closing of dockwidget
-            self.dockwidget.closingPlugin.connect(self.onClosePlugin)
-
-            # show the dockwidget
-            # TODO: fix to allow choice of dock location
-            self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
-
-            #self.dockwidget.setFloating(True)
-            #self.dockwidget.move(QPoint(0, 0))
-
-            # start plugin in fullscreen, but first do self.dockwidget.move(QPoint(0, 0))
-            #self.dockwidget.showFullScreen()
-
-
-            self.dockwidget.setWindowTitle("Planning Tool")
-            self.dockwidget.show()
+            # # dockwidget may not exist if:
+            # #    first run of plugin
+            # #    removed on close (see self.onClosePlugin method)
+            # if self.dockwidget == None:
+            #     # Create the dockwidget (after translation) and keep reference
+            #     self.dockwidget = PlanningToolClassDockWidget(self.iface)
+            #     #self.dockwidget2 = IndicatorsDialog(self.dockwidget)
+            #
+            # # connect to provide cleanup on closing of dockwidget
+            # self.dockwidget.closingPlugin.connect(self.onClosePlugin)
+            #
+            # # show the dockwidget
+            # # TODO: fix to allow choice of dock location
+            # self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+            #
+            # self.dockwidget.setWindowTitle("Planning Tool")
+            # self.dockwidget.show()
 
             self.zoomToInfrastructureInvestments()
 
-            uf.showMessage(self.iface, 'Close main plugin window on the right to go back to QGIS', type='Info', lev=0, dur=10)
+            #uf.showMessage(self.iface, 'Close main plugin window on the right to go back to QGIS', type='Info', lev=0, dur=10)
 
 
-    def loadProjectFile(self, event):
 
-        #self.Pages.setCurrentIndex(0)
+
+
+
+
+
+    ### helper functions
+
+    def loadProjectFile(self):
 
 
         # open the QGIS project file
@@ -451,7 +338,136 @@ class PlanningToolClass:
                 self.iface.addProject(unicode(new_file))
                 scenario_open = True
 
-        #uf.showMessage(self.iface, 'Strong winds! Keep out of red marked areas!', type='Info', lev=1, dur=10)
+
+    def updateToolbar(self):
+
+        ##toolbar icons /  add the map navigation actions
+        # separator
+        self.separators = []
+        self.separators.append(self.planning_toolbar.addSeparator())
+
+
+        # zoom to infrastructure investments / home
+        icon_path = ':/plugins/PlanningToolClass/icons/home.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Zoom to Infrastructure Investments'),
+            callback=self.zoomToInfrastructureInvestments,
+            parent=self.iface.mainWindow())
+
+        # zoom window
+        self.planning_toolbar.addAction(self.iface.actionZoomIn())
+        self.actions.append(self.iface.actionZoomIn())
+
+
+        # pan
+        self.planning_toolbar.addAction(self.iface.actionPan())
+        self.actions.append(self.iface.actionPan())
+
+        # touch
+        #self.planning_toolbar.addAction(self.iface.actionTouch())
+        #self.actions.append(self.iface.actionTouch())
+
+        # zoom to previous extent
+        self.planning_toolbar.addAction(self.iface.actionZoomLast())
+        self.actions.append(self.iface.actionZoomLast())
+
+        # identify features
+        self.planning_toolbar.addAction(self.iface.actionIdentify())
+        self.actions.append(self.iface.actionIdentify())
+
+
+        # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
+        self.municipalityCombo = QComboBox(self.iface.mainWindow())
+        self.municipalityComboAction = self.planning_toolbar.addWidget(self.municipalityCombo)
+        self.municipalityCombo.setToolTip("Municipalities")
+        self.actions.append(self.municipalityComboAction)
+
+        layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Projects")
+
+        idx = layer_housing.fieldNameIndex('GEMEENTE')
+        municipalities = layer_housing.uniqueValues(idx)
+        for municipality in municipalities:
+            #print str(municipality)
+            self.municipalityCombo.addItem("'"+str(municipality)+"'")
+
+        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Zoom to Municipality'),
+            callback=self.zoomToMunicipality,
+            parent=self.iface.mainWindow())
+
+        # select package
+        self.packageCombo = QComboBox(self.iface.mainWindow())
+        self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
+        self.packageCombo.setToolTip("Packages")
+        self.actions.append(self.packageComboAction)
+
+
+        layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
+
+        idx = layer_infra.fieldNameIndex('Package')
+        packages = layer_infra.uniqueValues(idx)
+        for package in packages:
+            #print str(package)
+            self.packageCombo.addItem("'"+str(package)+"'")
+
+        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Zoom to Package'),
+            callback=self.zoomToPackage,
+            parent=self.iface.mainWindow())
+
+
+        # separator
+        self.separators.append(self.planning_toolbar.addSeparator())
+
+        # add housing input
+        icon_path = ':/plugins/PlanningToolClass/icons/hp.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Housing Input'),
+            callback=self.openIndicatorDialog,
+            parent=self.iface.mainWindow())
+
+        # add infrastructure input
+        icon_path = ':/plugins/PlanningToolClass/icons/ii.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Infrastructure Input'),
+            callback=self.openIndicatorDialog,
+            parent=self.iface.mainWindow())
+
+        # add calculate indicators button
+        icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Calculate Indicators'),
+            callback=self.openIndicatorDialog,
+            parent=self.iface.mainWindow())
+
+        # separator
+        self.separators.append(self.planning_toolbar.addSeparator())
+
+        # close plugin
+        icon_path = ':/plugins/PlanningToolClass/icons/close.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Close Plugin'),
+            callback=self.onClosePlugin,
+            parent=self.iface.mainWindow())
+
+
+        # extra necessary actions
+        # self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
+        # self.planning_toolbar.addAction(self.iface.actionZoomFullExtent())
+        # self.planning_toolbar.addAction(self.iface.actionZoomToLayer())
+        # self.planning_toolbar.addAction(self.iface.actionZoomToSelected())
+        # self.planning_toolbar.addAction(self.iface.actionDraw())
+        # self.planning_toolbar.addAction(self.iface.actionSelect())
+
 
 
     def openIndicatorDialog(self):
@@ -484,7 +500,6 @@ class PlanningToolClass:
         # zoom to the box
         self.canvas.setExtent(box)
         self.canvas.refresh()
-
 
 
     def zoomToPackage(self):

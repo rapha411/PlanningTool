@@ -6,5 +6,6 @@
         <file>icons/hp.png</file>
         <file>icons/ii.png</file>
         <file>icons/calculator.png</file>
+        <file>icons/close.png</file>
     </qresource>
 </RCC>

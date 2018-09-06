@@ -181,272 +181,39 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
 
 
-
-
-        # page 0 - choose to give or take help
-        #self.Pages.setCurrentIndex(0)
-        self.activateCanvas()
-
-
-
-
-
-
-
-
-
     def handleDoubleClick(self, point, buttons):
         print('doubleclick')
 
 
-    def goBack(self):
-
-        if self.Pages.currentIndex() == 16:
-            self.Pages.setCurrentIndex(0)
-
-        elif self.Pages.currentIndex() == 17:
-            self.Pages.setCurrentIndex(11)
-
-        elif self.Pages.currentIndex() == 20:
-            self.Pages.setCurrentIndex(11)
-
-        elif self.Pages.currentIndex() == 19:
-            self.Pages.setCurrentIndex(11)
-        
-        elif self.Pages.currentIndex() == 19:
-            self.Pages.setCurrentIndex(11)
-        
-        elif self.Pages.currentIndex() == 5:
-            self.Pages.setCurrentIndex(4)
-            # remove the selected roads the user choose for a blocking but didn't save
-            roads_layer = uf.getLegendLayerByName(self.iface, "Roads")
-            roads_layer.removeSelection()
-
-        elif self.Pages.currentIndex() == 4:
-            self.Pages.setCurrentIndex(10)
-
-        elif self.Pages.currentIndex() == 6:
-            self.Pages.setCurrentIndex(3)
-
-        elif self.Pages.currentIndex() == 7:
-            self.Pages.setCurrentIndex(0)
-
-        elif self.Pages.currentIndex() == 8:
-            self.Pages.setCurrentIndex(9)
-
-        elif self.Pages.currentIndex() == 10:
-            self.Pages.setCurrentIndex(0)
-        
-        elif self.Pages.currentIndex() == 2:
-            self.Pages.setCurrentIndex(0)
-        
-        elif self.Pages.currentIndex() == 11:
-            self.Pages.setCurrentIndex(4)
-
-        elif self.Pages.currentIndex() == 13:
-            self.Pages.setCurrentIndex(12)
-            # remove destination_layer after user doen't want to go to a self choosen destination anymore
-            destination_layer = uf.getLegendLayerByName(self.iface, "Destination")
-            QgsMapLayerRegistry.instance().removeMapLayers([destination_layer])
-
-        elif self.Pages.currentIndex() == 14:
-            self.Pages.setCurrentIndex(12)
-            # remove destination_layer after user doen't want to go to a self choosen destination anymore
-            destination_layer = uf.getLegendLayerByName(self.iface, "Destination")
-            QgsMapLayerRegistry.instance().removeMapLayers([destination_layer])
-
-        elif self.Pages.currentIndex() == 3:
-            self.Pages.setCurrentIndex(12)
-            # remove destination_layer after user doen't want to go to a self choosen destination anymore
-            destination_layer = uf.getLegendLayerByName(self.iface, "Destination")
-            QgsMapLayerRegistry.instance().removeMapLayers([destination_layer])
-
-        elif self.Pages.currentIndex() == 15:
-            self.Pages.setCurrentIndex(11)
-
-        elif self.Pages.currentIndex() == 21:
-            self.Pages.setCurrentIndex(14)
-
-        elif self.Pages.currentIndex() == 18:
-            self.Pages.setCurrentIndex(13)
-
-        elif self.Pages.currentIndex() == 12:
-            self.Pages.setCurrentIndex(1)
-
-        elif self.Pages.currentIndex() == 22:
-            self.Pages.setCurrentIndex(13)
-
-        elif self.Pages.currentIndex() == 23:
-            self.Pages.setCurrentIndex(14)
-
-        elif self.Pages.currentIndex() == 25:
-            self.Pages.setCurrentIndex(22)
-
-        elif self.Pages.currentIndex() == 24:
-            self.Pages.setCurrentIndex(23)
-
-        elif self.Pages.currentIndex() == 19:
-            self.Pages.setCurrentIndex(17)
-
-        elif self.Pages.currentIndex() == 26:
-            self.Pages.setCurrentIndex(6)
-
-
-        remove_layer = ["Routes", "Buffer", "Obstacle_Temp"]
-        # remove selection on all layers
-        layers = QgsMapLayerRegistry.instance().mapLayers().values()
-        for layer in layers:
-
-            if layer.name() in remove_layer:
-                try:
-                    QgsMapLayerRegistry.instance().removeMapLayers([layer])
-                except:
-                    pass
-
-        self.canvas = self.determineCanvas()
-        #self.toolPan = QgsMapToolPan(self.canvas)
-        #self.canvas.setMapTool(self.toolPan)
-
-
-
-
-    def determineCanvas(self):
-
-        # always ask for index of the current page
-        if self.Pages.currentIndex() == 2:
-            self.canvas = self.QgsMapCanvas2
-
-        elif self.Pages.currentIndex() == 0:
-            self.canvas = self.QgsMapCanvas0
-
-        elif self.Pages.currentIndex() == 1:
-            self.canvas = self.QgsMapCanvas1
-
-        elif self.Pages.currentIndex() == 3:
-            self.canvas = self.QgsMapCanvas3
-
-        elif self.Pages.currentIndex() == 4:
-            self.canvas = self.QgsMapCanvas4
-
-        elif self.Pages.currentIndex() == 5:
-            self.canvas = self.QgsMapCanvas5
-
-        elif self.Pages.currentIndex() == 6:
-            self.canvas = self.QgsMapCanvas6
-
-        elif self.Pages.currentIndex() == 9:
-            self.canvas = self.QgsMapCanvas9
-
-        elif self.Pages.currentIndex() == 10:
-            self.canvas = self.QgsMapCanvas10
-
-        elif self.Pages.currentIndex() == 11:
-            self.canvas = self.QgsMapCanvas11
-
-        elif self.Pages.currentIndex() == 12:
-            self.canvas = self.QgsMapCanvas12
-
-        elif self.Pages.currentIndex() == 13:
-            self.canvas = self.QgsMapCanvas13
-
-        elif self.Pages.currentIndex() == 14:
-            self.canvas = self.QgsMapCanvas14
-
-        elif self.Pages.currentIndex() == 16:
-            self.canvas = self.QgsMapCanvas16
-
-        elif self.Pages.currentIndex() == 17:
-            self.canvas = self.QgsMapCanvas17
-
-        elif self.Pages.currentIndex() == 18:
-            self.canvas = self.QgsMapCanvas18
-
-        elif self.Pages.currentIndex() == 20:
-            self.canvas = self.QgsMapCanvas20
-
-        elif self.Pages.currentIndex() == 21:
-            self.canvas = self.QgsMapCanvas21
-
-        elif self.Pages.currentIndex() == 22:
-            self.canvas = self.QgsMapCanvas22
-
-        elif self.Pages.currentIndex() == 23:
-            self.canvas = self.QgsMapCanvas23
-
-
-        return self.canvas
-
-
-
     def activateCanvas(self):
-
         pass
 
-        # #self.smallCanvas = self.determineCanvas()
-        #
-        # # add all the layers to the small canvas
-        # layers = self.iface.legendInterface().layers()
-        # canvas_layers = []
-        # for layer in layers:
-        #     canvas_layers.append(QgsMapCanvasLayer(layer))
-        # #self.smallCanvas.setLayerSet(canvas_layers[6:])
-        # #self.smallCanvas.setLayerSet(canvas_layers)
-        # self.canvas.setLayerSet(canvas_layers)
-        #
-        # # roads_layer = uf.getLegendLayerByName(self.iface, "Roads")
-        # #self.smallCanvas.setLayerSet([canvas_layers[1],])
-        #
-        # #print self.smallCanvas.layers()
-        #
-        # # legend = self.iface.legendInterface()
-        # # # print legend.isLayerVisible(roads_layer)
-        # # legend.setLayerVisible(roads_layer, False)
-        #
-        #
-        # #
-        # #self.smallCanvas.layerStateChange()
-        # #self.smallCanvas.refreshAllLayers()
-        # #
-        # #self.smallCanvas.setLayerSet(canvas_layers)
-        #
-        #
-        # # make the pan tool the current map tool
-        # #self.toolPan = QgsMapToolPan(self.canvas)
-        # #self.canvas.setMapTool(self.toolPan)
-        #
-        # # refresh small canvas
-        # self.canvas.refresh()
-
-
-
-
-
-
-
-
-    def showEvent(self, event):
-
-        #self.Pages.setCurrentIndex(0)
-
-
-        # open the QGIS project file
-        scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file9.qgs')
-
-
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
-        else:
-            last_dir = uf.getLastDir("PlanningToolClass")
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(unicode(new_file))
-                scenario_open = True
-
-        #uf.showMessage(self.iface, 'Strong winds! Keep out of red marked areas!', type='Info', lev=1, dur=10)
-
+    #
+    #
+    #
+    # def showEvent(self, event):
+    #
+    #     #self.Pages.setCurrentIndex(0)
+    #
+    #
+    #     # open the QGIS project file
+    #     scenario_open = False
+    #     scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file9.qgs')
+    #
+    #
+    #     # check if file exists
+    #     if os.path.isfile(scenario_file):
+    #         self.iface.addProject(scenario_file)
+    #         scenario_open = True
+    #     else:
+    #         last_dir = uf.getLastDir("PlanningToolClass")
+    #         new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+    #         if new_file:
+    #             self.iface.addProject(unicode(new_file))
+    #             scenario_open = True
+    #
+    #     #uf.showMessage(self.iface, 'Strong winds! Keep out of red marked areas!', type='Info', lev=1, dur=10)
+    #
 
 
     def closeEvent(self, event):
@@ -651,36 +418,7 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
         self.canvas.setMapTool(self.toolPan)
 
 
-    # page 1
-    def leaveLocation(self):
 
-        self.Pages.setCurrentIndex(12)
-        #self.messageRoute()
-        self.activateCanvas()
-
-
-    def stayLocation(self):
-
-        self.Pages.setCurrentIndex(9)
-        self.activateCanvas()
-
-        location_layer = uf.getLegendLayerByName(self.iface, "Location")
-        roads_layer = uf.getLegendLayerByName(self.iface, "Roads")
-        feat = location_layer.getFeatures().next()
-        point = feat.geometry().asPoint()
-        closeFeatID = self.nearestFeature(point)
-        closeFeat = uf.getFeatureById(roads_layer, closeFeatID)
-
-        street = str(closeFeat.attributes()[2])
-        district = str(closeFeat.attributes()[3])
-        housenumber = random.randrange(1, 150, 1)
-
-        self.input_address.setText(str(street) + ' ' + str(housenumber) + ', ' + district)
-        self.frame_details.setAutoFillBackground(True)
-        # p = self.frame_details.palette()
-        # p.setColor(self.frame_details.backgroundRole(), Qt.red)
-        # self.frame_details.setPalette(p)
-        # print('changecolor')
 
 
     # page 2
