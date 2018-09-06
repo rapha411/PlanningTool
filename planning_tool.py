@@ -396,6 +396,7 @@ class PlanningToolClass:
             # self.planning_toolbar.adjustSize()
             self.planning_toolbar.show()
 
+
             ### start plugin
             #print "** STARTING PlanningToolClass"
 
