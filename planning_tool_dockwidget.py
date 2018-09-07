@@ -49,23 +49,17 @@ from matplotlib.figure import Figure
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
 
-FORM_CLASS2, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_second.ui'))
+FORM_INDICATORS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_chart.ui'))
+
+FORM_HOUSING, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_housing.ui'))
 
 
-class MapToolEmitPoint(QgsMapToolEmitPoint):
-    canvasDoubleClicked = QtCore.pyqtSignal(object, object)
-
-    def canvasDoubleClickEvent(self, event):
-        point = self.toMapCoordinates(event.pos())
-        self.canvasDoubleClicked.emit(point, event.button())
-        super(MapToolEmitPoint, self).canvasDoubleClickEvent(event)
-
-
-class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
+class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
     def __init__(self, iface, parent=None):
 
-        super(IndicatorsDialog, self).__init__(parent)
+        super(IndicatorsChart, self).__init__(parent)
 
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
@@ -90,7 +84,7 @@ class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
 
 
         #signal slot for closing indicator window
-        self.closeIndicators.clicked.connect(self.closeIndicatorDialog)
+        self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
 
 
 
@@ -140,8 +134,66 @@ class IndicatorsDialog(QtGui.QDialog, FORM_CLASS2):
 
 
 
-    def closeIndicatorDialog(self):
+    def closeIndicatorsChart(self):
         self.hide()
+
+class HousingInput(QtGui.QDialog, FORM_HOUSING):
+    def __init__(self, iface, parent=None):
+
+        super(HousingInput, self).__init__(parent)
+
+        # Set up the user interface from Designer.
+        # After setupUI you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)
+
+        #signal slot for closing indicator window
+        self.closeHousing.clicked.connect(self.closeHousingInput)
+
+
+        layer = iface.activeLayer()
+        print layer
+
+        projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
+        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+
+        if len(projectName) == 1:
+            print len(projectName)
+            self.naamplanLabel.setText(str(projectName[0]))
+            self.packageLabel.setText('PACKAGE ' + str(package[0][-1:]))
+        else:
+            self.closeHousingInput()
+            #uf.showMessage(print("please select exactly one project")
+            print("please select exactly one project")
+            # signal slot for closing indicator window
+            #self.closeHousing.clicked.disconnect(self.closeHousingInput)
+            uf.showMessage(iface, "please select exactly one project", type='Info', lev=1, dur=10)
+
+
+
+
+    def closeHousingInput(self):
+        print "should close"
+        self.hide()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

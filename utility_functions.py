@@ -1091,7 +1091,7 @@ def zoomToLayer(iface, name):
     layer.dataProvider().updateExtents()
 
     canvas.setExtent(layer.extent())
-    canvas.zoomToSelected()
+    #canvas.zoomToSelected()
     #self.canvas.zoomByFactor(0.3)
     #self.canvas.zoomScale(scale)
     canvas.refresh()

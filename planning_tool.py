@@ -31,7 +31,7 @@ import resources
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import PlanningToolClassDockWidget
-from planning_tool_dockwidget import IndicatorsDialog
+from planning_tool_dockwidget import IndicatorsChart, HousingInput
 import os.path
 
 
@@ -365,8 +365,8 @@ class PlanningToolClass:
         self.actions.append(self.iface.actionPan())
 
         # touch
-        #self.planning_toolbar.addAction(self.iface.actionTouch())
-        #self.actions.append(self.iface.actionTouch())
+        self.planning_toolbar.addAction(self.iface.actionTouch())
+        self.actions.append(self.iface.actionTouch())
 
         # zoom to previous extent
         self.planning_toolbar.addAction(self.iface.actionZoomLast())
@@ -375,7 +375,6 @@ class PlanningToolClass:
         # identify features
         self.planning_toolbar.addAction(self.iface.actionIdentify())
         self.actions.append(self.iface.actionIdentify())
-
 
         # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
         self.municipalityCombo = QComboBox(self.iface.mainWindow())
@@ -420,6 +419,12 @@ class PlanningToolClass:
             callback=self.zoomToPackage,
             parent=self.iface.mainWindow())
 
+        # separator
+        self.separators.append(self.planning_toolbar.addSeparator())
+
+        self.planning_toolbar.addAction(self.iface.actionSelect())
+        self.actions.append(self.iface.actionSelect())
+
 
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())
@@ -429,7 +434,7 @@ class PlanningToolClass:
         self.add_action(
             icon_path,
             text=self.transl(u'Housing Input'),
-            callback=self.openIndicatorDialog,
+            callback=self.openHousingInput,
             parent=self.iface.mainWindow())
 
         # add infrastructure input
@@ -437,7 +442,7 @@ class PlanningToolClass:
         self.add_action(
             icon_path,
             text=self.transl(u'Infrastructure Input'),
-            callback=self.openIndicatorDialog,
+            callback=self.openIndicatorsChart,
             parent=self.iface.mainWindow())
 
         # add calculate indicators button
@@ -445,7 +450,7 @@ class PlanningToolClass:
         self.add_action(
             icon_path,
             text=self.transl(u'Calculate Indicators'),
-            callback=self.openIndicatorDialog,
+            callback=self.openIndicatorsChart,
             parent=self.iface.mainWindow())
 
         # separator
@@ -470,13 +475,11 @@ class PlanningToolClass:
 
 
 
-    def openIndicatorDialog(self):
-        self.nd = IndicatorsDialog(self.iface)
-        self.nd.show()
-        self.nd.move(QPoint(150, 150))
+
 
 
     def zoomToInfrastructureInvestments(self):
+
 
         # zoom on infrastructure investments layer extent / home
         uf.zoomToLayer(self.iface, "Infrastructure_Investments")
@@ -526,3 +529,55 @@ class PlanningToolClass:
         self.canvas.setExtent(box1)
         self.canvas.refresh()
 
+
+
+    def openIndicatorsChart(self):
+        self.ic = IndicatorsChart(self.iface)
+        self.ic.show()
+        self.ic.move(QPoint(150, 150))
+
+
+    def openHousingInput(self):
+        self.hi = HousingInput(self.iface)
+        self.hi.show()
+        self.hi.move(QPoint(150, 150))
+
+
+
+
+
+
+
+
+
+
+
+        # # get start point from location layer
+        # location_layer = uf.getLegendLayerByName(self.iface, "Location")
+        # startFeat = uf.getLastFeature(location_layer)
+        # startPoint = startFeat.geometry().centroid().asPoint()
+        #
+        # # populate table
+        # values = []
+        # # only use the first attribute in the list
+        # for feature in emergency_layer.getFeatures():
+        #
+        #     dist = feature.geometry().distance(QgsGeometry.fromPoint(startPoint))
+        #     dist = dist/1000
+        #     name = str(feature.attributes()[1])
+        #     type = str(feature.attributes()[0])
+        #     nOfPeople = str(feature.attributes()[2])
+        #     address = str(feature.attributes()[3])
+        #     phone = str(feature.attributes()[4])
+
+
+
+
+
+
+
+
+    # def openInfrastructureInput(self):
+    #     self.nd = IndicatorsDialog(self.iface)
+    #     self.nd.show()
+    #     self.nd.move(QPoint(150, 150))
