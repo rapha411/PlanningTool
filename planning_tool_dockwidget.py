@@ -22,6 +22,7 @@
 """
 
 import os
+import math
 
 from PyQt4 import QtGui, QtCore, uic
 from qgis.core import *
@@ -44,6 +45,8 @@ import numpy as np
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+import pandas as pd
+import openpyxl
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -55,87 +58,9 @@ FORM_INDICATORS, _ = uic.loadUiType(os.path.join(
 FORM_HOUSING, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_housing.ui'))
 
+FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
 
-class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
-    def __init__(self, iface, parent=None):
-
-        super(IndicatorsChart, self).__init__(parent)
-
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
-
-
-        # add matplotlib Figure to chartFrame
-        self.chart_figure = Figure()
-        # self.chart_subplot_hist = self.chart_figure.add_subplot(221)
-        # self.chart_subplot_line = self.chart_figure.add_subplot(222)
-        # self.chart_subplot_pie = self.chart_figure.add_subplot(224)
-        self.chart_subplot_bar = self.chart_figure.add_subplot(111)
-
-        self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.chartLayout.addWidget(self.chart_canvas)
-        self.plotChart()
-        self.chart_figure.tight_layout()
-
-
-
-        #signal slot for closing indicator window
-        self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
-
-
-
-    def plotChart(self):
-
-        ax = self.chart_subplot_bar
-
-        N = 5
-        ind = np.arange(N)  # the x locations for the groups
-        width = 0.25  # the width of the bars
-
-        men_means = (20, 35, 30, 35, 27)
-        men_std = (2, 3, 4, 1, 2)
-        rects1 = ax.bar(ind - width, men_means, width, color='b', yerr=men_std)
-
-        women_means = (25, 32, 34, 20, 25)
-        women_std = (3, 5, 2, 3, 3)
-        rects2 = ax.bar(ind, women_means, width, color='g', yerr=women_std)
-
-        municipality_means = (11, 31, 44, 10, 19)
-        municipality_std = (6, 2, 5, 7, 3)
-        rects3 = ax.bar(ind + width, municipality_means, width, color='r', yerr=municipality_std)
-
-
-        # add some text for labels, title and axes ticks
-        ax.set_ylabel('Scores')
-        ax.set_xlabel('Indicators')
-        ax.set_title('Scores by organization')
-        ax.set_xticks(ind + width / 2)
-        ax.set_xticklabels(('I1', 'I2', 'I3', 'I4', 'I5'))
-
-        ax.legend((rects1[0], rects2[0], rects3[0]), ('Ministry', 'Province', 'Municipality'))
-
-        def autolabel(rects):
-            """
-            Attach a text label above each bar displaying its height
-            """
-            for rect in rects:
-                height = rect.get_height()
-                ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
-                        '%d' % int(height),
-                        ha='center', va='bottom')
-
-        autolabel(rects1)
-        autolabel(rects2)
-        autolabel(rects3)
-
-
-
-    def closeIndicatorsChart(self):
-        self.hide()
 
 class HousingInput(QtGui.QDialog, FORM_HOUSING):
     def __init__(self, iface, parent=None):
@@ -150,43 +75,208 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING):
         self.setupUi(self)
 
         #signal slot for closing indicator window
+        self.okHousing.clicked.connect(self.submitHousingInput)
         self.closeHousing.clicked.connect(self.closeHousingInput)
 
-
-        layer = iface.activeLayer()
-        print layer
-
-        projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
-        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
-
-        if len(projectName) == 1:
-            print len(projectName)
-            self.naamplanLabel.setText(str(projectName[0]))
-            self.packageLabel.setText('PACKAGE ' + str(package[0][-1:]))
-        else:
-            self.closeHousingInput()
-            #uf.showMessage(print("please select exactly one project")
-            print("please select exactly one project")
-            # signal slot for closing indicator window
-            #self.closeHousing.clicked.disconnect(self.closeHousingInput)
-            uf.showMessage(iface, "please select exactly one project", type='Info', lev=1, dur=10)
+        self.loadData()
 
 
+
+    def submitHousingInput(self):
+        # save in excel sheet
+        self.hide()
 
 
     def closeHousingInput(self):
-        print "should close"
+        self.hide()
+    
+    
+
+
+class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
+    def __init__(self, iface, parent=None):
+
+        super(InfrastructureInput, self).__init__(parent)
+
+        # Set up the user interface from Designer.
+        # After setupUI you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)
+
+        #signal slot for closing indicator window
+        self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
+
+        # layer = iface.activeLayer()
+        # print layer
+        #
+        # investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
+        # package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+        #
+        # if len(investmentName) == 1:
+        #     print len(investmentName)
+        #     self.investmentLabel.setText(str(investmentName[0]))
+        #     self.packageLabel2.setText('PACKAGE ' + str(package[0][-1:]))
+        # else:
+        #     print len(investmentName)
+        #     uf.showMessage(iface, "please select exactly one project", type='Info', lev=1, dur=5)
+
+
+    def closeInfrastructureInput(self):
         self.hide()
 
 
 
 
+class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
+    def __init__(self, iface, parent=None):
+
+        super(IndicatorsChart, self).__init__(parent)
+
+        # Set up the user interface from Designer.
+        # After setupUI you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)
+
+        #signal slot for closing indicator window
+        self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
+
+        
+        ### INDICATORS
+        excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+
+
+        ### ACCESIBILITY
+        sheet_name = 'INPUT - Infra Projects'
+        ## Transit accesibility
+        c = []
+        af = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
+        aj = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        ak = aj * 0.01
+        p = self.getValue(filepath=excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        ar = p * af * ak
+        c.append(sum(ar))
+        # c4
+        ag = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
+        as1 = p * ag * ak
+        c.append(sum(as1))
+        # c5
+        ah = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
+        at = p * ah * ak
+        c.append(sum(at))
+        # c6
+        ai = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
+        au = p * ai * ak
+        c.append(sum(au))
+
+        ## Car accesibility
+        d = []
+        # d3
+        aa = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
+        aj = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        ak = aj * 0.01
+        p = self.getValue(filepath=excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        aw = p * aa * ak
+        d.append(sum(aw))
+        # d4
+        ab = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
+        ax = p * ab * ak
+        d.append(sum(ax))
+        # d5
+        ac = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
+        ay = p * ac * ak
+        d.append(sum(ay))
+        # d6
+        ad = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
+        az = p * ad * ak
+        d.append(sum(az))
+
+        cd = np.add(c, d)
+        accesibility = np.append(cd, np.mean(cd))
+
+
+        # add matplotlib Figure to chartFrame
+        self.chart_figure = Figure()
+        # self.chart_subplot_hist = self.chart_figure.add_subplot(221)
+        # self.chart_subplot_line = self.chart_figure.add_subplot(222)
+        # self.chart_subplot_pie = self.chart_figure.add_subplot(224)
+        self.chart_subplot_bar = self.chart_figure.add_subplot(111)
+
+        self.chart_canvas = FigureCanvas(self.chart_figure)
+        self.chartLayout.addWidget(self.chart_canvas)
+        self.plotChart(accesibility, accesibility, accesibility)
+        #self.chart_figure.tight_layout()
+
+
+
+    def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
+        excel_file = openpyxl.load_workbook(filepath, read_only=True,
+                                            keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = excel_file.get_sheet_by_name(sheetname)
+        data = []
+        for i in range(row_start, row_end + 1):
+            val = float(sheet[col + str(i)].value)
+            data.append(val)
+        return np.array(data)
+
+
+    def plotChart(self, first, second, third):
+
+        ax = self.chart_subplot_bar
+
+        N = 5
+        ind = np.arange(N)  # the x locations for the groups
+        width = 0.25  # the width of the bars
+
+        rects1 = ax.bar(ind - width, first, width, color='b')
+
+        rects2 = ax.bar(ind, first, width, color='g')
+
+        rects3 = ax.bar(ind + width, first, width, color='r')
+
+
+        # add some text for labels, title and axes ticks
+        ax.set_ylabel('Scores')
+        ax.set_xlabel('Indicators')
+        ax.set_title('Scores by organization')
+        ax.set_xticks(ind + width / 2)
+        ax.set_xticklabels(('Edam-Volendam', 'Hoorn', 'Purmerend', 'Zaanstad', 'Noord-Holland'))
+
+        ax.legend((rects1[0], rects2[0], rects3[0]), ('Accessibility', 'Market Balance', 'Finances'))
+
+        #low = min(rects1)
+        high = np.max(first)
+        self.chart_subplot_bar.set_ylim((0,high*1.3))
+
+        # def autolabel(rects):
+        #     """
+        #     Attach a text label above each bar displaying its height
+        #     """
+        #     for rect in rects:
+        #         height = rect.get_height()
+        #         ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
+        #                 '%d' % int(height),
+        #                 ha='center', va='bottom')
+        #
+        # autolabel(rects1)
+        # autolabel(rects2)
+        # autolabel(rects3)
 
 
 
 
 
 
+
+    def closeIndicatorsChart(self):
+        self.hide()
+
+
+
+    
 
 
 

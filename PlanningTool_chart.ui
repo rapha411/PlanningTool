@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>716</width>
-    <height>545</height>
+    <width>667</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,28 +16,15 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <layout class="QVBoxLayout" name="chartLayout"/>
-     </item>
-     <item row="2" column="0">
+     <item row="1" column="0">
       <widget class="QPushButton" name="closeIndicators">
        <property name="text">
         <string>Close</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>I1: Spatial quality - I2: Financial impact - I3: Accessibility - I4: Marker health</string>
-       </property>
-      </widget>
+     <item row="0" column="0">
+      <layout class="QVBoxLayout" name="chartLayout"/>
      </item>
     </layout>
    </item>

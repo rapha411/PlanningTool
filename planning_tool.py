@@ -31,7 +31,7 @@ import resources
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import PlanningToolClassDockWidget
-from planning_tool_dockwidget import IndicatorsChart, HousingInput
+from planning_tool_dockwidget import IndicatorsChart, HousingInput, InfrastructureInput
 import os.path
 
 
@@ -442,7 +442,7 @@ class PlanningToolClass:
         self.add_action(
             icon_path,
             text=self.transl(u'Infrastructure Input'),
-            callback=self.openIndicatorsChart,
+            callback=self.openInfrastructureInput,
             parent=self.iface.mainWindow())
 
         # add calculate indicators button
@@ -531,25 +531,44 @@ class PlanningToolClass:
 
 
 
+    def openHousingInput(self):
+        self.hi = HousingInput(self.iface)
+
+        layer = self.iface.activeLayer()
+        projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
+        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+
+        if len(projectName) == 1:
+            self.hi.show()
+            self.hi.move(QPoint(950, 150))
+            self.hi.naamplanLabel.setText(str(projectName[0]))
+            self.hi.packageLabel.setText('PACKAGE ' + str(package[0][-1:]))
+        else:
+            uf.showMessage(self.iface, "please select exactly one housing project", type='Info', lev=1, dur=5)
+
+
+
+    def openInfrastructureInput(self):
+        self.ii = InfrastructureInput(self.iface)
+
+        layer = self.iface.activeLayer()
+        investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
+        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+
+        if len(investmentName) == 1:
+            self.ii.show()
+            self.ii.move(QPoint(950, 150))
+            self.ii.investmentLabel.setText(str(investmentName[0]))
+            self.ii.packageLabel2.setText('PACKAGE ' + str(package[0][-1:]))
+        else:
+            uf.showMessage(self.iface, "please select exactly one infrastructure project", type='Info', lev=1, dur=5)
+
+
+
     def openIndicatorsChart(self):
         self.ic = IndicatorsChart(self.iface)
         self.ic.show()
-        self.ic.move(QPoint(150, 150))
-
-
-    def openHousingInput(self):
-        self.hi = HousingInput(self.iface)
-        self.hi.show()
-        self.hi.move(QPoint(150, 150))
-
-
-
-
-
-
-
-
-
+        self.ic.move(QPoint(950, 150))
 
 
         # # get start point from location layer
