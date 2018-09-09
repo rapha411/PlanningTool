@@ -568,7 +568,7 @@ class PlanningToolClass:
     def openIndicatorsChart(self):
         self.ic = IndicatorsChart(self.iface)
         self.ic.show()
-        self.ic.move(QPoint(950, 150))
+        self.ic.move(QPoint(100, 150))
 
 
         # # get start point from location layer

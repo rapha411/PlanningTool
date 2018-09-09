@@ -45,6 +45,8 @@ import numpy as np
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+import matplotlib.gridspec as gridspec
+
 import pandas as pd
 import openpyxl
 
@@ -78,9 +80,6 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING):
         self.okHousing.clicked.connect(self.submitHousingInput)
         self.closeHousing.clicked.connect(self.closeHousingInput)
 
-        self.loadData()
-
-
 
     def submitHousingInput(self):
         # save in excel sheet
@@ -105,22 +104,115 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
+        self.iface = iface
+
         #signal slot for closing indicator window
         self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
+        self.okInfrastructure.clicked.connect(self.saveValue)
 
-        # layer = iface.activeLayer()
-        # print layer
-        #
-        # investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
-        # package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
-        #
-        # if len(investmentName) == 1:
-        #     print len(investmentName)
-        #     self.investmentLabel.setText(str(investmentName[0]))
-        #     self.packageLabel2.setText('PACKAGE ' + str(package[0][-1:]))
-        # else:
-        #     print len(investmentName)
-        #     uf.showMessage(iface, "please select exactly one project", type='Info', lev=1, dur=5)
+        # get project ID and corresponding data from excel sheet
+        self.layer = self.iface.activeLayer()
+        # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
+        # thas where the +4 in the getValue call below is coming from
+        temp1, temp2 = uf.getFieldValues(self.layer, 'id', null=False, selection=True)
+        # guard for when not exactly one project is selected
+        if len(temp1) != 1:
+            return
+        self.id = temp1[0]
+        print "die project ID aus QGIS: ", self.id
+
+        # get excel row by id of project id from QGIS
+        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+        self.sheet_name = 'INPUT - Infra Projects'
+        excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
+        print "excel id: ", excel_id
+
+
+        iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+        iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+        iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+        iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+        iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+        iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+        iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+
+
+
+        if iC == 1:
+            self.inputYes.setChecked(True)
+        else:
+            self.inputNo.setChecked(True)
+
+        self.inputAmsterdam.setText(str(iA))
+        self.inputEdam.setText(str(iE))
+        self.inputHoorn.setText(str(iP))
+        self.inputPurmerend.setText(str(iZ))
+        self.inputZaanstad.setText(str(iH))
+        self.inputProvince.setText(str(iM))
+
+
+
+    # save value
+    def saveValue(self):
+
+        iC = self.inputYes.isChecked()
+        iC2 = self.inputNo.isChecked()
+        iA = self.inputAmsterdam.text()
+        iE = self.inputEdam.text()
+        iP = self.inputPurmerend.text()
+        iZ = self.inputZaanstad.text()
+        iH = self.inputProvince.text()
+        iM = self.inputMinistry.text()
+
+
+        #take from input field and save to excel file, depending on polygonID = row in excel file
+        #column depending on which input field
+
+
+        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
+                                         keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
+
+        # project id is at row+2 in excel, thats why I need to introduce this skip variable
+        k = 2
+        if iC == True and iC2 == False:
+            sheet['P' + str(self.id+k)] = 1
+        elif iC == False and iC2 == True:
+            sheet['P' + str(self.id+k)] = 0
+        else:
+            # chase case where both yes and no are checked
+            uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
+            return
+        sheet['Q'+str(self.id+k)] = float(iA)
+        sheet['R'+str(self.id+k)] = float(iE)
+        sheet['S'+str(self.id+k)] = float(iP)
+        sheet['T'+str(self.id+k)] = float(iZ)
+        sheet['U'+str(self.id+k)] = float(iH)
+        sheet['V'+str(self.id+k)] = float(iM)
+
+        srcfile.save(self.excel_file)
+
+        # close input window
+        self.hide()
+
+
+
+
+    def getValue(self, filepath=None, sheetname=None, col=None, row_start=None, row_end=None):
+        # project id is at row+2 in excel, thats why I need to introduce this skip variable
+        k = 2
+        row_start = row_start+k
+        if row_end == None:
+            row_end = row_start
+        excel_file = openpyxl.load_workbook(filepath, read_only=True,
+                                            keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = excel_file.get_sheet_by_name(sheetname)
+        data = []
+        for i in range(row_start, row_end + 1):
+            val = float(sheet[col + str(i)].value)
+            data.append(val)
+        return np.array(data)
+
 
 
     def closeInfrastructureInput(self):
@@ -171,7 +263,6 @@ class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
         ai = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
         au = p * ai * ak
         c.append(sum(au))
-
         ## Car accesibility
         d = []
         # d3
@@ -198,18 +289,37 @@ class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
         accesibility = np.append(cd, np.mean(cd))
 
 
+        ### Market Balance
+        market_balance = [-1035, -1907, -3106, -7902, -3487]
+
+
+        ### Market Balance
+        finances = [-5.01, 0, -35.2, 0, 0, 0]
+
+
+        ### PLOT
         # add matplotlib Figure to chartFrame
         self.chart_figure = Figure()
+        #plt.figure(figsize=(4, 4))
+
+        #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
+        # gs1 = gridspec.GridSpec(1, 3)
+        # gs1.update(wspace=0.1, hspace=0.95)
+
         # self.chart_subplot_hist = self.chart_figure.add_subplot(221)
         # self.chart_subplot_line = self.chart_figure.add_subplot(222)
         # self.chart_subplot_pie = self.chart_figure.add_subplot(224)
-        self.chart_subplot_bar = self.chart_figure.add_subplot(111)
-
+        #self.chart_subplot_bar = self.chart_figure.add_subplot(131)
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.chartLayout.addWidget(self.chart_canvas)
-        self.plotChart(accesibility, accesibility, accesibility)
-        #self.chart_figure.tight_layout()
+        #self.plotChart(gs1[0], accesibility, "Accessibility", 'b')
 
+        self.plotChart(self.chart_figure.add_subplot(131), accesibility, "Accessibility", 'b')
+        self.plotChart(self.chart_figure.add_subplot(132), market_balance, "Market Balance", 'g')
+        self.plotChart(self.chart_figure.add_subplot(133), finances, "Finances", 'r')
+        self.chart_figure.subplots_adjust(wspace=0.02, hspace=0.4)
+        self.chart_figure.tight_layout()
+        #self.chart_figure.gca().set_aspect('equal', adjustable='box')
 
 
     def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
@@ -223,33 +333,36 @@ class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
         return np.array(data)
 
 
-    def plotChart(self, first, second, third):
+    def plotChart(self, ax, indicator, indicator_name, color):
 
-        ax = self.chart_subplot_bar
 
-        N = 5
+        N = len(indicator)
         ind = np.arange(N)  # the x locations for the groups
-        width = 0.25  # the width of the bars
+        width = 0.35  # the width of the bars
 
-        rects1 = ax.bar(ind - width, first, width, color='b')
-
-        rects2 = ax.bar(ind, first, width, color='g')
-
-        rects3 = ax.bar(ind + width, first, width, color='r')
+        #rects1 = ax.bar(ind - width, first, width, color='b')
+        rects = ax.bar(ind, indicator, width, color=color, align='center')
+        #rects3 = ax.bar(ind + width, first, width, color='r')
 
 
         # add some text for labels, title and axes ticks
-        ax.set_ylabel('Scores')
-        ax.set_xlabel('Indicators')
-        ax.set_title('Scores by organization')
-        ax.set_xticks(ind + width / 2)
-        ax.set_xticklabels(('Edam-Volendam', 'Hoorn', 'Purmerend', 'Zaanstad', 'Noord-Holland'))
-
-        ax.legend((rects1[0], rects2[0], rects3[0]), ('Accessibility', 'Market Balance', 'Finances'))
+        ax.set_ylabel('Indicator score')
+        ax.set_xlabel('Region')
+        #ax.set_title('Scores by organization')
+        ax.set_xticks(ind)
+        if N == 5:
+            ax.set_xticklabels(('Edam-Vol.', 'Hoorn', 'Purmerend', 'Zaanstad', 'Province'), rotation=45)
+        else:
+            ax.set_xticklabels(('Edam-Vol.', 'Hoorn', 'Purmerend', 'Zaanstad', 'Province', 'Ministry'), rotation=45)
+        ax.legend((rects[0],), (indicator_name,))
 
         #low = min(rects1)
-        high = np.max(first)
-        self.chart_subplot_bar.set_ylim((0,high*1.3))
+        high = np.max(indicator)
+        #ax.set_xlim((-5, max(ind)+5))
+        #ax.set_aspect(aspect='equal')
+
+        if np.mean(indicator) < 0:
+            ax.invert_yaxis()
 
         # def autolabel(rects):
         #     """
@@ -329,34 +442,6 @@ class PlanningToolClassDockWidget(QtGui.QDockWidget, FORM_CLASS, QgsMapTool, Qgs
 
     def activateCanvas(self):
         pass
-
-    #
-    #
-    #
-    # def showEvent(self, event):
-    #
-    #     #self.Pages.setCurrentIndex(0)
-    #
-    #
-    #     # open the QGIS project file
-    #     scenario_open = False
-    #     scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file9.qgs')
-    #
-    #
-    #     # check if file exists
-    #     if os.path.isfile(scenario_file):
-    #         self.iface.addProject(scenario_file)
-    #         scenario_open = True
-    #     else:
-    #         last_dir = uf.getLastDir("PlanningToolClass")
-    #         new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-    #         if new_file:
-    #             self.iface.addProject(unicode(new_file))
-    #             scenario_open = True
-    #
-    #     #uf.showMessage(self.iface, 'Strong winds! Keep out of red marked areas!', type='Info', lev=1, dur=10)
-    #
-
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
