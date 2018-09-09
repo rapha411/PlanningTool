@@ -72,10 +72,10 @@ class PlanningToolClass:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.transl(u'&Planning Tool')
+        self.menu = self.transl(u'&Regional Game Mobiele Stad')
         # TODO: We are going to let the user set this up in a future iteration
-        self.planning_toolbar = self.iface.addToolBar(u'PTToolbar')
-        self.planning_toolbar.setObjectName(u'mPTToolbar')
+        self.planning_toolbar = self.iface.addToolBar(u'RGMSToolbar')
+        self.planning_toolbar.setObjectName(u'mRGMSToolbar')
 
 
         # print "** INITIALIZING PlanningToolClass"
@@ -205,7 +205,7 @@ class PlanningToolClass:
         next(iterAction)
         for action in iterAction:
             self.iface.removePluginMenu(
-                self.transl(u'&Planning Tool'),
+                self.transl(u'&Regional Game Mobiele Stad'),
                 action)
             print action
             #self.iface.removeToolBarIcon(action)       # this was the old syntax which doesn't work
@@ -246,7 +246,7 @@ class PlanningToolClass:
 
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.transl(u'&Planning Tool'),
+                self.transl(u'&Regional Game Mobiele Stad'),
                 action)
             self.iface.removeToolBarIcon(action)
 
@@ -359,9 +359,9 @@ class PlanningToolClass:
         self.actions.append(self.iface.actionZoomIn())
 
 
-        # pan
-        self.planning_toolbar.addAction(self.iface.actionPan())
-        self.actions.append(self.iface.actionPan())
+        # # pan - only needed for OSX version
+        # self.planning_toolbar.addAction(self.iface.actionPan())
+        # self.actions.append(self.iface.actionPan())
 
         # touch
         self.planning_toolbar.addAction(self.iface.actionTouch())
@@ -531,13 +531,20 @@ class PlanningToolClass:
 
 
     def openHousingInput(self):
-        self.hi = HousingInput(self.iface)
 
         layer = self.iface.activeLayer()
         projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
         package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+        if layer:
+            if str(layer.name()) != 'Housing_Projects':
+                uf.showMessage(self.iface, "please select a housing project first", type='Info', lev=1, dur=5)
+                return
+        else:
+            uf.showMessage(self.iface, "please select a housing project first", type='Info', lev=1, dur=5)
+            return
 
         if len(projectName) == 1:
+            self.hi = HousingInput(self.iface)
             self.hi.show()
             self.hi.move(QPoint(950, 150))
             self.hi.naamplanLabel.setText(str(projectName[0]))
@@ -548,13 +555,20 @@ class PlanningToolClass:
 
 
     def openInfrastructureInput(self):
-        self.ii = InfrastructureInput(self.iface)
 
         layer = self.iface.activeLayer()
         investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
         package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
+        if layer:
+            if str(layer.name()) != 'Infrastructure_Investments':
+                uf.showMessage(self.iface, "please select an infrastructure project first", type='Info', lev=1, dur=5)
+                return
+        else:
+            uf.showMessage(self.iface, "please select an infrastructure project first", type='Info', lev=1, dur=5)
+            return
 
         if len(investmentName) == 1:
+            self.ii = InfrastructureInput(self.iface)
             self.ii.show()
             self.ii.move(QPoint(950, 150))
             self.ii.investmentLabel.setText(str(investmentName[0]))
@@ -587,12 +601,6 @@ class PlanningToolClass:
         #     nOfPeople = str(feature.attributes()[2])
         #     address = str(feature.attributes()[3])
         #     phone = str(feature.attributes()[4])
-
-
-
-
-
-
 
 
     # def openInfrastructureInput(self):

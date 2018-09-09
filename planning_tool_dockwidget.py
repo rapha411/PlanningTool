@@ -39,8 +39,10 @@ from PyQt4.QtCore import Qt, pyqtSignal, QPoint
 #from PyQt4.QtCore import pyqtSignal
 from . import utility_functions as uf
 
+# this is for adding the "external" folder to the system path, because the QGIS python is only looking in the system path for python packages
+# you can see that this works by doing import sys, sys.path inside the QGIS python console
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 
 import processing
 import random
