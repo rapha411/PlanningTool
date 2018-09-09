@@ -39,17 +39,16 @@ from PyQt4.QtCore import Qt, pyqtSignal, QPoint
 #from PyQt4.QtCore import pyqtSignal
 from . import utility_functions as uf
 
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
+
 import processing
 import random
 import numpy as np
+import openpyxl
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.gridspec as gridspec
-
-import pandas as pd
-import openpyxl
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
@@ -377,11 +376,6 @@ class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
         # autolabel(rects1)
         # autolabel(rects2)
         # autolabel(rects3)
-
-
-
-
-
 
 
     def closeIndicatorsChart(self):

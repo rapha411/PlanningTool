@@ -22,9 +22,8 @@
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
 from PyQt4.QtGui import QAction, QIcon, QToolBar, QComboBox, QColor
-#from PyQt4 import QtGui, QtCore, uic
-from . import utility_functions as uf
-
+#from . import utility_functions as uf
+import utility_functions as uf
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -489,7 +488,7 @@ class PlanningToolClass:
     def zoomToMunicipality(self):
 
         # get the Housing_Projects layer
-        layer = uf.getLegendLayerByName(self.iface, "Housing_Projects")
+        layer = uf.getLegendLayerByName(self.iface, "Municipalities NH")
         # remove current selections on this layer
         layer.removeSelection()
         # get the currently selected item in the municipality combo box
