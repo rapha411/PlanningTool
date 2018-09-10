@@ -30,7 +30,8 @@ import resources
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import IndicatorsChartDocked
-from planning_tool_dockwidget import IndicatorsChart, HousingInput, InfrastructureInput
+from planning_tool_dockwidget import HousingInput, InfrastructureInput
+#from planning_tool_dockwidget import IndicatorsChart
 from nearest_feature_map_tool import NearestFeatureMapTool
 
 import os.path
