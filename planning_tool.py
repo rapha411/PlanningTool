@@ -29,7 +29,7 @@ import utility_functions as uf
 import resources
 
 # Import the code for the DockWidget
-#from planning_tool_dockwidget import PlanningToolClassDockWidget
+from planning_tool_dockwidget import IndicatorsChartDocked
 from planning_tool_dockwidget import IndicatorsChart, HousingInput, InfrastructureInput
 from nearest_feature_map_tool import NearestFeatureMapTool
 
@@ -325,7 +325,7 @@ class PlanningToolClass:
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file9.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file10.qgs')
 
 
         # check if file exists
@@ -583,9 +583,13 @@ class PlanningToolClass:
 
 
     def openIndicatorsChart(self):
-        self.ic = IndicatorsChart(self.iface)
+        #self.ic = IndicatorsChart(self.iface)
+        self.ic = IndicatorsChartDocked(self.iface)
+        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.ic)
         self.ic.show()
-        self.ic.move(QPoint(100, 150))
+        #self.ic.move(QPoint(100, 150))
+        #self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+
 
 
         # # get start point from location layer
@@ -606,8 +610,3 @@ class PlanningToolClass:
         #     address = str(feature.attributes()[3])
         #     phone = str(feature.attributes()[4])
 
-
-    # def openInfrastructureInput(self):
-    #     self.nd = IndicatorsDialog(self.iface)
-    #     self.nd.show()
-    #     self.nd.move(QPoint(150, 150))
