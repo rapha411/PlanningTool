@@ -488,7 +488,7 @@ class PlanningToolClass:
     def zoomToMunicipality(self):
 
         # get the Housing_Projects layer
-        layer = uf.getLegendLayerByName(self.iface, "Municipalities NH")
+        layer = uf.getLegendLayerByName(self.iface, "Housing_Projects")
         # remove current selections on this layer
         layer.removeSelection()
         # get the currently selected item in the municipality combo box
