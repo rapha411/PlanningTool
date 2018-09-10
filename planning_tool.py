@@ -29,8 +29,10 @@ import utility_functions as uf
 import resources
 
 # Import the code for the DockWidget
-from planning_tool_dockwidget import PlanningToolClassDockWidget
+#from planning_tool_dockwidget import PlanningToolClassDockWidget
 from planning_tool_dockwidget import IndicatorsChart, HousingInput, InfrastructureInput
+from nearest_feature_map_tool import NearestFeatureMapTool
+
 import os.path
 
 
@@ -474,9 +476,6 @@ class PlanningToolClass:
 
 
 
-
-
-
     def zoomToInfrastructureInvestments(self):
 
 
@@ -555,6 +554,11 @@ class PlanningToolClass:
 
 
     def openInfrastructureInput(self):
+
+        # # Create a new NearestFeatureMapTool and keep reference
+        # self.nearestFeatureMapTool = \
+        #     NearestFeatureMapTool(self.iface.mapCanvas())
+        # self.iface.mapCanvas().setMapTool(self.nearestFeatureMapTool)
 
         layer = self.iface.activeLayer()
         investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
