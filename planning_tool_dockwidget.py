@@ -64,7 +64,6 @@ FORM_HOUSING, _ = uic.loadUiType(os.path.join(
 FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
 
-
 class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
     def __init__(self, iface, parent=None):
 
@@ -209,13 +208,13 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         if len(temp1) != 1:
             return
         self.id = temp1[0]
-        print "die project ID aus QGIS: ", self.id
+        #print "die project ID aus QGIS: ", self.id
 
         # get excel row by id of project id from QGIS
         self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
         self.sheet_name = 'INPUT - Infra Projects'
         excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
-        print "excel id: ", excel_id
+        #print "excel id: ", excel_id
 
 
         iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
