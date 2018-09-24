@@ -4,12 +4,13 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 
 import openpyxl
-import win32com.client
+#import win32com.client
 import io
 import xlwings as xw
 
 
-excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_data.xlsm"
+#excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_data.xlsm"
+excel_file = "/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/excel_data.xlsm"
 
 # change cell P21 from 0 to 1 (and vice versa), and the value in E2 should change
 # P21 = 1 -> E2 = 0.0031
@@ -30,9 +31,9 @@ excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_dat
 book = xw.Book(excel_file)
 #book.set_mock_caller()
 # Do stuff with the info in the book
-#input = 'INPUT - Infra Projects'
-#book.sheets[input].range('P21').value = 1
-#output = 'Indicator 1 Accessibility'
+input = 'INPUT - Infra Projects'
+book.sheets[input].range('P21').value = 1
+output = 'Indicator 1 Accessibility'
 #val = book.sheets[output].range('E2').value
 
 
@@ -40,11 +41,11 @@ book = xw.Book(excel_file)
 #wb = xw.Book  (excel_file)
 
 #sheet I would like to modify
-#sht = wb.sheets[output]
+sht = book.sheets[output]
 
-#val = sht.range('E2').value
+val = sht.range('E2').value
 
-#print val
+print val
 
 
 

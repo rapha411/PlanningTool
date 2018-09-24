@@ -85,9 +85,7 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
         self.okHousing.clicked.connect(self.submitHousingInput)
         self.closeHousing.clicked.connect(self.closeHousingInput)
 
-
-
-        # # generate canvas clicked signal here so it uses the right canvas
+        # # generate canvas clicked signal here
         # self.emitPoint = QgsMapToolEmitPoint(self.canvas)
         # self.emitPoint.canvasClicked.connect(self.selectNearestFeature)
         #
@@ -98,8 +96,6 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
     def submitHousingInput(self):
         # save in excel sheet
         self.hide()
-
-
 
     # def selectNearestFeature(self, mouseEvent):
     #     """
@@ -167,14 +163,9 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
     #     layerWithClosestFeature, closestFeatureId, shortestDistance = layerData[0]
     #     layerWithClosestFeature.select(closestFeatureId)
 
-
-
-
-
     def closeHousingInput(self):
         self.hide()
 
-# test test
 
 class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
     def __init__(self, iface, parent=None):
@@ -216,7 +207,7 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
         #print "excel id: ", excel_id
 
-
+        # get values with openpyxl
         iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
         iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
         iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
@@ -225,6 +216,14 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
         iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
 
+        # # get values with xlwings
+        # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+        # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+        # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+        # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+        # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+        # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+        # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
 
 
         if iC == 1:
@@ -248,9 +247,10 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         iC2 = self.inputNo.isChecked()
         iA = self.inputAmsterdam.text()
         iE = self.inputEdam.text()
+        iH = self.inputHoorn.text()
         iP = self.inputPurmerend.text()
         iZ = self.inputZaanstad.text()
-        iH = self.inputProvince.text()
+        iPr = self.inputProvince.text()
         iM = self.inputMinistry.text()
 
 
@@ -258,8 +258,7 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         #column depending on which input field
 
 
-        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
-                                         keep_vba=True)  # to open the excel sheet and if it has macros
+        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
         sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
 
         # project id is at row+2 in excel, thats why I need to introduce this skip variable
@@ -274,17 +273,19 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
             return
         sheet['Q'+str(self.id+k)] = float(iA)
         sheet['R'+str(self.id+k)] = float(iE)
-        sheet['S'+str(self.id+k)] = float(iP)
-        sheet['T'+str(self.id+k)] = float(iZ)
-        sheet['U'+str(self.id+k)] = float(iH)
-        sheet['V'+str(self.id+k)] = float(iM)
+        sheet['S'+str(self.id+k)] = float(iH)
+        sheet['T'+str(self.id+k)] = float(iP)
+        sheet['U'+str(self.id+k)] = float(iZ)
+        sheet['V'+str(self.id+k)] = float(iPr)
+        sheet['W'+str(self.id+k)] = float(iM)
 
         srcfile.save(self.excel_file)
+        print 'new values saved'
 
         #IndicatorsChartDocked(self.iface).refreshPlot()
 
         # close input window
-        self.hide()
+        #self.hide()
 
 
 
