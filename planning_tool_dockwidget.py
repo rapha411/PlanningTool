@@ -65,7 +65,7 @@ FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
 
 class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
-    def __init__(self, iface, parent=None):
+    def __init__(self, iface, parent=None, chart=None):
 
         super(HousingInput, self).__init__(parent)
 
@@ -168,7 +168,7 @@ class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
 
 
 class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
-    def __init__(self, iface, parent=None):
+    def __init__(self, iface, parent=None, chart=None):
 
         super(InfrastructureInput, self).__init__(parent)
 
@@ -181,13 +181,11 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
 
         self.iface = iface
 
+        self.chart = chart
+
         #signal slot for closing indicator window
         self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
         self.okInfrastructure.clicked.connect(self.saveValue)
-        #### TODO: CONTINUE HERE:
-        # for some reason, once the following line is activated its doesn't save values anymore
-        # this is not the problem of two actions for one signal slot, as it also happens when I add the refresh plot action at the end of the saveValue method
-        #self.okInfrastructure.clicked.connect(IndicatorsChartDocked(self.iface).refreshPlot)
 
 
         # get project ID and corresponding data from excel sheet
@@ -282,7 +280,9 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         srcfile.save(self.excel_file)
         print 'new values saved'
 
-        #IndicatorsChartDocked(self.iface).refreshPlot()
+        # TODO: this works now, but it adds a new widget to the chart widget, obviously because thats what I do in refresh plot
+        self.chart.refreshPlot()
+
 
         # close input window
         #self.hide()
@@ -296,13 +296,14 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         row_start = row_start+k
         if row_end == None:
             row_end = row_start
-        excel_file = openpyxl.load_workbook(filepath, read_only=True,
-                                            keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = excel_file.get_sheet_by_name(sheetname)
+        source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = source_file.get_sheet_by_name(sheetname)
         data = []
         for i in range(row_start, row_end + 1):
             val = float(sheet[col + str(i)].value)
             data.append(val)
+
+        source_file.save(self.excel_file)
         return np.array(data)
 
 
@@ -485,11 +486,14 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         #signal slot for closing indicator window
         #self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
 
+
         self.refreshPlot()
 
     def refreshPlot(self):
         ### INDICATORS
-        excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+
+        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+
 
         print "refreshing plot"
 
@@ -497,48 +501,50 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         sheet_name = 'INPUT - Infra Projects'
         ## Transit accesibility
         c = []
-        af = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
-        aj = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        af = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
+        aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
         ak = aj * 0.01
-        p = self.getValue(filepath=excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
         ar = p * af * ak
         c.append(sum(ar))
         # c4
-        ag = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
+        ag = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
         as1 = p * ag * ak
         c.append(sum(as1))
         # c5
-        ah = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
+        ah = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
         at = p * ah * ak
         c.append(sum(at))
         # c6
-        ai = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
+        ai = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
         au = p * ai * ak
         c.append(sum(au))
         ## Car accesibility
         d = []
         # d3
-        aa = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
-        aj = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        aa = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
+        aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
         ak = aj * 0.01
-        p = self.getValue(filepath=excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
         aw = p * aa * ak
         d.append(sum(aw))
         # d4
-        ab = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
+        ab = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
         ax = p * ab * ak
         d.append(sum(ax))
         # d5
-        ac = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
+        ac = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
         ay = p * ac * ak
         d.append(sum(ay))
         # d6
-        ad = self.getValue(filepath=excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
+        ad = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
         az = p * ad * ak
         d.append(sum(az))
 
         cd = np.add(c, d)
         accesibility = np.append(cd, np.mean(cd))
+
+        print accesibility
 
 
         ### Market Balance
@@ -550,15 +556,17 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
 
 
         ### PLOT
-        # add matplotlib Figure to chartFrame
+        # first clear the Figure() from the chartView layout,
+        # so a new one will be printed when function is run several times
+        for i in reversed(range(self.chartView.count())):
+            self.chartView.itemAt(i).widget().setParent(None)
+
+        # add matplotlib Figure to chartFrame / chartView layout
         self.chart_figure = Figure()
-
         #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
-
-
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.chartView.addWidget(self.chart_canvas)
-
+        # plot the subplots
         self.plotChart(self.chart_figure.add_subplot(311), accesibility, "Accessibility", 'b')
         self.plotChart(self.chart_figure.add_subplot(312), market_balance, "Market Balance", 'g')
         self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
@@ -570,21 +578,23 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         self.chart_figure.patch.set_alpha(0.0)
         #self.chart_figure.patch.set_facecolor('red')
 
+
         return
 
     def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
-        excel_file = openpyxl.load_workbook(filepath, read_only=True,
-                                            keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = excel_file.get_sheet_by_name(sheetname)
+        source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = source_file.get_sheet_by_name(sheetname)
         data = []
         for i in range(row_start, row_end + 1):
             val = float(sheet[col + str(i)].value)
             data.append(val)
+        source_file.save(self.excel_file)
         return np.array(data)
 
 
     def plotChart(self, ax, indicator, indicator_name, color):
 
+        ax.cla()
 
         N = len(indicator)
         ind = np.arange(N)  # the x locations for the groups
@@ -623,7 +633,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
                 height = rect.get_height()
                 if np.mean(indicator) < 0:
                     height = -height
-                print height
                 ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
                         '%.3f' % float(height),
                         ha='center', va='bottom')

@@ -87,6 +87,9 @@ class PlanningToolClass:
         self.dockwidget = None
 
 
+        self.ic = IndicatorsChartDocked(self.iface)
+
+
     # noinspection PyMethodMayBeStatic
     def transl(self, message):
         """Get the translation for a string using Qt translation API.
@@ -544,9 +547,9 @@ class PlanningToolClass:
             return
 
         if len(projectName) == 1:
-            self.hi = HousingInput(self.iface)
+            self.hi = HousingInput(self.iface, chart=self.ic)
             self.hi.show()
-            self.hi.move(QPoint(950, 150))
+            self.hi.move(QPoint(450, 150))
             self.hi.naamplanLabel.setText(str(projectName[0]))
             self.hi.packageLabel.setText('PACKAGE ' + str(package[0][-1:]))
         else:
@@ -561,6 +564,8 @@ class PlanningToolClass:
         #     NearestFeatureMapTool(self.iface.mapCanvas())
         # self.iface.mapCanvas().setMapTool(self.nearestFeatureMapTool)
 
+
+
         layer = self.iface.activeLayer()
         investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
         package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
@@ -573,41 +578,24 @@ class PlanningToolClass:
             return
 
         if len(investmentName) == 1:
-            self.ii = InfrastructureInput(self.iface)
+            self.ii = InfrastructureInput(self.iface, chart=self.ic)
             self.ii.show()
-            self.ii.move(QPoint(950, 150))
+            self.ii.move(QPoint(450, 150))
             self.ii.investmentLabel.setText(str(investmentName[0]))
             self.ii.packageLabel2.setText('PACKAGE ' + str(package[0][-1:]))
+            # TODO: continue here: this doesn't work. Its about the WindowStaysOnTopHint, which Gustavo wants
+            #self.ii.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint)
+            #self.ii.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         else:
             uf.showMessage(self.iface, "please select exactly one infrastructure project", type='Info', lev=1, dur=5)
 
 
 
     def openIndicatorsChart(self):
-        #self.ic = IndicatorsChart(self.iface)
-        self.ic = IndicatorsChartDocked(self.iface)
+        #self.ic = IndicatorsChart(self.iface)  #old
+        #self.ic = IndicatorsChartDocked(self.iface)    #new
+        #self.ic is now already initialized at the initialization of the plugin, as it needs to be passed to the input forms, even if it has not yet been opened
         self.iface.addDockWidget(Qt.RightDockWidgetArea, self.ic)
         self.ic.show()
         #self.ic.move(QPoint(100, 150))
         #self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
-
-
-
-        # # get start point from location layer
-        # location_layer = uf.getLegendLayerByName(self.iface, "Location")
-        # startFeat = uf.getLastFeature(location_layer)
-        # startPoint = startFeat.geometry().centroid().asPoint()
-        #
-        # # populate table
-        # values = []
-        # # only use the first attribute in the list
-        # for feature in emergency_layer.getFeatures():
-        #
-        #     dist = feature.geometry().distance(QgsGeometry.fromPoint(startPoint))
-        #     dist = dist/1000
-        #     name = str(feature.attributes()[1])
-        #     type = str(feature.attributes()[0])
-        #     nOfPeople = str(feature.attributes()[2])
-        #     address = str(feature.attributes()[3])
-        #     phone = str(feature.attributes()[4])
-
