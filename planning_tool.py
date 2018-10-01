@@ -87,9 +87,6 @@ class PlanningToolClass:
         self.dockwidget = None
 
 
-        self.ic = IndicatorsChartDocked(self.iface)
-
-
     # noinspection PyMethodMayBeStatic
     def transl(self, message):
         """Get the translation for a string using Qt translation API.
@@ -311,9 +308,11 @@ class PlanningToolClass:
             # self.dockwidget.setWindowTitle("Planning Tool")
             # self.dockwidget.show()
 
+            # initialise IndicatorsChart widget here
+            self.ic = IndicatorsChartDocked(self.iface)
+
             self.zoomToInfrastructureInvestments()
 
-            #uf.showMessage(self.iface, 'Close main plugin window on the right to go back to QGIS', type='Info', lev=0, dur=10)
 
 
 

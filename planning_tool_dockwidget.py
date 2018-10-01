@@ -184,6 +184,8 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         self.chart = chart
 
         #signal slot for closing indicator window
+        # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
+        # their, before the input windows was opened
         self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
         self.okInfrastructure.clicked.connect(self.saveValue)
 
@@ -280,7 +282,6 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         srcfile.save(self.excel_file)
         print 'new values saved'
 
-        # TODO: this works now, but it adds a new widget to the chart widget, obviously because thats what I do in refresh plot
         self.chart.refreshPlot()
 
 
