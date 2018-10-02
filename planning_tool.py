@@ -81,7 +81,7 @@ class PlanningToolClass:
         self.planning_toolbar.setObjectName(u'mRGMSToolbar')
 
 
-        # print "** INITIALIZING PlanningToolClass"
+        print "** INITIALIZING PlanningToolClass"
 
         self.pluginIsActive = False
         self.dockwidget = None
@@ -198,6 +198,7 @@ class PlanningToolClass:
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
 
+        # TODO: this is only printed when the plugin is reopened, is that correct?
         print "** CLOSING PlanningToolClass"
 
         # disconnects
@@ -210,7 +211,6 @@ class PlanningToolClass:
             self.iface.removePluginMenu(
                 self.transl(u'&Regional Game Mobiele Stad'),
                 action)
-            print action
             #self.iface.removeToolBarIcon(action)       # this was the old syntax which doesn't work
             self.planning_toolbar.removeAction(action)
 
@@ -220,9 +220,7 @@ class PlanningToolClass:
 
         # toolbars that were present before opening plugin are restored here
         for i, toolbar in enumerate(self.toolbars0):
-            print toolbar.objectName()
             toolbar.setVisible(self.toolbars0_visible[i])
-            print self.toolbars0_visible[i]
 
         ### layer tree icon size
         self.iface.layerTreeView().setIconSize(self.tree_size)

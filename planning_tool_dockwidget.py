@@ -48,9 +48,14 @@ import processing
 import random
 import numpy as np
 import openpyxl
+import xlwings as xw
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+
+
+
+
 
 FORM_BASE, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
@@ -215,6 +220,9 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
         iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
         iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+        # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
+        #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+
 
         # # get values with xlwings
         # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
@@ -306,7 +314,6 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
 
         source_file.save(self.excel_file)
         return np.array(data)
-
 
 
     def closeInfrastructureInput(self):
@@ -490,6 +497,29 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
 
         self.refreshPlot()
 
+    def getValue_xlwings(self, filename, sheet, cells):
+        # # # run Excel with xlwings
+        # # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
+        # # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
+        #
+        app = xw.App(visible=False)
+        book = app.books.open(filename)
+        #book = xw.Book(filename)
+        #app = xw.apps.active
+
+        ##get new value based on UDF (user defined function)
+        vals = []
+        for cell in cells:
+            vals.append(book.sheets[sheet].range(cell).value)
+
+        book.close()  # Ya puedo cerrar el libro.
+        #app.kill()
+
+        # return value
+        return np.asarray(vals)
+        #return [-1035, -1907, -3106, -7902, -3487]
+
+
     def refreshPlot(self):
         ### INDICATORS
 
@@ -499,61 +529,64 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         print "refreshing plot"
 
         ### ACCESIBILITY
-        sheet_name = 'INPUT - Infra Projects'
-        ## Transit accesibility
-        c = []
-        af = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
-        aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
-        ak = aj * 0.01
-        p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
-        ar = p * af * ak
-        c.append(sum(ar))
-        # c4
-        ag = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
-        as1 = p * ag * ak
-        c.append(sum(as1))
-        # c5
-        ah = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
-        at = p * ah * ak
-        c.append(sum(at))
-        # c6
-        ai = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
-        au = p * ai * ak
-        c.append(sum(au))
-        ## Car accesibility
-        d = []
-        # d3
-        aa = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
-        aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
-        ak = aj * 0.01
-        p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
-        aw = p * aa * ak
-        d.append(sum(aw))
-        # d4
-        ab = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
-        ax = p * ab * ak
-        d.append(sum(ax))
-        # d5
-        ac = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
-        ay = p * ac * ak
-        d.append(sum(ay))
-        # d6
-        ad = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
-        az = p * ad * ak
-        d.append(sum(az))
+        # sheet_name = 'INPUT - Infra Projects'
+        # ## Transit accesibility
+        # c = []
+        # af = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
+        # aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        # ak = aj * 0.01
+        # p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        # ar = p * af * ak
+        # c.append(sum(ar))
+        # # c4
+        # ag = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
+        # as1 = p * ag * ak
+        # c.append(sum(as1))
+        # # c5
+        # ah = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
+        # at = p * ah * ak
+        # c.append(sum(at))
+        # # c6
+        # ai = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
+        # au = p * ai * ak
+        # c.append(sum(au))
+        # ## Car accesibility
+        # d = []
+        # # d3
+        # aa = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
+        # aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
+        # ak = aj * 0.01
+        # p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
+        # aw = p * aa * ak
+        # d.append(sum(aw))
+        # # d4
+        # ab = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
+        # ax = p * ab * ak
+        # d.append(sum(ax))
+        # # d5
+        # ac = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
+        # ay = p * ac * ak
+        # d.append(sum(ay))
+        # # d6
+        # ad = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
+        # az = p * ad * ak
+        # d.append(sum(az))
+        #
+        # cd = np.add(c, d)
+        # accesibility = np.append(cd, np.mean(cd))
 
-        cd = np.add(c, d)
-        accesibility = np.append(cd, np.mean(cd))
-
-        print accesibility
-
-
-        ### Market Balance
-        market_balance = [-1035, -1907, -3106, -7902, -3487]
-
+        ### Accesibility
+        accesibility = self.getValue_xlwings(self.excel_file, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
+        accesibility = np.append(accesibility, np.mean(accesibility))
 
         ### Market Balance
-        finances = [-5.01, 0, -35.2, 0, 0, 0]
+        market_balance = np.asarray([-1035, -1907, -3106, -7902, -3487])
+        #market_balance = self.getValue_xlwings(self.excel_file, 'Indicator 2 Market balance', ['E3', 'E4', 'E5', 'E6', 'E7'])
+
+        ### Market Balance
+        finances = np.asarray([-5.01, 0, -35.2, 0, 0, 0])
+        #finances = self.getValue_xlwings(self.excel_file, 'Indicator 3 Finances', ['E3', 'E4', 'E5', 'E6', 'E7', 'E8'])
+
 
 
         ### PLOT
@@ -579,18 +612,17 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         self.chart_figure.patch.set_alpha(0.0)
         #self.chart_figure.patch.set_facecolor('red')
 
-
         return
 
-    def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
-        source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = source_file.get_sheet_by_name(sheetname)
-        data = []
-        for i in range(row_start, row_end + 1):
-            val = float(sheet[col + str(i)].value)
-            data.append(val)
-        source_file.save(self.excel_file)
-        return np.array(data)
+    # def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
+    #     source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
+    #     sheet = source_file.get_sheet_by_name(sheetname)
+    #     data = []
+    #     for i in range(row_start, row_end + 1):
+    #         val = float(sheet[col + str(i)].value)
+    #         data.append(val)
+    #     source_file.save(self.excel_file)
+    #     return np.array(data)
 
 
     def plotChart(self, ax, indicator, indicator_name, color):
@@ -632,8 +664,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
             """
             for rect in rectangle:
                 height = rect.get_height()
-                if np.mean(indicator) < 0:
-                    height = -height
                 ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
                         '%.3f' % float(height),
                         ha='center', va='bottom')
