@@ -4,7 +4,7 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 
 import openpyxl
-import win32com.client
+#import win32com.client
 import io
 import xlwings as xw
 
@@ -21,44 +21,45 @@ startTime = datetime.now()
 
 
 
-# def saveValue(filename, sheet, cells, vals):
-#     # # run Excel with xlwings
-#     # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
-#     # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
-#
-#     app = xw.App(visible=False)  # not necessary
-#     book = app.books.open(filename)
-#     # book = xw.Book(filename)
-#     # app = xw.apps.active
-#
-#     # set new value
-#     for i,cell in enumerate(cells):
-#         book.sheets[sheet].range(cell).value = val[i]
-#     book.save(filename)
-#     book.close()  # Ya puedo cerrar el libro.
-#     # app.kill()
-#
-#     # return value
-#     return 0
-
-
-def getValue(filename, sheet, cells):
+def saveValue(app, filename, sheet, cells, vals):
     # # run Excel with xlwings
     # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
     # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
 
-    app = xw.App(visible=False) # not necessary
-    book=app.books.open(filename)
+    #app = xw.App(visible=False)  # not necessary
+    book = app.books.open(filename)
     # book = xw.Book(filename)
     # app = xw.apps.active
+
+    # set new value
+    for i,cell in enumerate(cells):
+        book.sheets[sheet].range(cell).value = val[i]
+    book.save()
+    # book.close()  # Ya puedo cerrar el libro.
+    # # app.kill()
+
+    # return value
+    return 0
+
+
+def getValue(app, filename, sheet, cells):
+    # # run Excel with xlwings
+    # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
+    # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
+
+    # app = xw.App(visible=False)  # not necessary
+    book = app.books.open(filename)
+    # book = xw.Book(filename)
+    # app = xw.apps.active
+
 
     # get new value based on UDF (user defined function)
     vals = []
     for cell in cells:
         vals.append(book.sheets[sheet].range(cell).value)
 
-    book.close()  # Ya puedo cerrar el libro.
-    app.kill()
+    book.close()
+    # app.kill()
 
     # return value
     return vals
@@ -99,28 +100,36 @@ def saveValue2(filename, sheet, cells, vals):
 
 
 
-excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_data.xlsm"
-#excel_file = "/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/excel_data.xlsm"
+#excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_data.xlsm"
+excel_file = "/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/excel_data.xlsm"
+
+app = xw.App(visible=False)  # not necessary
+#book = app.books.open(excel_file)
 
 sheet_input = 'INPUT - Infra Projects'
-cell_input = ['P21', 'P10', 'P31', 'P14']
-val = [0, 0, 1, 1]
-#saveValue2(excel_file, sheet_input, cell_input, val)
+cell_input = ['P21']
+val = [0]
+saveValue2(excel_file, sheet_input, cell_input, val)
 
 
 sheet_output = 'Indicator 1 Accessibility'
-cell_output = ['E2', 'E3', 'E4', 'E5', 'E6']
+cell_output = ['E2']
 # get value is now done with xlwings,
 # because openpyxl obviously doesn't refresh data, and win32com doesn't work on OSX
-print getValue(excel_file, sheet_output, cell_output)
+print getValue(app, excel_file, sheet_output, cell_output)
+
+
+
 
 
 # timing
 print datetime.now() - startTime
 
-# run this if excel doesn't open
-app = xw.apps.active
 app.kill()
+
+# # run this if excel doesn't open
+# app = xw.apps.active
+# app.kill()
 
 
 a=5

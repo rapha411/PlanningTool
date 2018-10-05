@@ -28,6 +28,11 @@ import utility_functions as uf
 # Initialize Qt resources from file resources.py
 import resources
 
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+
+import xlwings as xw
+
 # Import the code for the DockWidget
 from planning_tool_dockwidget import IndicatorsChartDocked
 from planning_tool_dockwidget import HousingInput, InfrastructureInput
@@ -84,8 +89,9 @@ class PlanningToolClass:
         print "** INITIALIZING PlanningToolClass"
 
         self.pluginIsActive = False
-        self.dockwidget = None
+        self.ic = None
 
+        self.app = None
 
     # noinspection PyMethodMayBeStatic
     def transl(self, message):
@@ -231,6 +237,11 @@ class PlanningToolClass:
         #self.iface.addToolBar(self.planning_toolbar)
         #TODO: what needs to be done here instead is simply docking self.planning_toolbar, but I cannot seems to get that done.
 
+        # close excel sheet
+        if self.app:
+            self.app.kill()
+
+
         self.pluginIsActive = False
 
 
@@ -288,15 +299,15 @@ class PlanningToolClass:
             self.updateToolbar()
 
 
-            # # dockwidget may not exist if:
-            # #    first run of plugin
-            # #    removed on close (see self.onClosePlugin method)
-            # if self.dockwidget == None:
+            # dockwidget may not exist if:
+            #    first run of plugin
+            #    removed on close (see self.onClosePlugin method)
+            # if self.ic == None:
             #     # Create the dockwidget (after translation) and keep reference
-            #     self.dockwidget = PlanningToolClassDockWidget(self.iface)
+            #     self.ic = IndicatorsChartDocked(self.iface, self.book)
             #     #self.dockwidget2 = IndicatorsDialog(self.dockwidget)
             #
-            # # connect to provide cleanup on closing of dockwidget
+            # connect to provide cleanup on closing of dockwidget
             # self.dockwidget.closingPlugin.connect(self.onClosePlugin)
             #
             # # show the dockwidget
@@ -306,16 +317,21 @@ class PlanningToolClass:
             # self.dockwidget.setWindowTitle("Planning Tool")
             # self.dockwidget.show()
 
+
+
+
+            # prepare excel file
+            #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+            self.app = xw.App(visible=False)
+            #self.book = self.app.books.open(self.excel_file)
+
+
             # initialise IndicatorsChart widget here
-            self.ic = IndicatorsChartDocked(self.iface)
+            self.ic = IndicatorsChartDocked(self.iface, app=self.app)
+
+
 
             self.zoomToInfrastructureInvestments()
-
-
-
-
-
-
 
 
 
@@ -529,6 +545,8 @@ class PlanningToolClass:
         self.canvas.refresh()
 
 
+
+#### open dialogs:
 
     def openHousingInput(self):
 
