@@ -90,8 +90,8 @@ class PlanningToolClass:
 
         self.pluginIsActive = False
         self.ic = None
-
         self.app = None
+        self.book = None
 
     # noinspection PyMethodMayBeStatic
     def transl(self, message):
@@ -238,7 +238,8 @@ class PlanningToolClass:
         #TODO: what needs to be done here instead is simply docking self.planning_toolbar, but I cannot seems to get that done.
 
         # close excel sheet
-        if self.app:
+        if self.book:
+            self.book.close()
             self.app.kill()
 
 
@@ -317,21 +318,34 @@ class PlanningToolClass:
             # self.dockwidget.setWindowTitle("Planning Tool")
             # self.dockwidget.show()
 
-
+            # TODO: not working anymore with the new QGIS project file,
+            # thus also the "home" button in the toolbar not working anymore
+            #self.zoomToInfrastructureInvestments()
 
 
             # prepare excel file
-            #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+            self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
             self.app = xw.App(visible=False)
-            #self.book = self.app.books.open(self.excel_file)
-
+            self.book = self.app.books.open(self.excel_file)
 
             # initialise IndicatorsChart widget here
-            self.ic = IndicatorsChartDocked(self.iface, app=self.app)
+            if self.ic == None:
+                # Create the dockwidget (after translation) and keep reference
+                self.ic = IndicatorsChartDocked(self.iface, book=self.book)
+
+            # connect to provide cleanup on closing of dockwidget
+            self.ic.closingPlugin.connect(self.onClosePlugin)
+
+            # show the dockwidget
+            self.iface.addDockWidget(Qt.RightDockWidgetArea, self.ic)
+
+            self.ic.setWindowTitle(self.transl(u'&Regional Game Mobiele Stad'))
+            self.ic.show()
+
+            #self.ic = IndicatorsChartDocked(self.iface, book=self.book)
 
 
 
-            self.zoomToInfrastructureInvestments()
 
 
 
@@ -342,7 +356,7 @@ class PlanningToolClass:
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file10.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file20.qgs')
 
 
         # check if file exists
@@ -400,7 +414,7 @@ class PlanningToolClass:
         self.municipalityCombo.setToolTip("Municipalities")
         self.actions.append(self.municipalityComboAction)
 
-        layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Projects")
+        layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Plans")
 
         idx = layer_housing.fieldNameIndex('GEMEENTE')
         municipalities = layer_housing.uniqueValues(idx)
@@ -500,11 +514,10 @@ class PlanningToolClass:
         uf.zoomToLayer(self.iface, "Infrastructure_Investments")
 
 
-
     def zoomToMunicipality(self):
 
         # get the Housing_Projects layer
-        layer = uf.getLegendLayerByName(self.iface, "Housing_Projects")
+        layer = uf.getLegendLayerByName(self.iface, "Housing_Plans")
         # remove current selections on this layer
         layer.removeSelection()
         # get the currently selected item in the municipality combo box
@@ -523,7 +536,7 @@ class PlanningToolClass:
     def zoomToPackage(self):
 
         # get the Housing_Projects layer
-        layer1 = uf.getLegendLayerByName(self.iface, "Housing_Projects")
+        layer1 = uf.getLegendLayerByName(self.iface, "Housing_Plans")
         layer2 = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
         # remove current selections on this layer
         layer1.removeSelection()
@@ -554,7 +567,7 @@ class PlanningToolClass:
         projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
         package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
         if layer:
-            if str(layer.name()) != 'Housing_Projects':
+            if str(layer.name()) != 'Housing_Plans':
                 uf.showMessage(self.iface, "please select a housing project first", type='Info', lev=1, dur=5)
                 return
         else:

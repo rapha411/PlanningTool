@@ -191,7 +191,7 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         #signal slot for closing indicator window
         # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
         # their, before the input windows was opened
-        self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
+        #self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
         self.okInfrastructure.clicked.connect(self.saveValue)
 
 
@@ -322,15 +322,11 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         self.hide()
 
 
-# class IndicatorsChart(QtGui.QDialog, FORM_INDICATORS):
-#     pass
-
-
-
 class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
 
+    closingPlugin = pyqtSignal()
 
-    def __init__(self, iface, parent=None, app=None):
+    def __init__(self, iface, parent=None, book=None):
 
         super(IndicatorsChartDocked, self).__init__(parent)
 
@@ -343,23 +339,144 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
 
         self.iface = iface
 
-        self.app = app
-        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+        self.book = book
+        #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
 
         #signal slot for closing indicator window
         #self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
 
 
+
+        # generate the plot
+        #self.refreshPlot()
+
+
+
+        ## infrastructure input
+        # signal slot for closing indicator window
+        # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
+        # their, before the input windows was opened
+        self.okInfrastructure.clicked.connect(self.saveValue)
+
+
+        # get project ID and corresponding data from excel sheet
+        self.layer = self.iface.activeLayer()
+        # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
+        # thas where the +4 in the getValue call below is coming from
+        temp1, temp2 = uf.getFieldValues(self.layer, 'id', null=False, selection=True)
+        # guard for when not exactly one project is selected
+        if len(temp1) != 1:
+            #return
+            pass
+        # self.id = temp1[0]
+        temp1 = None
+        temp2 = None
+        # print "die project ID aus QGIS: ", self.id
+
+        # get excel row by id of project id from QGIS
+        #excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
+        # print "excel id: ", excel_id
+
+        # # get values with openpyxl
+        # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+        # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+        # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+        # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+        # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+        # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+        # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+        # # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
+        # #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+
+
+        ## get values with xlwings
+        #vals = self.getValue_xlwings(self.app, self.excel_file, 'INPUT - Infra Projects', ['P21','P21','P21','P21','P21','P21','P21'])
+        # iC = vals[0]
+        # iA = vals[1]
+        # iE = vals[2]
+        # iP = vals[3]
+        # iZ = vals[4]
+        # iH = vals[5]
+        # iM = vals[6]
+
+        iC = 1
+        iA = 0.4
+        iE = 0.2
+        iP = 0.1
+        iZ = 3.2
+        iH = 0.2
+        iM = 10.
+
+        print str(iA)
+
+
+        if iC == 1:
+            self.inputYes.setChecked(True)
+        else:
+            self.inputNo.setChecked(True)
+
+        self.inputAmsterdam.setText(str(iA))
+        self.inputEdam.setText(str(iE))
+        self.inputHoorn.setText(str(iP))
+        self.inputPurmerend.setText(str(iZ))
+        self.inputZaanstad.setText(str(iH))
+        self.inputProvince.setText(str(iM))
+
+
+
+    # save value
+    def saveValue(self):
+
+        iC = self.inputYes.isChecked()
+        iC2 = self.inputNo.isChecked()
+        iA = self.inputAmsterdam.text()
+        iE = self.inputEdam.text()
+        iH = self.inputHoorn.text()
+        iP = self.inputPurmerend.text()
+        iZ = self.inputZaanstad.text()
+        iPr = self.inputProvince.text()
+        iM = self.inputMinistry.text()
+
+        # take from input field and save to excel file, depending on polygonID = row in excel file
+        # column depending on which input field
+
+
+        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
+                                         keep_vba=True)  # to open the excel sheet and if it has macros
+        sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
+
+        # project id is at row+2 in excel, thats why I need to introduce this skip variable
+        k = 2
+        if iC == True and iC2 == False:
+            sheet['P' + str(self.id + k)] = 1
+        elif iC == False and iC2 == True:
+            sheet['P' + str(self.id + k)] = 0
+        else:
+            # chase case where both yes and no are checked
+            uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
+            return
+        sheet['Q' + str(self.id + k)] = float(iA)
+        sheet['R' + str(self.id + k)] = float(iE)
+        sheet['S' + str(self.id + k)] = float(iH)
+        sheet['T' + str(self.id + k)] = float(iP)
+        sheet['U' + str(self.id + k)] = float(iZ)
+        sheet['V' + str(self.id + k)] = float(iPr)
+        sheet['W' + str(self.id + k)] = float(iM)
+
+        srcfile.save(self.excel_file)
+        print 'new values saved'
+
         self.refreshPlot()
 
-    def getValue_xlwings(self, app, filename, sheet, cells):
+
+    def getValue_xlwings(self, book, sheet, cells):
         # # # run Excel with xlwings
         # # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
         # # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
         #
         # TODO: open app and book in planning_tool.py and pass to the dockwidget, same way as done for the plot dockwidget that is passed to infrastructure input class
         # app = xw.App(visible=False)
-        book = app.books.open(filename)
+        # book = app.books.open(filename)
         # #book = xw.Book(filename)
         # #app = xw.apps.active
         # app.visible = False
@@ -369,7 +486,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         for cell in cells:
             vals.append(book.sheets[sheet].range(cell).value)
 
-        book.close()
+        # book.close()
         # app.kill()
 
         # return value
@@ -433,7 +550,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         # accesibility = np.append(cd, np.mean(cd))
 
         ### Accesibility
-        accesibility = self.getValue_xlwings(self.app, self.excel_file, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
+        accesibility = self.getValue_xlwings(self.book, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
         accesibility = np.append(accesibility, np.mean(accesibility))
 
         ### Market Balance
@@ -528,8 +645,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         autolabel(rects)
 
 
-    def closeIndicatorsChart(self):
-        self.hide()
+    def closeEvent(self, event):
+        self.closingPlugin.emit()
+        event.accept()
 
 
 

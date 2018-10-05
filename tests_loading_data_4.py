@@ -7,6 +7,7 @@ import openpyxl
 #import win32com.client
 import io
 import xlwings as xw
+import xlrd
 
 from datetime import datetime
 startTime = datetime.now()
@@ -21,19 +22,20 @@ startTime = datetime.now()
 
 
 
-def saveValue(app, filename, sheet, cells, vals):
+def saveValue(book, sheet, cells, vals):
     # # run Excel with xlwings
     # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
     # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
 
     #app = xw.App(visible=False)  # not necessary
-    book = app.books.open(filename)
+    #book = app.books.open(filename)
     # book = xw.Book(filename)
     # app = xw.apps.active
 
+
     # set new value
     for i,cell in enumerate(cells):
-        book.sheets[sheet].range(cell).value = val[i]
+        book.sheets[sheet].range(cell).value = vals[i]
     book.save()
     # book.close()  # Ya puedo cerrar el libro.
     # # app.kill()
@@ -42,13 +44,13 @@ def saveValue(app, filename, sheet, cells, vals):
     return 0
 
 
-def getValue(app, filename, sheet, cells):
+def getValue(book, sheet, cells):
     # # run Excel with xlwings
     # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
     # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
 
     # app = xw.App(visible=False)  # not necessary
-    book = app.books.open(filename)
+    # book = app.books.open(filename)
     # book = xw.Book(filename)
     # app = xw.apps.active
 
@@ -58,7 +60,7 @@ def getValue(app, filename, sheet, cells):
     for cell in cells:
         vals.append(book.sheets[sheet].range(cell).value)
 
-    book.close()
+    # book.close()
     # app.kill()
 
     # return value
@@ -99,23 +101,51 @@ def saveValue2(filename, sheet, cells, vals):
 #     return vals
 
 
+def getValue_openpyxl(filename, sheet, cells):
+    # openpyxl, save new data to file
+    srcfile = openpyxl.load_workbook(filename, read_only=True, keep_vba=True, data_only=True)
+    sheet_input = srcfile[sheet]  # get sheetname from the file
+
+    vals = []
+    for i,cell in enumerate(cells):
+        vals.append(sheet_input[cell].value)
+
+    return vals
+
+
+# def getValue_xlrd(filename, sheet, cells):
+#     # openpyxl, save new data to file
+#     # book = openpyxl.load_workbook(filename, read_only=True, keep_vba=True)
+#     # sheet_input = srcfile[sheet]  # get sheetname from the file
+#
+#     book = xlrd.open_workbook(filename)
+#     sheet_input = book[sheet]
+#     a1 = sheet.cell_value(rowx=0, colx=0, )
+#
+#     vals = []
+#     for i,cell in enumerate(cells):
+#         vals.append(sheet_input[cell].value)
+#
+#     return vals
+
 
 #excel_file = "D:\Users\Raphael\.qgis2\python\plugins\PlanningTool\data\excel_data.xlsm"
 excel_file = "/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/excel_data.xlsm"
 
 app = xw.App(visible=False)  # not necessary
-#book = app.books.open(excel_file)
+book = app.books.open(excel_file)
 
 sheet_input = 'INPUT - Infra Projects'
 cell_input = ['P21']
 val = [0]
-saveValue2(excel_file, sheet_input, cell_input, val)
+#saveValue2(excel_file, sheet_input, cell_input, val)
 
 
 sheet_output = 'Indicator 1 Accessibility'
 cell_output = ['E2']
 # get value is now done with xlwings,
 # because openpyxl obviously doesn't refresh data, and win32com doesn't work on OSX
+print getValue_openpyxl(excel_file, sheet_output, cell_input)
 print getValue(app, excel_file, sheet_output, cell_output)
 
 

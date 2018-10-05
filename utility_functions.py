@@ -1088,6 +1088,8 @@ def zoomToLayer(iface, name):
 
     layer = getLegendLayerByName(iface, name)
 
+    print layer
+
     layer.dataProvider().updateExtents()
 
     canvas.setExtent(layer.extent())
