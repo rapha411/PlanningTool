@@ -22,8 +22,12 @@
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
 from PyQt4.QtGui import QAction, QIcon, QToolBar, QComboBox, QColor
+from qgis.gui import QgsMapTool
+
+
 #from . import utility_functions as uf
 import utility_functions as uf
+
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -34,7 +38,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 import xlwings as xw
 
 # Import the code for the DockWidget
-from planning_tool_dockwidget import IndicatorsChartDocked
+from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
 from planning_tool_dockwidget import HousingInput, InfrastructureInput
 #from planning_tool_dockwidget import IndicatorsChart
 from nearest_feature_map_tool import NearestFeatureMapTool
@@ -208,7 +212,7 @@ class PlanningToolClass:
         print "** CLOSING PlanningToolClass"
 
         # disconnects
-        #self.dockwidget.closingPlugin.disconnect(self.onClosePlugin)
+        self.ic.closingPlugin.disconnect(self.onClosePlugin)
 
         # skip first action, because it is the plugin icon itself
         iterAction = iter(self.actions)
@@ -300,24 +304,6 @@ class PlanningToolClass:
             self.updateToolbar()
 
 
-            # dockwidget may not exist if:
-            #    first run of plugin
-            #    removed on close (see self.onClosePlugin method)
-            # if self.ic == None:
-            #     # Create the dockwidget (after translation) and keep reference
-            #     self.ic = IndicatorsChartDocked(self.iface, self.book)
-            #     #self.dockwidget2 = IndicatorsDialog(self.dockwidget)
-            #
-            # connect to provide cleanup on closing of dockwidget
-            # self.dockwidget.closingPlugin.connect(self.onClosePlugin)
-            #
-            # # show the dockwidget
-            # # TODO: fix to allow choice of dock location
-            # self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
-            #
-            # self.dockwidget.setWindowTitle("Planning Tool")
-            # self.dockwidget.show()
-
             # TODO: not working anymore with the new QGIS project file,
             # thus also the "home" button in the toolbar not working anymore
             #self.zoomToInfrastructureInvestments()
@@ -325,13 +311,20 @@ class PlanningToolClass:
 
             # prepare excel file
             self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-            self.app = xw.App(visible=False)
-            self.book = self.app.books.open(self.excel_file)
+            #self.app = xw.App(visible=False)
+            #self.book = self.app.books.open(self.excel_file)
 
-            # initialise IndicatorsChart widget here
+            ## initialise IndicatorsChart widget here
+            # dockwidget does not exist if:
+            #    first run of plugin
+            #    removed on close (see self.onClosePlugin method)
             if self.ic == None:
                 # Create the dockwidget (after translation) and keep reference
                 self.ic = IndicatorsChartDocked(self.iface, book=self.book)
+                # maptool = MapToolEmitPoint(self.canvas)
+                # self.canvas.setMapTool(maptool)
+                # maptool.canvasDoubleClicked.connect(self.handleDoubleClick)
+
 
             # connect to provide cleanup on closing of dockwidget
             self.ic.closingPlugin.connect(self.onClosePlugin)
@@ -349,7 +342,10 @@ class PlanningToolClass:
 
 
 
-    ### helper functions
+    # ### helper functions
+    # def handleDoubleClick(self, point, buttons):
+    #     # do stuff with point and buttons
+    #     print "double-clicked"
 
     def loadProjectFile(self):
 
@@ -393,8 +389,8 @@ class PlanningToolClass:
 
 
         # # pan - only needed for OSX version
-        # self.planning_toolbar.addAction(self.iface.actionPan())
-        # self.actions.append(self.iface.actionPan())
+        self.planning_toolbar.addAction(self.iface.actionPan())
+        self.actions.append(self.iface.actionPan())
 
         # touch
         self.planning_toolbar.addAction(self.iface.actionTouch())
@@ -471,11 +467,14 @@ class PlanningToolClass:
 
         # add infrastructure input
         icon_path = ':/plugins/PlanningToolClass/icons/ii.png'
-        self.add_action(
+        self.iiAction = self.add_action(
             icon_path,
             text=self.transl(u'Infrastructure Input'),
-            callback=self.openInfrastructureInput,
+            callback=self.activateSelectionTool,
             parent=self.iface.mainWindow())
+        self.iiAction.setObjectName('mSelectAction')
+        self.iiAction.setCheckable(True)
+
 
         # add calculate indicators button
         icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
@@ -558,8 +557,14 @@ class PlanningToolClass:
         self.canvas.refresh()
 
 
+### activate map Tool
+    def activateSelectionTool(self):
 
-#### open dialogs:
+        mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
+        self.canvas.setMapTool(mapTool)
+        # self.iiAction.setChecked(True)
+
+    #### open dialogs:
 
     def openHousingInput(self):
 

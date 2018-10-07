@@ -34,7 +34,7 @@ from qgis.gui import *
 from qgis.gui import QgsMapTool
 from qgis.networkanalysis import *
 
-from PyQt4.QtGui import QCursor, QPixmap
+from PyQt4.QtGui import QCursor, QPixmap, QAction
 from PyQt4.QtCore import Qt, pyqtSignal, QPoint
 #from PyQt4.QtCore import pyqtSignal
 from . import utility_functions as uf
@@ -53,6 +53,112 @@ import xlwings as xw
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+
+class MapToolEmitPoint(QgsMapToolEmitPoint):
+    canvasDoubleClicked = QtCore.pyqtSignal(object, object)
+
+    def canvasDoubleClickEvent(self, event):
+        point = self.toMapCoordinates(event.pos())
+        self.canvasDoubleClicked.emit(point, event.button())
+        super(MapToolEmitPoint, self).canvasDoubleClickEvent(event)
+
+
+class PointTool(QgsMapTool, QAction):
+    def __init__(self, widget, canvas, action):
+        QgsMapToolEmitPoint.__init__(self, canvas)
+        self.canvas = canvas
+        self.action = action
+        self.widget = widget
+
+        self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
+        self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
+
+        self.infra_layer.selectionChanged.connect(self.infraSelectionChanged)
+        self.housing_layer.selectionChanged.connect(self.housingSelectionChanged)
+
+        # now just put this in the SelectionChanged function
+        self.widget.inputAmsterdam.setText("works")
+        #self.inputAmsterdam.setText(str(iA))
+
+
+    def infraSelectionChanged(self):
+        if self.infra_layer.selectedFeatures():
+            print "infra selection Changed"
+
+    def housingSelectionChanged(self):
+        if self.housing_layer.selectedFeatures():
+            print "housing selection Changed"
+
+    # def canvasPressEvent(self, event):
+    #     pass
+    #
+    # def canvasMoveEvent(self, event):
+    #     x = event.pos().x()
+    #     y = event.pos().y()
+    #
+    #     point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
+
+    def canvasReleaseEvent(self, event):
+
+        mapPoint = self.toMapCoordinates(event.pos())
+        infra_layerPoint = self.toLayerCoordinates(self.infra_layer, mapPoint)
+        housing_layerPoint = self.toLayerCoordinates(self.housing_layer, mapPoint)
+
+        # mapcanvas = iface.mapCanvas()
+        # layers = mapcanvas.layers()
+        infra_intersection = [None, 10000000]
+        for poly in self.infra_layer.getFeatures():
+            if poly.geometry().contains(QgsGeometry.fromPoint(infra_layerPoint)):
+                self.infra_layer.removeSelection()
+                self.infra_layer.select([poly.id()])
+                break
+        #         cent = poly.geometry().centroid().asPoint()
+        #
+        #         dist = cent.distance(infra_layerPoint)
+        #
+        #         if dist < infra_intersection[1]:
+        #             infra_intersection[0] = poly
+        #             infra_intersection[1] = dist
+        #
+        # if infra_intersection[0]:
+        #     infra_layer.select([infra_intersection[0].id()])
+
+        housing_intersections = [None, 10000000]
+        for poly in self.housing_layer.getFeatures():
+            if poly.geometry().contains(QgsGeometry.fromPoint(housing_layerPoint)):
+                self.housing_layer.removeSelection()
+                self.housing_layer.select([poly.id()])
+                break
+
+
+
+
+        # for a in layers[0].getFeatures():
+        #     for b in layers[1].getFeatures():
+        #         if a.geometry().intersects(b.geometry()):
+        #             print a.id(), ",", b.id()
+
+    def canvasDoubleClickEvent(self, event):
+        self.infra_layer.removeSelection()
+        self.housing_layer.removeSelection()
+
+
+
+    def activate(self):
+        self.action.setChecked(True)
+    #
+    def deactivate(self):
+        self.action.setChecked(False)
+        print "map tool deactivated"
+    #
+    # def isZoomTool(self):
+    #     return False
+    #
+    # def isTransient(self):
+    #     return False
+    #
+    # def isEditTool(self):
+    #     return True
 
 
 
@@ -322,9 +428,10 @@ class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
         self.hide()
 
 
-class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
+class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
     closingPlugin = pyqtSignal()
+    # canvasDoubleClicked = pyqtSignal(object, object)
 
     def __init__(self, iface, parent=None, book=None):
 
@@ -338,6 +445,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         self.setupUi(self)
 
         self.iface = iface
+        self.canvas = self.iface.mapCanvas()
 
         self.book = book
         #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
@@ -345,10 +453,15 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         #signal slot for closing indicator window
         #self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
 
-
-
         # generate the plot
         #self.refreshPlot()
+
+        # # generate canvas clicked signal here so it uses the right canvas
+        # self.emitPoint = QgsMapToolEmitPoint(self.canvas)
+        # self.emitPoint.canvasClicked.connect(self.getPoint)
+        #
+        # # activate coordinate capture tool
+        # self.canvas.setMapTool(self.emitPoint)
 
 
 
@@ -357,6 +470,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
         # their, before the input windows was opened
         self.okInfrastructure.clicked.connect(self.saveValue)
+
+
 
 
         # get project ID and corresponding data from excel sheet
@@ -421,6 +536,17 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE):
         self.inputPurmerend.setText(str(iZ))
         self.inputZaanstad.setText(str(iH))
         self.inputProvince.setText(str(iM))
+
+    def getPoint(self, mapPoint, mouseButton):
+        # change tool so you don't get more than one POI
+        #self.canvas.unsetMapTool(self.emitPoint)
+        #self.canvas.setMapTool(self.userTool)
+
+        # Get the click
+        if mapPoint:
+            pass
+
+        return
 
 
 

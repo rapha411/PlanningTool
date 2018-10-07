@@ -98,9 +98,9 @@ def getLegendLayerByName(iface, name):
     return layer
 
 
-def getCanvasLayerByName(iface, name):
+def getCanvasLayerByName(canvas, name):
     layer = None
-    for i in iface.mapCanvas().layers():
+    for i in canvas.layers():
         if i.name() == name:
             layer = i
     return layer
