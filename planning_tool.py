@@ -437,26 +437,26 @@ class PlanningToolClass:
         #     callback=self.zoomToMunicipality,
         #     parent=self.iface.mainWindow())
 
-        # zoom to package
-        self.packageCombo = QComboBox(self.iface.mainWindow())
-        self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
-        self.packageCombo.setToolTip("Packages")
-        self.actions.append(self.packageComboAction)
-
-        layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
-
-        idx = layer_infra.fieldNameIndex('Package')
-        packages = layer_infra.uniqueValues(idx)
-        for package in packages:
-            #print str(package)
-            self.packageCombo.addItem("'"+str(package)+"'")
-
-        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Zoom to Package'),
-            callback=self.zoomToPackage,
-            parent=self.iface.mainWindow())
+        #### zoom to package
+        # self.packageCombo = QComboBox(self.iface.mainWindow())
+        # self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
+        # self.packageCombo.setToolTip("Packages")
+        # self.actions.append(self.packageComboAction)
+        #
+        # layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
+        #
+        # idx = layer_infra.fieldNameIndex('Package')
+        # packages = layer_infra.uniqueValues(idx)
+        # for package in packages:
+        #     #print str(package)
+        #     self.packageCombo.addItem("'"+str(package)+"'")
+        #
+        # icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
+        # self.add_action(
+        #     icon_path,
+        #     text=self.transl(u'Zoom to Package'),
+        #     callback=self.zoomToPackage,
+        #     parent=self.iface.mainWindow())
 
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())

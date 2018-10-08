@@ -118,8 +118,6 @@ class PointTool(QgsMapTool, QAction):
         infra_layerPoint = self.toLayerCoordinates(self.infra_layer, mapPoint)
         housing_layerPoint = self.toLayerCoordinates(self.housing_layer, mapPoint)
 
-        # mapcanvas = iface.mapCanvas()
-        # layers = mapcanvas.layers()
         infra_intersection = [None, 10000000]
         for poly in self.infra_layer.getFeatures():
             if poly.geometry().contains(QgsGeometry.fromPoint(infra_layerPoint)):
@@ -156,8 +154,6 @@ class PointTool(QgsMapTool, QAction):
     def deactivate(self):
         self.action.setChecked(False)
         print "map tool deactivated"
-
-
 
 
 
@@ -443,17 +439,19 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.populateComboBox()
         self.populateTable()
 
+        # connect signal/slot
+        self.housingTable.cellClicked.connect(self.selectHousingFeat)
+        self.infraTable.cellClicked.connect(self.selectInfraFeat)
+
+        self.packageComboBox.currentIndexChanged.connect(self.zoomToPackage)
+
+
 
         ## infrastructure input
         # signal slot for closing indicator window
         # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
         # their, before the input windows was opened
         #self.okInfrastructure.clicked.connect(self.saveValue)
-
-        # connect signal/slot
-        self.housingTable.cellClicked.connect(self.selectHousingFeat)
-        self.infraTable.cellClicked.connect(self.selectInfraFeat)
-
 
 
         # # get project ID and corresponding data from excel sheet
@@ -500,8 +498,41 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ################## COMBOBOX ################################
     ############################################################
     def populateComboBox(self):
+        self.packageComboBox.addItem("All Packages")
+        self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
+        self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
+        self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
+        self.packageComboBox.addItem("Package 4 - Hoorn")
+        self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
 
-        self.packageComboBox.addItem("p1")
+
+
+    def zoomToPackage(self):
+
+        # remove current selections on this layer
+        self.housingLayer.removeSelection()
+        self.infraLayer.removeSelection()
+        # get the currently selected item in the municipality combo box
+        package = self.packageComboBox.currentIndex()
+        if package == 0:
+            uf.zoomToLayer(self.iface, "Infrastructure_Investments")
+            return
+
+        print '"Package" IS p' + "'"+str(package)+"'"
+        ### select the features for this municipality
+        uf.selectFeaturesByExpression(self.housingLayer, '"Package" IS ' + "'p"+str(package)+"'")
+        uf.selectFeaturesByExpression(self.infraLayer, '"Package" IS ' + "'P"+str(package)+"'")
+        # make box around the features
+        box1 = self.housingLayer.boundingBoxOfSelected()
+        box2 = self.infraLayer.boundingBoxOfSelected()
+        box1.combineExtentWith(box2)
+        # unselect features again
+        self.housingLayer.removeSelection()
+        self.infraLayer.removeSelection()
+        # zoom to the box
+        self.canvas.setExtent(box1)
+        self.canvas.refresh()
+
 
 
 
@@ -580,6 +611,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
         self.housingTable.selectRow(id[0])
+        self.housingLabel.setText(str(feat))
 
     # infra
     def selectInfraFeat(self):
