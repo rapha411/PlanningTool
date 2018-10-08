@@ -221,7 +221,6 @@ class PlanningToolClass:
             self.iface.removePluginMenu(
                 self.transl(u'&Regional Game Mobiele Stad'),
                 action)
-            #self.iface.removeToolBarIcon(action)       # this was the old syntax which doesn't work
             self.planning_toolbar.removeAction(action)
 
         for separator in self.separators:
