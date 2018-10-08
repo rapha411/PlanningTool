@@ -346,7 +346,7 @@ class PlanningToolClass:
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file22.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
 
 
         # check if file exists
@@ -387,9 +387,9 @@ class PlanningToolClass:
             callback=self.zoomToInfrastructureInvestments,
             parent=self.iface.mainWindow())
 
-        # # pan - only needed for OSX version
-        self.planning_toolbar.addAction(self.iface.actionPan())
-        self.actions.append(self.iface.actionPan())
+        # # # pan - only needed for OSX version
+        # self.planning_toolbar.addAction(self.iface.actionPan())
+        # self.actions.append(self.iface.actionPan())
 
         # touch
         self.planning_toolbar.addAction(self.iface.actionTouch())

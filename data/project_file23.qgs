@@ -1,54 +1,54 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="2.18.20">
+<qgis projectname="" version="2.18.24">
   <title></title>
   <autotransaction active="0"/>
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Housing_Plans.shp" name="Housing_Plans">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans.shp" name="Housing_Plans">
       <customproperties>
         <property key="expandedLegendNodes" value="{d90b5184-bdf4-43e8-9584-b3b95ea85119}"/>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Investments20181002174821220" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Infrastructure_Projects.shp" name="Infrastructure_Investments">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Investments20181002174821220" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Infrastructure_Projects.shp" name="Infrastructure_Investments">
       <customproperties>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
-    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="Acthergrond">
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Acthergrond">
       <customproperties/>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Treinstations20180924143846273" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Treinstations.shp" name="Treinstations">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Treinstations20180924143846273" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Treinstations.shp" name="Treinstations">
         <customproperties>
           <property key="expandedLegendNodes"/>
           <property key="overview" value="1"/>
         </customproperties>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="spoorwegen2018100215271595124246" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Spoorwegen.shp" name="Spoorwegen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="spoorwegen2018100215271595124246" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Spoorwegen.shp" name="Spoorwegen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="wegen2018100215271595218851" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Wegen.shp" name="Wegen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="wegen2018100215271595218851" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Wegen.shp" name="Wegen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Unchecked" id="Housing_Projects_Total20180925142458441" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Housing_Plans_Total.shp" name="Housing_Plans_Total">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects_Total20180925142458441" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans_Total.shp" name="Housing_Plans_Total">
         <customproperties>
           <property key="expandedLegendNodes" value="{6b2f8a50-bcbd-408b-8859-befaaaf869d3}"/>
         </customproperties>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="groen201810021527159521392" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Groen.shp" name="Groen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="groen201810021527159521392" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Groen.shp" name="Groen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="water2018100215271595225642" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Water.shp" name="Water">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="water2018100215271595225642" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Water.shp" name="Water">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="bebouwdgebieden201810021527159522506" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Bebouwdgebieden.shp" name="Bebouwdgebieden">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="bebouwdgebieden201810021527159522506" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Bebouwdgebieden.shp" name="Bebouwdgebieden">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="gemeenten2018100215271595310990" source="/Users/Raphael/Library/Mobile Documents/com~apple~CloudDocs/Studium/GustavoQGIS/data/PackageRaphael_3/Gemeenten.shp" name="Gemeenten">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="gemeenten2018100215271595310990" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Gemeenten.shp" name="Gemeenten">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xa;  &lt;Service name=&quot;TMS&quot;>&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xa;  &lt;/Service>&#xa;  &lt;DataWindow>&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xa;  &lt;/DataWindow>&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xa;  &lt;Cache />&#xa;&lt;/GDAL_WMS>&#xa;" name="OpenStreetMap">
+    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xd;&#xa;  &lt;Service name=&quot;TMS&quot;>&#xd;&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xa;  &lt;/Service>&#xd;&#xa;  &lt;DataWindow>&#xd;&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xa;  &lt;/DataWindow>&#xd;&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xa;  &lt;Cache />&#xd;&#xa;&lt;/GDAL_WMS>&#xd;&#xa;" name="OpenStreetMap">
       <customproperties>
         <property key="expandedLegendNodes"/>
       </customproperties>
@@ -58,50 +58,37 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>518541.85210057557560503</xmin>
-      <ymin>6850473.86604615580290556</ymin>
-      <xmax>589194.29915417195297778</xmax>
-      <ymax>6948032.04046854097396135</ymax>
+      <xmin>106739.25332509365398437</xmin>
+      <ymin>489051.75540450669359416</ymin>
+      <xmax>147546.24299223953858018</xmax>
+      <ymax>523849.22910618351306766</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
     <destinationsrs>
       <spatialrefsys>
-        <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
-        <srsid>3857</srsid>
-        <srid>3857</srid>
-        <authid>EPSG:3857</authid>
-        <description>WGS 84 / Pseudo Mercator</description>
-        <projectionacronym>merc</projectionacronym>
-        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
+        <srsid>2517</srsid>
+        <srid>28992</srid>
+        <authid>EPSG:28992</authid>
+        <description>Amersfoort / RD New</description>
+        <projectionacronym>sterea</projectionacronym>
+        <ellipsoidacronym>bessel</ellipsoidacronym>
         <geographicflag>false</geographicflag>
       </spatialrefsys>
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="Transport_Dark20180924144642063"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="spoorwegen2018100215271595124246"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="Stamen_Toner_Lite_OSM20180924162350240"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="gemeenten2018100215271595310990"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="aaa20181003172730441"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20180924145017200"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="water2018100215271595225642"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Treinstations20180924143846273"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Spoorwegen20180924144928407"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects20180906013549130"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Investments20180906014407985"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="grens2018100215271595119676"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Groen20181002162859900"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Spoorwegen_copy2018100215271595216507"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="Wikimedia_unlabelled_layer20180924162427430"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Investments20181002174821220"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="bebouwdgebieden201810021527159522506"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects_Total20180925142458441"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="wegen2018100215271595218851"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenLayers_plugin_layer20180924144542679"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="groen201810021527159521392"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20180924144002060"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Knooppunten_copy2018100215271595124787"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="bebouwdgebieden201810021527159522506"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Treinstations20180924143846273"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Investments20181002174821220"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="gemeenten2018100215271595310990"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="spoorwegen2018100215271595124246"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects_Total20180925142458441"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects20180906013549130"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="wegen2018100215271595218851"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="groen201810021527159521392"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="water2018100215271595225642"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
@@ -130,7 +117,7 @@
         <legendlayerfile isInOverview="0" layerid="Infrastructure_Investments20181002174821220" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendgroup open="true" checked="Qt::PartiallyChecked" name="Acthergrond">
+    <legendgroup open="true" checked="Qt::Checked" name="Acthergrond">
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Treinstations" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="1" layerid="Treinstations20180924143846273" visible="1"/>
@@ -146,9 +133,9 @@
           <legendlayerfile isInOverview="0" layerid="wegen2018100215271595218851" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Housing_Plans_Total" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Housing_Plans_Total" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Housing_Projects_Total20180925142458441" visible="0"/>
+          <legendlayerfile isInOverview="0" layerid="Housing_Projects_Total20180925142458441" visible="1"/>
         </filegroup>
       </legendlayer>
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Groen" showFeatureCount="0">
@@ -194,7 +181,7 @@
       <layername>Housing_Plans</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -738,7 +725,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Housing_Plans_Total</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -1257,7 +1244,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Infrastructure_Investments</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -2368,26 +2355,26 @@ def my_form_open(dialog, layer, feature):
         <ymax>20037508.33999999985098839</ymax>
       </extent>
       <id>OpenStreetMap20180924145017200</id>
-      <datasource>&lt;GDAL_WMS>
-  &lt;Service name="TMS">
-    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>
-  &lt;/Service>
-  &lt;DataWindow>
-    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>
-    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>
-    &lt;LowerRightX>20037508.34&lt;/LowerRightX>
-    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>
-    &lt;TileLevel>19&lt;/TileLevel>
-    &lt;TileCountX>1&lt;/TileCountX>
-    &lt;TileCountY>1&lt;/TileCountY>
-    &lt;YOrigin>top&lt;/YOrigin>
-  &lt;/DataWindow>
-  &lt;Projection>EPSG:3857&lt;/Projection>
-  &lt;BlockSizeX>256&lt;/BlockSizeX>
-  &lt;BlockSizeY>256&lt;/BlockSizeY>
-  &lt;BandsCount>3&lt;/BandsCount>
-  &lt;Cache />
-&lt;/GDAL_WMS>
+      <datasource>&lt;GDAL_WMS>&#xd;
+  &lt;Service name="TMS">&#xd;
+    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;
+  &lt;/Service>&#xd;
+  &lt;DataWindow>&#xd;
+    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;
+    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;
+    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;
+    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;
+    &lt;TileLevel>19&lt;/TileLevel>&#xd;
+    &lt;TileCountX>1&lt;/TileCountX>&#xd;
+    &lt;TileCountY>1&lt;/TileCountY>&#xd;
+    &lt;YOrigin>top&lt;/YOrigin>&#xd;
+  &lt;/DataWindow>&#xd;
+  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;
+  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;
+  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;
+  &lt;BandsCount>3&lt;/BandsCount>&#xd;
+  &lt;Cache />&#xd;
+&lt;/GDAL_WMS>&#xd;
 </datasource>
       <keywordList>
         <value></value>
@@ -2395,7 +2382,7 @@ def my_form_open(dialog, layer, feature):
       <layername>OpenStreetMap</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
+          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs</proj4>
           <srsid>3857</srsid>
           <srid>3857</srid>
           <authid>EPSG:3857</authid>
@@ -2444,7 +2431,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Treinstations</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -2909,7 +2896,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Bebouwdgebieden</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3206,7 +3193,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Gemeenten</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3519,7 +3506,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Groen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3816,7 +3803,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Spoorwegen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -4133,7 +4120,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Water</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -4429,7 +4416,7 @@ def my_form_open(dialog, layer, feature):
       <layername>Wegen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>

@@ -140,6 +140,11 @@ class PointTool(QgsMapTool, QAction):
         print "map tool deactivated"
 
 
+
+
+################################################################################################################
+###################################################### PLUGIN WIDGET ###########################################
+################################################################################################################
 class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
     closingPlugin = pyqtSignal()
@@ -168,100 +173,16 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         # connect signal/slot
-        self.housingTable.cellClicked.connect(self.selectHousingFeat)
-        self.infraTable.cellClicked.connect(self.selectInfraFeat)
+        self.housingTable.cellClicked.connect(self.housingRowSelected)
+        self.infraTable.cellClicked.connect(self.infraRowSelected)
         self.packageComboBox.currentIndexChanged.connect(self.packageSelected)
 
-        self.infraLayer.selectionChanged.connect(self.infraSelectionChanged)
-        self.housingLayer.selectionChanged.connect(self.housingSelectionChanged)
+        self.infraLayer.selectionChanged.connect(self.infraLayerSelectionChanged)
+        self.housingLayer.selectionChanged.connect(self.housingLayerSelectionChanged)
 
         ### TODO: now just put this in the SelectionChanged function
         # self.widget.inputAmsterdam.setText("works")
 
-    def housingSelectionChanged(self):
-        ## this is called if user changes the project selection on the canvas
-
-        self.housingTable.blockSignals(True)
-
-        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
-        feat = self.housingLayer.selectedFeatures()
-        if feat:
-            feat = feat[0]
-        else:
-            self.housingTable.clearSelection()
-            self.housingTable.blockSignals(False)
-            return
-
-        ## check if package changed
-        packageMap = int(feat.attribute("Package")[1])
-        packageTable = self.packageComboBox.currentIndex()
-        print packageTable
-        if packageMap != packageTable and packageTable != 0:
-                self.packageComboBox.setCurrentIndex(packageMap)
-                self.packageSelected()
-
-        ## select the corresponding row of the project
-        rowCount = self.housingTable.rowCount()
-        for i in range(rowCount):
-            project = self.housingTable.item(i, 0).text()
-            print project
-            if project == feat.attribute("NameShort"):
-                self.housingTable.selectRow(i)
-                break
-
-        self.housingTable.blockSignals(False)
-
-                #self.housingTable.selectRow(int(feat.attribute("id")))
-
-        # if feat == None:
-        #     self.housingTable.clearSelection()
-        # elif feat[0]:
-        #
-        # feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
-        # print id
-        # self.housingTable.selectRow(id[0])
-        #
-        #
-        # if self.housingLayer.selectedFeatures():
-        #     print "housing selection Changed"
-        #     # if self.widget.tableHousing.current
-        #     #     self.widget.
-        #     # self.widget.selectHousingRow()
-        # else:
-        #     self.housingTable.clearSelection()
-
-    def infraSelectionChanged(self):
-        ## this is called if user changes the project selection on the canvas
-
-        self.infraTable.blockSignals(True)
-
-        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
-        feat = self.infraLayer.selectedFeatures()
-        if feat:
-            feat = feat[0]
-        else:
-            self.infraTable.clearSelection()
-            self.infraTable.blockSignals(False)
-            return
-
-        ## check if package changed
-        packageMap = int(feat.attribute("Package")[1])
-        packageTable = self.packageComboBox.currentIndex()
-        print packageTable
-        if packageMap != packageTable and packageTable != 0:
-                self.packageComboBox.setCurrentIndex(packageMap)
-                self.packageSelected()
-
-        ## select the corresponding row of the project
-        rowCount = self.infraTable.rowCount()
-        for i in range(rowCount):
-            project = self.infraTable.item(i, 0).text()
-            print project
-            if project == feat.attribute("ShortName"):
-                self.infraTable.selectRow(i)
-                break
-
-        self.infraTable.blockSignals(False)
 
     ############################################################
     ################## COMBOBOX ################################
@@ -279,11 +200,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         package = self.packageComboBox.currentIndex()
 
-        # housingSelectedFeats = self.housingLayer.getSelectedFeatures()
-        # infraSelectedFeats = self.infraLayer.getSelectedFeatures()
-        #
-        # if housingSelectedFeats and infraSelectedFeats:
-        #     housingFeat = housingSelectedFeats[0].attribute("Package")
 
         ####if "all packages" selected
         if package == 0:
@@ -340,7 +256,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.setRowCount(len(attributes))
         for i, att in enumerate(attributes):
             # i is the table row, items mus tbe added as QTableWidgetItems
-            table.setItem(i,0,QtGui.QTableWidgetItem(str(att)))
+            table.setItem(i,0,QtGui.QTableWidgetItem(att))
             table.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
@@ -358,23 +274,94 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
     # housing
-    def selectHousingFeat(self):
+    def housingRowSelected(self):
 
-        selectedItem = self.housingTable.selectedItems()[0].text()
+        selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
         #print selectedItem
         self.housingLayer.removeSelection()
-        uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+str(selectedItem)+"'")
-        self.zoomToSelectedFeature(1.2, self.housingLayer)
+        uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
+        self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
 
     # infra
-    def selectInfraFeat(self):
+    def infraRowSelected(self):
 
-        selectedItem = self.infraTable.selectedItems()[0].text()
+        selectedItem = self.infraTable.selectedItems()[0].text().encode('utf-8')
+        #if selectedItem[:-4]
         #print selectedItem
         self.infraLayer.removeSelection()
-        uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+str(selectedItem)+"'")
-        self.zoomToSelectedFeature(1.2, self.infraLayer)
+        uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
+        self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
 
+
+    ############################################################
+    ################## LAYER SELECTION CHANGED #################
+    ############################################################
+    def housingLayerSelectionChanged(self):
+        ## this is called if user changes the project selection on the canvas
+
+
+        self.housingTable.blockSignals(True)
+
+        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
+        feat = self.housingLayer.selectedFeatures()
+        if feat:
+            feat = feat[0]
+            print "housingLayerSelectionChanged - new feature"
+        else:
+            self.housingTable.clearSelection()
+            self.housingTable.blockSignals(False)
+            print "housingLayerSelectionChanged - no feature"
+            return
+
+        ## check if package changed
+        packageMap = int(feat.attribute("Package")[1])
+        packageTable = self.packageComboBox.currentIndex()
+        if packageMap != packageTable and packageTable != 0:
+                self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageSelected()
+
+        ## select the corresponding row of the project
+        rowCount = self.housingTable.rowCount()
+        for i in range(rowCount):
+            project = self.housingTable.item(i, 0).text()
+            if project == feat.attribute("NameShort"):
+                self.housingTable.selectRow(i)
+                break
+
+        self.housingTable.blockSignals(False)
+
+    def infraLayerSelectionChanged(self):
+        ## this is called if user changes the project selection on the canvas
+
+        self.infraTable.blockSignals(True)
+
+        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
+        feat = self.infraLayer.selectedFeatures()
+        if feat:
+            feat = feat[0]
+        else:
+            self.infraTable.clearSelection()
+            self.infraTable.blockSignals(False)
+            return
+
+        ## check if package changed
+        packageMap = int(feat.attribute("Package")[1])
+        packageTable = self.packageComboBox.currentIndex()
+        if packageMap != packageTable and packageTable != 0:
+                self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageSelected()
+
+        ## select the corresponding row of the project
+        rowCount = self.infraTable.rowCount()
+        for i in range(rowCount):
+            project = self.infraTable.item(i, 0).text()
+            if project == feat.attribute("ShortName"):
+                self.infraTable.selectRow(i)
+                break
+
+        #self.infraTable.selectRow(4)
+
+        self.infraTable.blockSignals(False)
 
     ############################################################
     ################## CANVAS ##################################
@@ -383,7 +370,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         box = layer.boundingBoxOfSelected()
         box.scale(scale)
-        #self.canvas = self.determineCanvas()
         self.canvas.setExtent(box)
         #self.canvas.zoomScale(50000)
         self.canvas.refresh()
