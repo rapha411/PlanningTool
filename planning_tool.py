@@ -39,7 +39,7 @@ import xlwings as xw
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
-from planning_tool_dockwidget import HousingInput, InfrastructureInput
+#from planning_tool_dockwidget import HousingInput, InfrastructureInput
 #from planning_tool_dockwidget import IndicatorsChart
 from nearest_feature_map_tool import NearestFeatureMapTool
 
@@ -193,7 +193,7 @@ class PlanningToolClass:
         # DO NOT FORGET TO ALSO CHANGE ICON PATH IN resources.qrc AND metadata.txt FILES
         # text is the text that appears when you hover over the plugin icon in the toolbar
         icon_path = ':/plugins/PlanningToolClass/icons/rgms.png'
-        self.add_action(
+        self.rgmsAction = self.add_action(
             icon_path,
             text=self.transl(u'Planning Tool'),
             callback=self.run,
@@ -246,6 +246,7 @@ class PlanningToolClass:
             self.book.close()
             self.app.kill()
 
+        self.rgmsAction.setVisible(True)
 
         self.pluginIsActive = False
 
@@ -352,7 +353,7 @@ class PlanningToolClass:
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file20.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file22.qgs')
 
 
         # check if file exists
@@ -369,6 +370,16 @@ class PlanningToolClass:
 
     def updateToolbar(self):
 
+        self.rgmsAction.setVisible(False)
+
+        # save
+        icon_path = ':/plugins/PlanningToolClass/icons/save.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Save'),
+            callback=self.openHousingInput,
+            parent=self.iface.mainWindow())
+
         ##toolbar icons /  add the map navigation actions
         # separator
         self.separators = []
@@ -383,11 +394,6 @@ class PlanningToolClass:
             callback=self.zoomToInfrastructureInvestments,
             parent=self.iface.mainWindow())
 
-        # zoom window
-        self.planning_toolbar.addAction(self.iface.actionZoomIn())
-        self.actions.append(self.iface.actionZoomIn())
-
-
         # # pan - only needed for OSX version
         self.planning_toolbar.addAction(self.iface.actionPan())
         self.actions.append(self.iface.actionPan())
@@ -395,6 +401,10 @@ class PlanningToolClass:
         # touch
         self.planning_toolbar.addAction(self.iface.actionTouch())
         self.actions.append(self.iface.actionTouch())
+
+        # # zoom window
+        # self.planning_toolbar.addAction(self.iface.actionZoomIn())
+        # self.actions.append(self.iface.actionZoomIn())
 
         # zoom to previous extent
         self.planning_toolbar.addAction(self.iface.actionZoomLast())
@@ -404,33 +414,34 @@ class PlanningToolClass:
         self.planning_toolbar.addAction(self.iface.actionIdentify())
         self.actions.append(self.iface.actionIdentify())
 
-        # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
-        self.municipalityCombo = QComboBox(self.iface.mainWindow())
-        self.municipalityComboAction = self.planning_toolbar.addWidget(self.municipalityCombo)
-        self.municipalityCombo.setToolTip("Municipalities")
-        self.actions.append(self.municipalityComboAction)
 
-        layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Plans")
 
-        idx = layer_housing.fieldNameIndex('GEMEENTE')
-        municipalities = layer_housing.uniqueValues(idx)
-        for municipality in municipalities:
-            #print str(municipality)
-            self.municipalityCombo.addItem("'"+str(municipality)+"'")
+        # # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
+        # self.municipalityCombo = QComboBox(self.iface.mainWindow())
+        # self.municipalityComboAction = self.planning_toolbar.addWidget(self.municipalityCombo)
+        # self.municipalityCombo.setToolTip("Municipalities")
+        # self.actions.append(self.municipalityComboAction)
+        #
+        # layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Plans")
+        #
+        # idx = layer_housing.fieldNameIndex('GEMEENTE')
+        # municipalities = layer_housing.uniqueValues(idx)
+        # for municipality in municipalities:
+        #     #print str(municipality)
+        #     self.municipalityCombo.addItem("'"+str(municipality)+"'")
+        #
+        # icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
+        # self.add_action(
+        #     icon_path,
+        #     text=self.transl(u'Zoom to Municipality'),
+        #     callback=self.zoomToMunicipality,
+        #     parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Zoom to Municipality'),
-            callback=self.zoomToMunicipality,
-            parent=self.iface.mainWindow())
-
-        # select package
+        # zoom to package
         self.packageCombo = QComboBox(self.iface.mainWindow())
         self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
         self.packageCombo.setToolTip("Packages")
         self.actions.append(self.packageComboAction)
-
 
         layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
 
@@ -450,39 +461,28 @@ class PlanningToolClass:
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())
 
-        self.planning_toolbar.addAction(self.iface.actionSelect())
-        self.actions.append(self.iface.actionSelect())
+        # self.planning_toolbar.addAction(self.iface.actionSelect())
+        # self.actions.append(self.iface.actionSelect())
 
-
-        # separator
-        self.separators.append(self.planning_toolbar.addSeparator())
-
-        # add housing input
-        icon_path = ':/plugins/PlanningToolClass/icons/hp.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Housing Input'),
-            callback=self.openHousingInput,
-            parent=self.iface.mainWindow())
 
         # add infrastructure input
-        icon_path = ':/plugins/PlanningToolClass/icons/ii.png'
+        icon_path = ':/plugins/PlanningToolClass/icons/select_2.png'
         self.iiAction = self.add_action(
             icon_path,
-            text=self.transl(u'Infrastructure Input'),
+            text=self.transl(u'Select'),
             callback=self.activateSelectionTool,
             parent=self.iface.mainWindow())
         self.iiAction.setObjectName('mSelectAction')
         self.iiAction.setCheckable(True)
 
 
-        # add calculate indicators button
-        icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Calculate Indicators'),
-            callback=self.openIndicatorsChart,
-            parent=self.iface.mainWindow())
+        # # add calculate indicators button
+        # icon_path = ':/plugins/PlanningToolClass/icons/calculator.png'
+        # self.add_action(
+        #     icon_path,
+        #     text=self.transl(u'Calculate Indicators'),
+        #     callback=self.openIndicatorsChart,
+        #     parent=self.iface.mainWindow())
 
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())
@@ -563,6 +563,8 @@ class PlanningToolClass:
         mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
         self.canvas.setMapTool(mapTool)
         # self.iiAction.setChecked(True)
+        uf.showMessage(self.iface, 'tap on polygon to select, double-tap on canvas to remove selection', type='Info', lev=1, dur=5)
+
 
     #### open dialogs:
 

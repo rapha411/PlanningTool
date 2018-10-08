@@ -54,21 +54,33 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-class MapToolEmitPoint(QgsMapToolEmitPoint):
-    canvasDoubleClicked = QtCore.pyqtSignal(object, object)
+FORM_BASE, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
 
-    def canvasDoubleClickEvent(self, event):
-        point = self.toMapCoordinates(event.pos())
-        self.canvasDoubleClicked.emit(point, event.button())
-        super(MapToolEmitPoint, self).canvasDoubleClickEvent(event)
+FORM_INDICATORS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_chart.ui'))
+
+FORM_HOUSING, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_housing.ui'))
+
+FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
 
 
+
+
+################################################################################################################
+###################################################### SELECT-TOOL #############################################
+################################################################################################################
 class PointTool(QgsMapTool, QAction):
     def __init__(self, widget, canvas, action):
-        QgsMapToolEmitPoint.__init__(self, canvas)
+        QgsMapTool.__init__(self, canvas)
         self.canvas = canvas
         self.action = action
         self.widget = widget
+        self.book = self.widget.book
+
+        self.cursor = QCursor(Qt.PointingHandCursor)
 
         self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
@@ -76,18 +88,20 @@ class PointTool(QgsMapTool, QAction):
         self.infra_layer.selectionChanged.connect(self.infraSelectionChanged)
         self.housing_layer.selectionChanged.connect(self.housingSelectionChanged)
 
-        # now just put this in the SelectionChanged function
-        self.widget.inputAmsterdam.setText("works")
-        #self.inputAmsterdam.setText(str(iA))
+        ### TODO: now just put this in the SelectionChanged function
+        # self.widget.inputAmsterdam.setText("works")
 
 
     def infraSelectionChanged(self):
         if self.infra_layer.selectedFeatures():
             print "infra selection Changed"
+            self.widget.selectInfraRow()
+
 
     def housingSelectionChanged(self):
         if self.housing_layer.selectedFeatures():
             print "housing selection Changed"
+            self.widget.selectHousingRow()
 
     # def canvasPressEvent(self, event):
     #     pass
@@ -131,303 +145,276 @@ class PointTool(QgsMapTool, QAction):
                 break
 
 
-
-
-        # for a in layers[0].getFeatures():
-        #     for b in layers[1].getFeatures():
-        #         if a.geometry().intersects(b.geometry()):
-        #             print a.id(), ",", b.id()
-
     def canvasDoubleClickEvent(self, event):
         self.infra_layer.removeSelection()
         self.housing_layer.removeSelection()
 
-
-
     def activate(self):
         self.action.setChecked(True)
+        self.canvas.setCursor(self.cursor)
     #
     def deactivate(self):
         self.action.setChecked(False)
         print "map tool deactivated"
-    #
-    # def isZoomTool(self):
-    #     return False
-    #
-    # def isTransient(self):
-    #     return False
-    #
-    # def isEditTool(self):
-    #     return True
 
 
 
 
-FORM_BASE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
 
-FORM_INDICATORS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_chart.ui'))
-
-FORM_HOUSING, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_housing.ui'))
-
-FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
-
-class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
-    def __init__(self, iface, parent=None, chart=None):
-
-        super(HousingInput, self).__init__(parent)
-
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
-
-        self.iface = iface
-
-        self.canvas = self.iface.mapCanvas()
-
-
-        #signal slot for closing indicator window
-        self.okHousing.clicked.connect(self.submitHousingInput)
-        self.closeHousing.clicked.connect(self.closeHousingInput)
-
-        # # generate canvas clicked signal here
-        # self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        # self.emitPoint.canvasClicked.connect(self.selectNearestFeature)
-        #
-        # # activate coordinate capture tool
-        # self.canvas.setMapTool(self.emitPoint)
-
-
-    def submitHousingInput(self):
-        # save in excel sheet
-        self.hide()
-
-    # def selectNearestFeature(self, mouseEvent):
-    #     """
-    #     Each time the mouse is clicked on the map canvas, perform
-    #     the following tasks:
-    #         Loop through all visible vector layers and for each:
-    #             Ensure no features are selected
-    #             Determine the distance of the closes feature in the layer to the mouse click
-    #             Keep track of the layer id and id of the closest feature
-    #         Select the id of the closes feature
-    #     """
-    #
-    #     layerData = []
-    #
-    #     for layer in self.canvas.layers():
-    #
-    #         if layer.type() != QgsMapLayer.VectorLayer:
-    #             # Ignore this layer as it's not a vector
-    #             continue
-    #
-    #         if layer.featureCount() == 0:
-    #             # There are no features - skip
-    #             continue
-    #
-    #         layer.removeSelection()
-    #
-    #         # print(type(mouseEvent.pos()))
-    #         # print(type(layer))
-    #
-    #         # Determine the location of the click in real-world coords
-    #         #layerPoint = self.toLayerCoordinates(layer, mouseEvent.pos())
-    #         mapPoint = self.toMapCoordinates(mouseEvent.pos())
-    #         canvasPoint = self.toCanvasCoordinates(mapPoint)
-    #         layerPoint = self.toLayerCoordinates(layer, mapPoint)
-    #
-    #         print('mapPoint:', mapPoint)
-    #         print('canvasPoint:', canvasPoint)
-    #         print('layerPoint:', layerPoint)
-    #
-    #         shortestDistance = float("inf")
-    #         closestFeatureId = -1
-    #
-    #         # Loop through all features in the layer
-    #         for f in layer.getFeatures():
-    #             dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
-    #             #print(f.id())
-    #             #print(dist)
-    #             if dist < shortestDistance:
-    #                 shortestDistance = dist
-    #                 closestFeatureId = f.id()
-    #
-    #         info = (layer, closestFeatureId, shortestDistance)
-    #         layerData.append(info)
-    #
-    #
-    #
-    #     if not len(layerData) > 0:
-    #         # Looks like no vector layers were found - do nothing
-    #         return
-    #
-    #     # Sort the layer information by shortest distance
-    #     layerData.sort(key=lambda element: element[2], reverse=False)
-    #
-    #     # Select the closest feature
-    #     layerWithClosestFeature, closestFeatureId, shortestDistance = layerData[0]
-    #     layerWithClosestFeature.select(closestFeatureId)
-
-    def closeHousingInput(self):
-        self.hide()
+# class HousingInput(QtGui.QDialog, FORM_HOUSING, QgsMapTool):
+#     def __init__(self, iface, parent=None, chart=None):
+#
+#         super(HousingInput, self).__init__(parent)
+#
+#         # Set up the user interface from Designer.
+#         # After setupUI you can access any designer object by doing
+#         # self.<objectname>, and you can use autoconnect slots - see
+#         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+#         # #widgets-and-dialogs-with-auto-connect
+#         self.setupUi(self)
+#
+#         self.iface = iface
+#
+#         self.canvas = self.iface.mapCanvas()
+#
+#
+#         #signal slot for closing indicator window
+#         self.okHousing.clicked.connect(self.submitHousingInput)
+#         self.closeHousing.clicked.connect(self.closeHousingInput)
+#
+#         # # generate canvas clicked signal here
+#         # self.emitPoint = QgsMapToolEmitPoint(self.canvas)
+#         # self.emitPoint.canvasClicked.connect(self.selectNearestFeature)
+#         #
+#         # # activate coordinate capture tool
+#         # self.canvas.setMapTool(self.emitPoint)
+#
+#
+#     def submitHousingInput(self):
+#         # save in excel sheet
+#         self.hide()
+#
+#     # def selectNearestFeature(self, mouseEvent):
+#     #     """
+#     #     Each time the mouse is clicked on the map canvas, perform
+#     #     the following tasks:
+#     #         Loop through all visible vector layers and for each:
+#     #             Ensure no features are selected
+#     #             Determine the distance of the closes feature in the layer to the mouse click
+#     #             Keep track of the layer id and id of the closest feature
+#     #         Select the id of the closes feature
+#     #     """
+#     #
+#     #     layerData = []
+#     #
+#     #     for layer in self.canvas.layers():
+#     #
+#     #         if layer.type() != QgsMapLayer.VectorLayer:
+#     #             # Ignore this layer as it's not a vector
+#     #             continue
+#     #
+#     #         if layer.featureCount() == 0:
+#     #             # There are no features - skip
+#     #             continue
+#     #
+#     #         layer.removeSelection()
+#     #
+#     #         # print(type(mouseEvent.pos()))
+#     #         # print(type(layer))
+#     #
+#     #         # Determine the location of the click in real-world coords
+#     #         #layerPoint = self.toLayerCoordinates(layer, mouseEvent.pos())
+#     #         mapPoint = self.toMapCoordinates(mouseEvent.pos())
+#     #         canvasPoint = self.toCanvasCoordinates(mapPoint)
+#     #         layerPoint = self.toLayerCoordinates(layer, mapPoint)
+#     #
+#     #         print('mapPoint:', mapPoint)
+#     #         print('canvasPoint:', canvasPoint)
+#     #         print('layerPoint:', layerPoint)
+#     #
+#     #         shortestDistance = float("inf")
+#     #         closestFeatureId = -1
+#     #
+#     #         # Loop through all features in the layer
+#     #         for f in layer.getFeatures():
+#     #             dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
+#     #             #print(f.id())
+#     #             #print(dist)
+#     #             if dist < shortestDistance:
+#     #                 shortestDistance = dist
+#     #                 closestFeatureId = f.id()
+#     #
+#     #         info = (layer, closestFeatureId, shortestDistance)
+#     #         layerData.append(info)
+#     #
+#     #
+#     #
+#     #     if not len(layerData) > 0:
+#     #         # Looks like no vector layers were found - do nothing
+#     #         return
+#     #
+#     #     # Sort the layer information by shortest distance
+#     #     layerData.sort(key=lambda element: element[2], reverse=False)
+#     #
+#     #     # Select the closest feature
+#     #     layerWithClosestFeature, closestFeatureId, shortestDistance = layerData[0]
+#     #     layerWithClosestFeature.select(closestFeatureId)
+#
+#     def closeHousingInput(self):
+#         self.hide()
 
 
-class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
-    def __init__(self, iface, parent=None, chart=None):
-
-        super(InfrastructureInput, self).__init__(parent)
-
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
-
-        self.iface = iface
-
-        self.chart = chart
-
-        #signal slot for closing indicator window
-        # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
-        # their, before the input windows was opened
-        #self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
-        self.okInfrastructure.clicked.connect(self.saveValue)
-
-
-        # get project ID and corresponding data from excel sheet
-        self.layer = self.iface.activeLayer()
-        # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
-        # thas where the +4 in the getValue call below is coming from
-        temp1, temp2 = uf.getFieldValues(self.layer, 'id', null=False, selection=True)
-        # guard for when not exactly one project is selected
-        if len(temp1) != 1:
-            return
-        self.id = temp1[0]
-        temp1 = None
-        temp2 = None
-        #print "die project ID aus QGIS: ", self.id
-
-        # get excel row by id of project id from QGIS
-        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-        self.sheet_name = 'INPUT - Infra Projects'
-        excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
-        #print "excel id: ", excel_id
-
-        # get values with openpyxl
-        iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
-        iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
-        iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
-        iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
-        iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
-        iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
-        iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
-        # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
-        #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
-
-
-        # # get values with xlwings
-        # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
-        # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
-        # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
-        # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
-        # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
-        # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
-        # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
-
-
-        if iC == 1:
-            self.inputYes.setChecked(True)
-        else:
-            self.inputNo.setChecked(True)
-
-        self.inputAmsterdam.setText(str(iA))
-        self.inputEdam.setText(str(iE))
-        self.inputHoorn.setText(str(iP))
-        self.inputPurmerend.setText(str(iZ))
-        self.inputZaanstad.setText(str(iH))
-        self.inputProvince.setText(str(iM))
-
-
-
-    # save value
-    def saveValue(self):
-
-        iC = self.inputYes.isChecked()
-        iC2 = self.inputNo.isChecked()
-        iA = self.inputAmsterdam.text()
-        iE = self.inputEdam.text()
-        iH = self.inputHoorn.text()
-        iP = self.inputPurmerend.text()
-        iZ = self.inputZaanstad.text()
-        iPr = self.inputProvince.text()
-        iM = self.inputMinistry.text()
-
-
-        #take from input field and save to excel file, depending on polygonID = row in excel file
-        #column depending on which input field
-
-
-        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
-
-        # project id is at row+2 in excel, thats why I need to introduce this skip variable
-        k = 2
-        if iC == True and iC2 == False:
-            sheet['P' + str(self.id+k)] = 1
-        elif iC == False and iC2 == True:
-            sheet['P' + str(self.id+k)] = 0
-        else:
-            # chase case where both yes and no are checked
-            uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
-            return
-        sheet['Q'+str(self.id+k)] = float(iA)
-        sheet['R'+str(self.id+k)] = float(iE)
-        sheet['S'+str(self.id+k)] = float(iH)
-        sheet['T'+str(self.id+k)] = float(iP)
-        sheet['U'+str(self.id+k)] = float(iZ)
-        sheet['V'+str(self.id+k)] = float(iPr)
-        sheet['W'+str(self.id+k)] = float(iM)
-
-        srcfile.save(self.excel_file)
-        print 'new values saved'
-
-        self.chart.refreshPlot()
-
-
-        # close input window
-        #self.hide()
-
-
-
-
-    def getValue(self, filepath=None, sheetname=None, col=None, row_start=None, row_end=None):
-        # project id is at row+2 in excel, thats why I need to introduce this skip variable
-        k = 2
-        row_start = row_start+k
-        if row_end == None:
-            row_end = row_start
-        source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = source_file.get_sheet_by_name(sheetname)
-        data = []
-        for i in range(row_start, row_end + 1):
-            val = float(sheet[col + str(i)].value)
-            data.append(val)
-
-        source_file.save(self.excel_file)
-        return np.array(data)
-
-
-    def closeInfrastructureInput(self):
-        self.hide()
-
-
+# class InfrastructureInput(QtGui.QDialog, FORM_INFRASTRUCTURE):
+#     def __init__(self, iface, parent=None, chart=None):
+#
+#         super(InfrastructureInput, self).__init__(parent)
+#
+#         # Set up the user interface from Designer.
+#         # After setupUI you can access any designer object by doing
+#         # self.<objectname>, and you can use autoconnect slots - see
+#         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+#         # #widgets-and-dialogs-with-auto-connect
+#         self.setupUi(self)
+#
+#         self.iface = iface
+#
+#         self.chart = chart
+#
+#         #signal slot for closing indicator window
+#         # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
+#         # their, before the input windows was opened
+#         #self.closeInfrastructure.clicked.connect(self.closeInfrastructureInput)
+#         self.okInfrastructure.clicked.connect(self.saveValue)
+#
+#
+#         # get project ID and corresponding data from excel sheet
+#         self.layer = self.iface.activeLayer()
+#         # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
+#         # thas where the +4 in the getValue call below is coming from
+#         temp1, temp2 = uf.getFieldValues(self.layer, 'id', null=False, selection=True)
+#         # guard for when not exactly one project is selected
+#         if len(temp1) != 1:
+#             return
+#         self.id = temp1[0]
+#         temp1 = None
+#         temp2 = None
+#         #print "die project ID aus QGIS: ", self.id
+#
+#         # get excel row by id of project id from QGIS
+#         self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+#         self.sheet_name = 'INPUT - Infra Projects'
+#         excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
+#         #print "excel id: ", excel_id
+#
+#         # get values with openpyxl
+#         iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+#         iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+#         iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+#         iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+#         iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+#         iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+#         iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+#         # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
+#         #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+#
+#
+#         # # get values with xlwings
+#         # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+#         # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+#         # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+#         # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+#         # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+#         # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+#         # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+#
+#
+#         if iC == 1:
+#             self.inputYes.setChecked(True)
+#         else:
+#             self.inputNo.setChecked(True)
+#
+#         self.inputAmsterdam.setText(str(iA))
+#         self.inputEdam.setText(str(iE))
+#         self.inputHoorn.setText(str(iP))
+#         self.inputPurmerend.setText(str(iZ))
+#         self.inputZaanstad.setText(str(iH))
+#         self.inputProvince.setText(str(iM))
+#
+#
+#
+#     # save value
+#     def saveValue(self):
+#
+#         iC = self.inputYes.isChecked()
+#         iC2 = self.inputNo.isChecked()
+#         iA = self.inputAmsterdam.text()
+#         iE = self.inputEdam.text()
+#         iH = self.inputHoorn.text()
+#         iP = self.inputPurmerend.text()
+#         iZ = self.inputZaanstad.text()
+#         iPr = self.inputProvince.text()
+#         iM = self.inputMinistry.text()
+#
+#
+#         #take from input field and save to excel file, depending on polygonID = row in excel file
+#         #column depending on which input field
+#
+#
+#         srcfile = openpyxl.load_workbook(self.excel_file, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
+#         sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
+#
+#         # project id is at row+2 in excel, thats why I need to introduce this skip variable
+#         k = 2
+#         if iC == True and iC2 == False:
+#             sheet['P' + str(self.id+k)] = 1
+#         elif iC == False and iC2 == True:
+#             sheet['P' + str(self.id+k)] = 0
+#         else:
+#             # chase case where both yes and no are checked
+#             uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
+#             return
+#         sheet['Q'+str(self.id+k)] = float(iA)
+#         sheet['R'+str(self.id+k)] = float(iE)
+#         sheet['S'+str(self.id+k)] = float(iH)
+#         sheet['T'+str(self.id+k)] = float(iP)
+#         sheet['U'+str(self.id+k)] = float(iZ)
+#         sheet['V'+str(self.id+k)] = float(iPr)
+#         sheet['W'+str(self.id+k)] = float(iM)
+#
+#         srcfile.save(self.excel_file)
+#         print 'new values saved'
+#
+#         self.chart.refreshPlot()
+#
+#
+#         # close input window
+#         #self.hide()
+#
+#
+#
+#
+#     def getValue(self, filepath=None, sheetname=None, col=None, row_start=None, row_end=None):
+#         # project id is at row+2 in excel, thats why I need to introduce this skip variable
+#         k = 2
+#         row_start = row_start+k
+#         if row_end == None:
+#             row_end = row_start
+#         source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
+#         sheet = source_file.get_sheet_by_name(sheetname)
+#         data = []
+#         for i in range(row_start, row_end + 1):
+#             val = float(sheet[col + str(i)].value)
+#             data.append(val)
+#
+#         source_file.save(self.excel_file)
+#         return np.array(data)
+#
+#
+#     def closeInfrastructureInput(self):
+#         self.hide()
+################################################################################################################
+###################################################### PLUGIN ##################################################
+################################################################################################################
 class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
     closingPlugin = pyqtSignal()
@@ -437,105 +424,191 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         super(IndicatorsChartDocked, self).__init__(parent)
 
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
 
         self.book = book
-        #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
+        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
 
-        #signal slot for closing indicator window
-        #self.closeIndicators.clicked.connect(self.closeIndicatorsChart)
 
         # generate the plot
         #self.refreshPlot()
 
-        # # generate canvas clicked signal here so it uses the right canvas
-        # self.emitPoint = QgsMapToolEmitPoint(self.canvas)
-        # self.emitPoint.canvasClicked.connect(self.getPoint)
-        #
-        # # activate coordinate capture tool
-        # self.canvas.setMapTool(self.emitPoint)
+        self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
+        self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
 
+
+        self.populateComboBox()
+        self.populateTable()
 
 
         ## infrastructure input
         # signal slot for closing indicator window
         # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
         # their, before the input windows was opened
-        self.okInfrastructure.clicked.connect(self.saveValue)
+        #self.okInfrastructure.clicked.connect(self.saveValue)
+
+        # connect signal/slot
+        self.housingTable.cellClicked.connect(self.selectHousingFeat)
+        self.infraTable.cellClicked.connect(self.selectInfraFeat)
 
 
 
+        # # get project ID and corresponding data from excel sheet
+        # self.layer = self.iface.activeLayer()
+        # # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
+        # # thas where the +4 in the getValue call below is coming from
+        # temp1, temp2 = uf.getFieldValues(self.housing_layer, 'id', null=False, selection=True)
+        # # guard for when not exactly one project is selected
+        # if len(temp1) != 1:
+        #     #return
+        #     pass
+        # # self.id = temp1[0]
+        # temp1 = None
+        # temp2 = None
+        # # print "die project ID aus QGIS: ", self.id
+        #
+        # # get excel row by id of project id from QGIS
+        # #excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
+        # # print "excel id: ", excel_id
+        #
+        # # # get values with openpyxl
+        # # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
+        # # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
+        # # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
+        # # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
+        # # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
+        # # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
+        # # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
+        # # # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
+        # # #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+        #
+        #
+        # ## get values with xlwings
+        # #vals = self.getValue_xlwings(self.app, self.excel_file, 'INPUT - Infra Projects', ['P21','P21','P21','P21','P21','P21','P21'])
+        # # iC = vals[0]
+        # # iA = vals[1]
+        # # iE = vals[2]
+        # # iP = vals[3]
+        # # iZ = vals[4]
+        # # iH = vals[5]
+        # # iM = vals[6]
 
-        # get project ID and corresponding data from excel sheet
-        self.layer = self.iface.activeLayer()
-        # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
-        # thas where the +4 in the getValue call below is coming from
-        temp1, temp2 = uf.getFieldValues(self.layer, 'id', null=False, selection=True)
+    ############################################################
+    ################## COMBOBOX ################################
+    ############################################################
+    def populateComboBox(self):
+
+        self.packageComboBox.addItem("p1")
+
+
+
+    ############################################################
+    ################## TABLE ###################################
+    ############################################################
+    def populateTable(self):
+
+        # housing
+        housingFeats, temp2 = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=False)
         # guard for when not exactly one project is selected
-        if len(temp1) != 1:
+        if len(housingFeats) != 1:
             #return
             pass
-        # self.id = temp1[0]
-        temp1 = None
-        temp2 = None
-        # print "die project ID aus QGIS: ", self.id
 
-        # get excel row by id of project id from QGIS
-        #excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
-        # print "excel id: ", excel_id
+        self.housingTable.clear()
+        self.housingTable.setColumnCount(2)
+        self.housingTable.setHorizontalHeaderLabels(["Housing Plan", "%"])
+        self.housingTable.setRowCount(len(housingFeats))
+        for i, feat in enumerate(housingFeats):
+            # i is the table row, items mus tbe added as QTableWidgetItems
+            self.housingTable.setItem(i,0,QtGui.QTableWidgetItem(str(feat)))
+            self.housingTable.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
 
-        # # get values with openpyxl
-        # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
-        # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
-        # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
-        # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
-        # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
-        # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
-        # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
-        # # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
-        # #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+        # horizontal sizing
+        self.housingTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        #self.housingTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        self.housingTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        #self.housingTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        self.housingTable.resizeRowsToContents()
+        self.housingTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.housingTable.verticalHeader().setVisible(False)
+        #self.housingTable.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
+        # vertical sizing
+        self.housingTable.verticalHeader().setDefaultSectionSize(30)
+
+        # infra
+        infraFeats, temp2 = uf.getFieldValues(self.infraLayer, 'ShortName', null=False, selection=False)
+        # guard for when not exactly one project is selected
+        if len(infraFeats) != 1:
+            #return
+            pass
+
+        self.infraTable.clear()
+        self.infraTable.setColumnCount(2)
+        self.infraTable.setHorizontalHeaderLabels(["Infrastructure Investment", "%"])
+        self.infraTable.setRowCount(len(infraFeats))
+        for i, feat in enumerate(infraFeats):
+            # i is the table row, items mus tbe added as QTableWidgetItems
+            self.infraTable.setItem(i,0,QtGui.QTableWidgetItem(str(feat)))
+            self.infraTable.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
+
+        # horizontal sizing
+        self.infraTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        #self.infraTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        self.infraTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        #self.infraTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        self.infraTable.resizeRowsToContents()
+        self.infraTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.infraTable.verticalHeader().setVisible(False)
+        #self.infraTable.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
+        # vertical sizing
+        self.infraTable.verticalHeader().setDefaultSectionSize(30)
 
 
-        ## get values with xlwings
-        #vals = self.getValue_xlwings(self.app, self.excel_file, 'INPUT - Infra Projects', ['P21','P21','P21','P21','P21','P21','P21'])
-        # iC = vals[0]
-        # iA = vals[1]
-        # iE = vals[2]
-        # iP = vals[3]
-        # iZ = vals[4]
-        # iH = vals[5]
-        # iM = vals[6]
+    # housing
+    def selectHousingFeat(self):
 
-        iC = 1
-        iA = 0.4
-        iE = 0.2
-        iP = 0.1
-        iZ = 3.2
-        iH = 0.2
-        iM = 10.
+        selectedItem = self.housingTable.selectedItems()[0]
+        row=selectedItem.row()
+        self.housingLayer.removeSelection()
+        self.housingLayer.select(row)
+        self.zoomToSelectedFeature(1.2, self.housingLayer)
 
-        print str(iA)
+    def selectHousingRow(self):
+
+        feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
+        self.housingTable.selectRow(id[0])
+
+    # infra
+    def selectInfraFeat(self):
+
+        selectedItem = self.infraTable.selectedItems()[0]
+        row=selectedItem.row()
+        self.infraLayer.removeSelection()
+        self.infraLayer.select(row)
+        self.zoomToSelectedFeature(1.2, self.infraLayer)
+
+    def selectInfraRow(self):
+
+        feat, id = uf.getFieldValues(self.infraLayer, 'ShortName', null=False, selection=True)
+        self.infraTable.selectRow(id[0])
 
 
-        if iC == 1:
-            self.inputYes.setChecked(True)
-        else:
-            self.inputNo.setChecked(True)
+    ############################################################
+    ################## CANVAS ##################################
+    ############################################################
+    def zoomToSelectedFeature(self, scale, layer):
 
-        self.inputAmsterdam.setText(str(iA))
-        self.inputEdam.setText(str(iE))
-        self.inputHoorn.setText(str(iP))
-        self.inputPurmerend.setText(str(iZ))
-        self.inputZaanstad.setText(str(iH))
-        self.inputProvince.setText(str(iM))
+        box = layer.boundingBoxOfSelected()
+        box.scale(scale)
+        #self.canvas = self.determineCanvas()
+        self.canvas.setExtent(box)
+        #self.canvas.zoomScale(50000)
+        self.canvas.refresh()
+
+
 
     def getPoint(self, mapPoint, mouseButton):
         # change tool so you don't get more than one POI
@@ -550,51 +623,52 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
 
-    # save value
-    def saveValue(self):
-
-        iC = self.inputYes.isChecked()
-        iC2 = self.inputNo.isChecked()
-        iA = self.inputAmsterdam.text()
-        iE = self.inputEdam.text()
-        iH = self.inputHoorn.text()
-        iP = self.inputPurmerend.text()
-        iZ = self.inputZaanstad.text()
-        iPr = self.inputProvince.text()
-        iM = self.inputMinistry.text()
-
-        # take from input field and save to excel file, depending on polygonID = row in excel file
-        # column depending on which input field
-
-
-        srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
-                                         keep_vba=True)  # to open the excel sheet and if it has macros
-        sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
-
-        # project id is at row+2 in excel, thats why I need to introduce this skip variable
-        k = 2
-        if iC == True and iC2 == False:
-            sheet['P' + str(self.id + k)] = 1
-        elif iC == False and iC2 == True:
-            sheet['P' + str(self.id + k)] = 0
-        else:
-            # chase case where both yes and no are checked
-            uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
-            return
-        sheet['Q' + str(self.id + k)] = float(iA)
-        sheet['R' + str(self.id + k)] = float(iE)
-        sheet['S' + str(self.id + k)] = float(iH)
-        sheet['T' + str(self.id + k)] = float(iP)
-        sheet['U' + str(self.id + k)] = float(iZ)
-        sheet['V' + str(self.id + k)] = float(iPr)
-        sheet['W' + str(self.id + k)] = float(iM)
-
-        srcfile.save(self.excel_file)
-        print 'new values saved'
-
-        self.refreshPlot()
-
-
+    # # save value
+    # def saveValue(self):
+    #
+    #     iC = self.inputYes.isChecked()
+    #     iC2 = self.inputNo.isChecked()
+    #     iA = self.inputAmsterdam.text()
+    #     iE = self.inputEdam.text()
+    #     iH = self.inputHoorn.text()
+    #     iP = self.inputPurmerend.text()
+    #     iZ = self.inputZaanstad.text()
+    #     iPr = self.inputProvince.text()
+    #     iM = self.inputMinistry.text()
+    #
+    #     # take from input field and save to excel file, depending on polygonID = row in excel file
+    #     # column depending on which input field
+    #
+    #
+    #     srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
+    #                                      keep_vba=True)  # to open the excel sheet and if it has macros
+    #     sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
+    #
+    #     # project id is at row+2 in excel, thats why I need to introduce this skip variable
+    #     k = 2
+    #     if iC == True and iC2 == False:
+    #         sheet['P' + str(self.id + k)] = 1
+    #     elif iC == False and iC2 == True:
+    #         sheet['P' + str(self.id + k)] = 0
+    #     else:
+    #         # chase case where both yes and no are checked
+    #         uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
+    #         return
+    #     sheet['Q' + str(self.id + k)] = float(iA)
+    #     sheet['R' + str(self.id + k)] = float(iE)
+    #     sheet['S' + str(self.id + k)] = float(iH)
+    #     sheet['T' + str(self.id + k)] = float(iP)
+    #     sheet['U' + str(self.id + k)] = float(iZ)
+    #     sheet['V' + str(self.id + k)] = float(iPr)
+    #     sheet['W' + str(self.id + k)] = float(iM)
+    #
+    #     srcfile.save(self.excel_file)
+    #     print 'new values saved'
+    #
+    #     self.refreshPlot()
+    ############################################################
+    ################## EXCEL ###################################
+    ############################################################
     def getValue_xlwings(self, book, sheet, cells):
         # # # run Excel with xlwings
         # # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
@@ -620,6 +694,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         #return [-1035, -1907, -3106, -7902, -3487]
 
 
+    ###########################################################
+    ################## PLOT ###################################
+    ###########################################################
     def refreshPlot(self):
         ### INDICATORS
 
@@ -771,6 +848,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         autolabel(rects)
 
 
+    ############################################################
+    ################## CLOSE ###################################
+    ############################################################
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
