@@ -430,7 +430,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         # generate the plot
-        #self.refreshPlot()
+        self.refreshPlot()
 
         self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
@@ -813,18 +813,21 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             self.chartView.itemAt(i).widget().setParent(None)
 
         # add matplotlib Figure to chartFrame / chartView layout
-        self.chart_figure = Figure()
+        self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
         #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.chartView.addWidget(self.chart_canvas)
+
+        self.plotChartHorizontal(self.chart_figure.add_subplot(111))
+
         # plot the subplots
         #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
-        self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
+        #self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
         #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
         #self.chart_figure.tight_layout()
         # you can actually probably adjust it perfectly with this
-        self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
-        self.chart_figure.subplots_adjust(hspace=0.53)
+        #self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
+        #self.chart_figure.subplots_adjust(hspace=0.53)
         # make background of plot transparent
         self.chart_figure.patch.set_alpha(0.0)
         #self.chart_figure.patch.set_facecolor('red')
@@ -886,6 +889,25 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                         ha='center', va='bottom')
 
         autolabel(rects)
+
+
+    def plotChartHorizontal(self, ax):
+        #fig, ax = plt.subplots()
+
+        # Example data
+        people = ('Hoorn', 'Amsterdam', 'Municipality')
+        y_pos = np.arange(len(people))
+        performance = 100 * np.random.rand(len(people))
+        #error = np.random.rand(len(people))
+
+        ax.barh(y_pos, performance, align='center',
+                color='blue', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(people)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        ax.set_xlabel('Percent')
+        ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_title('How fast do you want to go today?')
 
 
     ############################################################
