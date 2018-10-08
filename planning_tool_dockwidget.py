@@ -78,7 +78,7 @@ class PointTool(QgsMapTool, QAction):
         self.canvas = canvas
         self.action = action
         self.widget = widget
-        self.book = self.widget.book
+        #self.book = self.widget.book
 
         self.cursor = QCursor(Qt.PointingHandCursor)
 
@@ -155,8 +155,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.canvas = self.iface.mapCanvas()
 
         self.book = book
-        self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-
 
         # generate the plot
         self.refreshPlot()
@@ -335,9 +333,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     def populateTable(self, attributes=None, table=None, tableName=None):
 
-        # first get attribute vals as I need to unrol the iterator to get the row count anyway
-        vals = []
-        #for feat in features:
 
         table.clear()
         table.setColumnCount(2)
@@ -392,21 +387,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.canvas.setExtent(box)
         #self.canvas.zoomScale(50000)
         self.canvas.refresh()
-
-
-
-    def getPoint(self, mapPoint, mouseButton):
-        # change tool so you don't get more than one POI
-        #self.canvas.unsetMapTool(self.emitPoint)
-        #self.canvas.setMapTool(self.userTool)
-
-        # Get the click
-        if mapPoint:
-            pass
-
-        return
-
-
 
     # # save value
     # def saveValue(self):
@@ -659,6 +639,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ################## CLOSE ###################################
     ############################################################
     def closeEvent(self, event):
+        self.housingTable.clearSelection()
+        self.infraTable.clearSelection()
+        self.housingLayer.removeSelection()
+        self.infraLayer.removeSelection()
+        self.canvas.setExtent(self.infraLayer.extent())
+        self.canvas.refresh()
         self.closingPlugin.emit()
         event.accept()
 

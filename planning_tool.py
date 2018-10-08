@@ -93,8 +93,10 @@ class PlanningToolClass:
 
         self.pluginIsActive = False
         self.ic = None
+        self.mapTool = None
         self.app = None
         self.book = None
+
 
     # noinspection PyMethodMayBeStatic
     def transl(self, message):
@@ -210,6 +212,11 @@ class PlanningToolClass:
         # TODO: this is only printed when the plugin is reopened, is that correct?
         print "** CLOSING PlanningToolClass"
 
+        # close excel sheet
+        if self.book:
+            self.book.close()
+            self.app.kill()
+
         # disconnects
         self.ic.closingPlugin.disconnect(self.onClosePlugin)
 
@@ -239,13 +246,11 @@ class PlanningToolClass:
         #self.iface.addToolBar(self.planning_toolbar)
         #TODO: what needs to be done here instead is simply docking self.planning_toolbar, but I cannot seems to get that done.
 
-        # close excel sheet
-        if self.book:
-            self.book.close()
-            self.app.kill()
+        if self.mapTool:
+            self.canvas.unsetMapTool(self.mapTool)
+            self.mapTool = None
 
         self.rgmsAction.setVisible(True)
-
         self.pluginIsActive = False
 
 
@@ -305,11 +310,11 @@ class PlanningToolClass:
             # zoom to infra investments at the start of the plugin
             #self.zoomToInfrastructureInvestments()
 
-
-            # prepare excel file
+            # open excel
             self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-            #self.app = xw.App(visible=False)
-            #self.book = self.app.books.open(self.excel_file)
+            self.app = xw.App(visible=False)
+            self.book = self.app.books.open(self.excel_file)
+
 
             ## initialise IndicatorsChart widget here
             # dockwidget does not exist if:
@@ -471,16 +476,16 @@ class PlanningToolClass:
         #     callback=self.openIndicatorsChart,
         #     parent=self.iface.mainWindow())
 
-        # separator
-        self.separators.append(self.planning_toolbar.addSeparator())
+        # # separator
+        # self.separators.append(self.planning_toolbar.addSeparator())
 
-        # close plugin
-        icon_path = ':/plugins/PlanningToolClass/icons/close.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Close Plugin'),
-            callback=self.onClosePlugin,
-            parent=self.iface.mainWindow())
+        # # close plugin
+        # icon_path = ':/plugins/PlanningToolClass/icons/close.png'
+        # self.add_action(
+        #     icon_path,
+        #     text=self.transl(u'Close Plugin'),
+        #     callback=self.onClosePlugin,
+        #     parent=self.iface.mainWindow())
 
         # extra necessary actions
         # self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
@@ -542,10 +547,11 @@ class PlanningToolClass:
 ### activate map Tool
     def activateSelectionTool(self):
 
-        mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
-        self.canvas.setMapTool(mapTool)
+        if self.mapTool == None:
+            self.mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
+        self.canvas.setMapTool(self.mapTool)
         # self.iiAction.setChecked(True)
-        uf.showMessage(self.iface, 'tap on polygon to select, double-tap on canvas to remove selection', type='Info', lev=1, dur=5)
+        uf.showMessage(self.iface, 'tap on polygon to select, double-tap on canvas to remove selection', type='Info', lev=0, dur=10)
 
 
 #### open dialogs:
