@@ -601,31 +601,39 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     # housing
     def selectHousingFeat(self):
 
-        selectedItem = self.housingTable.selectedItems()[0]
-        row=selectedItem.row()
+        # selectedItem = self.housingTable.selectedItems()[0]
+        # row=selectedItem.row()
+        row = self.housingTable.currentRow()
         self.housingLayer.removeSelection()
         self.housingLayer.select(row)
         self.zoomToSelectedFeature(1.2, self.housingLayer)
+        self.housingLabel.setText(self.housingTable.currentItem().text())
+
 
     def selectHousingRow(self):
 
         feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
         self.housingTable.selectRow(id[0])
-        self.housingLabel.setText(str(feat))
+        self.housingLabel.setText(str(feat)[3:-2])
 
     # infra
     def selectInfraFeat(self):
 
-        selectedItem = self.infraTable.selectedItems()[0]
-        row=selectedItem.row()
+        # selectedItem = self.infraTable.selectedItems()[0]
+        # row=selectedItem.row()
+        row = self.infraTable.currentRow()
         self.infraLayer.removeSelection()
         self.infraLayer.select(row)
         self.zoomToSelectedFeature(1.2, self.infraLayer)
+        self.infraLabel.setText(self.infraTable.currentItem().text())
+
 
     def selectInfraRow(self):
 
         feat, id = uf.getFieldValues(self.infraLayer, 'ShortName', null=False, selection=True)
         self.infraTable.selectRow(id[0])
+        self.infraLabel.setText(str(feat)[3:-2])
+
 
 
     ############################################################
@@ -785,8 +793,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # accesibility = np.append(cd, np.mean(cd))
 
         ### Accesibility
-        accesibility = self.getValue_xlwings(self.book, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
-        accesibility = np.append(accesibility, np.mean(accesibility))
+        #accesibility = self.getValue_xlwings(self.book, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
+        #accesibility = np.append(accesibility, np.mean(accesibility))
 
         ### Market Balance
         market_balance = np.asarray([-1035, -1907, -3106, -7902, -3487])
@@ -810,9 +818,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.chartView.addWidget(self.chart_canvas)
         # plot the subplots
-        self.plotChart(self.chart_figure.add_subplot(311), accesibility, "Accessibility", 'b')
-        self.plotChart(self.chart_figure.add_subplot(312), market_balance, "Market Balance", 'g')
-        self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
+        #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
+        self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
+        #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
         #self.chart_figure.tight_layout()
         # you can actually probably adjust it perfectly with this
         self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
