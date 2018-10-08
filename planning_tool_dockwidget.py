@@ -85,23 +85,7 @@ class PointTool(QgsMapTool, QAction):
         self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
 
-        self.infra_layer.selectionChanged.connect(self.infraSelectionChanged)
-        self.housing_layer.selectionChanged.connect(self.housingSelectionChanged)
 
-        ### TODO: now just put this in the SelectionChanged function
-        # self.widget.inputAmsterdam.setText("works")
-
-
-    def infraSelectionChanged(self):
-        if self.infra_layer.selectedFeatures():
-            print "infra selection Changed"
-            self.widget.selectInfraRow()
-
-
-    def housingSelectionChanged(self):
-        if self.housing_layer.selectedFeatures():
-            print "housing selection Changed"
-            self.widget.selectHousingRow()
 
     # def canvasPressEvent(self, event):
     #     pass
@@ -180,64 +164,106 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
 
-
+        # populate box and table
         self.populateComboBox()
-        self.populateTable()
+        self.packageSelected()
+
 
         # connect signal/slot
         self.housingTable.cellClicked.connect(self.selectHousingFeat)
         self.infraTable.cellClicked.connect(self.selectInfraFeat)
+        self.packageComboBox.currentIndexChanged.connect(self.packageSelected)
 
-        self.packageComboBox.currentIndexChanged.connect(self.zoomToPackage)
+        self.infraLayer.selectionChanged.connect(self.infraSelectionChanged)
+        self.housingLayer.selectionChanged.connect(self.housingSelectionChanged)
 
+        ### TODO: now just put this in the SelectionChanged function
+        # self.widget.inputAmsterdam.setText("works")
 
+    def housingSelectionChanged(self):
+        ## this is called if user changes the project selection on the canvas
 
-        ## infrastructure input
-        # signal slot for closing indicator window
-        # TODO: closeInfrastructure is actually cancel infrastructure, which should maybe actually restore the values that were
-        # their, before the input windows was opened
-        #self.okInfrastructure.clicked.connect(self.saveValue)
+        self.housingTable.blockSignals(True)
 
+        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
+        feat = self.housingLayer.selectedFeatures()
+        if feat:
+            feat = feat[0]
+        else:
+            self.housingTable.clearSelection()
+            self.housingTable.blockSignals(False)
+            return
 
-        # # get project ID and corresponding data from excel sheet
-        # self.layer = self.iface.activeLayer()
-        # # self.id is the row number (zero starting) of the attributes table in QGIS, so not the actual id column value
-        # # thas where the +4 in the getValue call below is coming from
-        # temp1, temp2 = uf.getFieldValues(self.housing_layer, 'id', null=False, selection=True)
-        # # guard for when not exactly one project is selected
-        # if len(temp1) != 1:
-        #     #return
-        #     pass
-        # # self.id = temp1[0]
-        # temp1 = None
-        # temp2 = None
-        # # print "die project ID aus QGIS: ", self.id
+        ## check if package changed
+        packageMap = int(feat.attribute("Package")[1])
+        packageTable = self.packageComboBox.currentIndex()
+        print packageTable
+        if packageMap != packageTable and packageTable != 0:
+                self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageSelected()
+
+        ## select the corresponding row of the project
+        rowCount = self.housingTable.rowCount()
+        for i in range(rowCount):
+            project = self.housingTable.item(i, 0).text()
+            print project
+            if project == feat.attribute("NameShort"):
+                self.housingTable.selectRow(i)
+                break
+
+        self.housingTable.blockSignals(False)
+
+                #self.housingTable.selectRow(int(feat.attribute("id")))
+
+        # if feat == None:
+        #     self.housingTable.clearSelection()
+        # elif feat[0]:
         #
-        # # get excel row by id of project id from QGIS
-        # #excel_id = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='A', row_start=self.id)[0]
-        # # print "excel id: ", excel_id
-        #
-        # # # get values with openpyxl
-        # # iC = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='P', row_start=self.id)[0]
-        # # iA = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='Q', row_start=self.id)[0]
-        # # iE = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='R', row_start=self.id)[0]
-        # # iP = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='S', row_start=self.id)[0]
-        # # iZ = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='T', row_start=self.id)[0]
-        # # iH = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='U', row_start=self.id)[0]
-        # # iM = self.getValue(filepath=self.excel_file, sheetname=self.sheet_name, col='V', row_start=self.id)[0]
-        # # # TODO replace these getValue calls with getValue_xlwings calls, because they always fuck up the excel file!!
-        # # #   should also be faster, if that for some reason doesn't work, I could also try to fix the getValue function, e.g. by using a in_memory_file
+        # feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
+        # print id
+        # self.housingTable.selectRow(id[0])
         #
         #
-        # ## get values with xlwings
-        # #vals = self.getValue_xlwings(self.app, self.excel_file, 'INPUT - Infra Projects', ['P21','P21','P21','P21','P21','P21','P21'])
-        # # iC = vals[0]
-        # # iA = vals[1]
-        # # iE = vals[2]
-        # # iP = vals[3]
-        # # iZ = vals[4]
-        # # iH = vals[5]
-        # # iM = vals[6]
+        # if self.housingLayer.selectedFeatures():
+        #     print "housing selection Changed"
+        #     # if self.widget.tableHousing.current
+        #     #     self.widget.
+        #     # self.widget.selectHousingRow()
+        # else:
+        #     self.housingTable.clearSelection()
+
+    def infraSelectionChanged(self):
+        ## this is called if user changes the project selection on the canvas
+
+        self.infraTable.blockSignals(True)
+
+        ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
+        feat = self.infraLayer.selectedFeatures()
+        if feat:
+            feat = feat[0]
+        else:
+            self.infraTable.clearSelection()
+            self.infraTable.blockSignals(False)
+            return
+
+        ## check if package changed
+        packageMap = int(feat.attribute("Package")[1])
+        packageTable = self.packageComboBox.currentIndex()
+        print packageTable
+        if packageMap != packageTable and packageTable != 0:
+                self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageSelected()
+
+        ## select the corresponding row of the project
+        rowCount = self.infraTable.rowCount()
+        for i in range(rowCount):
+            project = self.infraTable.item(i, 0).text()
+            print project
+            if project == feat.attribute("ShortName"):
+                self.infraTable.selectRow(i)
+                break
+
+        self.infraTable.blockSignals(False)
 
     ############################################################
     ################## COMBOBOX ################################
@@ -251,138 +277,108 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
 
 
+    def packageSelected(self):
 
-    def zoomToPackage(self):
-
-
-        #TODO: try to implement this without selecting the features, as this triggers feature selection signal
-        #solution: https://gis.stackexchange.com/questions/176170/find-bounding-box-for-multiple-features-using-pyqgis
-
-        # remove current selections on this layer
-        self.housingLayer.removeSelection()
-        self.infraLayer.removeSelection()
-        # get the currently selected item in the municipality combo box
         package = self.packageComboBox.currentIndex()
+
+        # housingSelectedFeats = self.housingLayer.getSelectedFeatures()
+        # infraSelectedFeats = self.infraLayer.getSelectedFeatures()
+        #
+        # if housingSelectedFeats and infraSelectedFeats:
+        #     housingFeat = housingSelectedFeats[0].attribute("Package")
+
+        ####if "all packages" selected
         if package == 0:
-            uf.zoomToLayer(self.iface, "Infrastructure_Investments")
-            return
+            #populate table with all packages
+            expressionHousing = "Package IS 'p1' or Package IS 'p2' or Package IS 'p3' or Package IS 'p4' or Package IS 'p5'"
+            expressionInfra = "Package IS 'P1' or Package IS 'P2' or Package IS 'P3' or Package IS 'P4' or Package IS 'P5'"
+        else:
+            expressionHousing = "Package IS " + "'p"+str(package)+"'"
+            expressionInfra = "Package IS " + "'P"+str(package)+"'"
 
-        print '"Package" IS p' + "'"+str(package)+"'"
-        ### select the features for this municipality
-        uf.selectFeaturesByExpression(self.housingLayer, '"Package" IS ' + "'p"+str(package)+"'")
-        uf.selectFeaturesByExpression(self.infraLayer, '"Package" IS ' + "'P"+str(package)+"'")
-        # make box around the features
-        box1 = self.housingLayer.boundingBoxOfSelected()
-        box2 = self.infraLayer.boundingBoxOfSelected()
-        box1.combineExtentWith(box2)
-        # unselect features again
-        self.housingLayer.removeSelection()
-        self.infraLayer.removeSelection()
-        # zoom to the box
-        self.canvas.setExtent(box1)
+        
+        request = QgsFeatureRequest().setFilterExpression(expressionHousing)
+        housingFeatureIterator = self.housingLayer.getFeatures(request)
+        feat = QgsFeature()
+        housingFeatureIterator.nextFeature(feat)
+        housingBox = feat.geometry().boundingBox()
+        housingNames = [feat.attribute('NameShort')]
+        while housingFeatureIterator.nextFeature(feat):
+            housingBox.combineExtentWith(feat.geometry().boundingBox())
+            housingNames.append(feat.attribute('NameShort'))
+            #print "housing: ", feat
+
+        request = QgsFeatureRequest().setFilterExpression(expressionInfra)
+        infraFeatureIterator = self.infraLayer.getFeatures(request)
+        feat = QgsFeature()
+        infraFeatureIterator.nextFeature(feat)
+        infraBox = feat.geometry().boundingBox()
+        infraNames = [feat.attribute('ShortName')]
+        while infraFeatureIterator.nextFeature(feat):
+            infraBox.combineExtentWith(feat.geometry().boundingBox())
+            infraNames.append(feat.attribute('ShortName'))
+
+        # populate the tables
+        self.populateTable(attributes=housingNames, table=self.housingTable, tableName='Housing Plans')
+        self.populateTable(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
+
+        # zoom to package
+        #if (not self.housingLayer.selectedFeatures()) and (not self.infraLayer.selectedFeatures()):
+        housingBox.combineExtentWith(infraBox)
+        self.canvas.setExtent(housingBox)
         self.canvas.refresh()
-
-
+        
 
 
     ############################################################
     ################## TABLE ###################################
     ############################################################
-    def populateTable(self):
+    def populateTable(self, attributes=None, table=None, tableName=None):
 
-        # housing
-        housingFeats, temp2 = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=False)
-        # guard for when not exactly one project is selected
-        if len(housingFeats) != 1:
-            #return
-            pass
+        # first get attribute vals as I need to unrol the iterator to get the row count anyway
+        vals = []
+        #for feat in features:
 
-        self.housingTable.clear()
-        self.housingTable.setColumnCount(2)
-        self.housingTable.setHorizontalHeaderLabels(["Housing Plan", "%"])
-        self.housingTable.setRowCount(len(housingFeats))
-        for i, feat in enumerate(housingFeats):
+        table.clear()
+        table.setColumnCount(2)
+        table.setHorizontalHeaderLabels([tableName, "%"])
+        table.setRowCount(len(attributes))
+        for i, att in enumerate(attributes):
             # i is the table row, items mus tbe added as QTableWidgetItems
-            self.housingTable.setItem(i,0,QtGui.QTableWidgetItem(str(feat)))
-            self.housingTable.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
+            table.setItem(i,0,QtGui.QTableWidgetItem(str(att)))
+            table.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
 
-        # horizontal sizing
-        self.housingTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        #self.housingTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        self.housingTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        #self.housingTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        self.housingTable.resizeRowsToContents()
-        self.housingTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.housingTable.verticalHeader().setVisible(False)
-        #self.housingTable.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
-        # vertical sizing
-        self.housingTable.verticalHeader().setDefaultSectionSize(30)
+        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
-        # infra
-        infraFeats, temp2 = uf.getFieldValues(self.infraLayer, 'ShortName', null=False, selection=False)
-        # guard for when not exactly one project is selected
-        if len(infraFeats) != 1:
-            #return
-            pass
-
-        self.infraTable.clear()
-        self.infraTable.setColumnCount(2)
-        self.infraTable.setHorizontalHeaderLabels(["Infrastructure Investment", "%"])
-        self.infraTable.setRowCount(len(infraFeats))
-        for i, feat in enumerate(infraFeats):
-            # i is the table row, items mus tbe added as QTableWidgetItems
-            self.infraTable.setItem(i,0,QtGui.QTableWidgetItem(str(feat)))
-            self.infraTable.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
-
-        # horizontal sizing
-        self.infraTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        #self.infraTable.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        self.infraTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        #self.infraTable.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        self.infraTable.resizeRowsToContents()
-        self.infraTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.infraTable.verticalHeader().setVisible(False)
-        #self.infraTable.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
-        # vertical sizing
-        self.infraTable.verticalHeader().setDefaultSectionSize(30)
+        # horizontal
+        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        # vertical
+        table.resizeRowsToContents()
+        table.verticalHeader().setVisible(True)
+        #table.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
+        table.verticalHeader().setDefaultSectionSize(30)
 
 
     # housing
     def selectHousingFeat(self):
 
-        # selectedItem = self.housingTable.selectedItems()[0]
-        # row=selectedItem.row()
-        row = self.housingTable.currentRow()
+        selectedItem = self.housingTable.selectedItems()[0].text()
+        #print selectedItem
         self.housingLayer.removeSelection()
-        self.housingLayer.select(row)
+        uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+str(selectedItem)+"'")
         self.zoomToSelectedFeature(1.2, self.housingLayer)
-        self.housingLabel.setText(self.housingTable.currentItem().text())
-
-
-    def selectHousingRow(self):
-
-        feat, id = uf.getFieldValues(self.housingLayer, 'NameShort', null=False, selection=True)
-        self.housingTable.selectRow(id[0])
-        #self.housingLabel.setText(str(feat)[3:-2])
 
     # infra
     def selectInfraFeat(self):
 
-        # selectedItem = self.infraTable.selectedItems()[0]
-        # row=selectedItem.row()
-        row = self.infraTable.currentRow()
+        selectedItem = self.infraTable.selectedItems()[0].text()
+        #print selectedItem
         self.infraLayer.removeSelection()
-        self.infraLayer.select(row)
+        uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+str(selectedItem)+"'")
         self.zoomToSelectedFeature(1.2, self.infraLayer)
-        self.infraLabel.setText(self.infraTable.currentItem().text())
-
-
-    def selectInfraRow(self):
-
-        feat, id = uf.getFieldValues(self.infraLayer, 'ShortName', null=False, selection=True)
-        self.infraTable.selectRow(id[0])
-        #self.infraLabel.setText(str(feat)[3:-2])
-
 
 
     ############################################################

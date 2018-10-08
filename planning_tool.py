@@ -85,7 +85,6 @@ class PlanningToolClass:
         # Declare instance attributes
         self.actions = []
         self.menu = self.transl(u'&Regional Game Mobiele Stad')
-        # TODO: We are going to let the user set this up in a future iteration
         self.planning_toolbar = self.iface.addToolBar(u'RGMSToolbar')
         self.planning_toolbar.setObjectName(u'mRGMSToolbar')
 
@@ -303,9 +302,7 @@ class PlanningToolClass:
             # update/ add additional stuff to planning toolbar
             self.updateToolbar()
 
-
-            # TODO: not working anymore with the new QGIS project file,
-            # thus also the "home" button in the toolbar not working anymore
+            # zoom to infra investments at the start of the plugin
             #self.zoomToInfrastructureInvestments()
 
 
@@ -338,15 +335,7 @@ class PlanningToolClass:
             #self.ic = IndicatorsChartDocked(self.iface, book=self.book)
 
 
-
-
-
-
     # ### helper functions
-    # def handleDoubleClick(self, point, buttons):
-    #     # do stuff with point and buttons
-    #     print "double-clicked"
-
     def loadProjectFile(self):
 
 
@@ -376,7 +365,7 @@ class PlanningToolClass:
         self.add_action(
             icon_path,
             text=self.transl(u'Save'),
-            callback=self.openHousingInput,
+            callback=self.save,
             parent=self.iface.mainWindow())
 
         ##toolbar icons /  add the map navigation actions
@@ -412,7 +401,6 @@ class PlanningToolClass:
         # identify features
         self.planning_toolbar.addAction(self.iface.actionIdentify())
         self.actions.append(self.iface.actionIdentify())
-
 
 
         # # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
@@ -494,7 +482,6 @@ class PlanningToolClass:
             callback=self.onClosePlugin,
             parent=self.iface.mainWindow())
 
-
         # extra necessary actions
         # self.planning_toolbar.addAction(self.iface.actionZoomActualSize())
         # self.planning_toolbar.addAction(self.iface.actionZoomFullExtent())
@@ -506,11 +493,8 @@ class PlanningToolClass:
 
 
     def zoomToInfrastructureInvestments(self):
-
-
         # zoom on infrastructure investments layer extent / home
         uf.zoomToLayer(self.iface, "Infrastructure_Investments")
-
 
     def zoomToMunicipality(self):
 
@@ -529,7 +513,6 @@ class PlanningToolClass:
         # zoom to the box
         self.canvas.setExtent(box)
         self.canvas.refresh()
-
 
     def zoomToPackage(self):
 
@@ -565,66 +548,7 @@ class PlanningToolClass:
         uf.showMessage(self.iface, 'tap on polygon to select, double-tap on canvas to remove selection', type='Info', lev=1, dur=5)
 
 
-    #### open dialogs:
-
-    def openHousingInput(self):
-
-        layer = self.iface.activeLayer()
-        projectName, ids = uf.getFieldValues(layer, 'NAAMPLAN', null=False, selection=True)
-        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
-        if layer:
-            if str(layer.name()) != 'Housing_Plans':
-                uf.showMessage(self.iface, "please select a housing project first", type='Info', lev=1, dur=5)
-                return
-        else:
-            uf.showMessage(self.iface, "please select a housing project first", type='Info', lev=1, dur=5)
-            return
-
-        if len(projectName) == 1:
-            self.hi = HousingInput(self.iface, chart=self.ic)
-            self.hi.show()
-            self.hi.move(QPoint(450, 150))
-            self.hi.naamplanLabel.setText(str(projectName[0]))
-            self.hi.packageLabel.setText('PACKAGE ' + str(package[0][-1:]))
-        else:
-            uf.showMessage(self.iface, "please select exactly one housing project", type='Info', lev=1, dur=5)
-
-
-
-    def openInfrastructureInput(self):
-
-        # # Create a new NearestFeatureMapTool and keep reference
-        # self.nearestFeatureMapTool = \
-        #     NearestFeatureMapTool(self.iface.mapCanvas())
-        # self.iface.mapCanvas().setMapTool(self.nearestFeatureMapTool)
-
-
-
-        layer = self.iface.activeLayer()
-        investmentName, ids = uf.getFieldValues(layer, 'InfrProj', null=False, selection=True)
-        package, ids = uf.getFieldValues(layer, 'Package', null=False, selection=True)
-        if layer:
-            if str(layer.name()) != 'Infrastructure_Investments':
-                uf.showMessage(self.iface, "please select an infrastructure project first", type='Info', lev=1, dur=5)
-                return
-        else:
-            uf.showMessage(self.iface, "please select an infrastructure project first", type='Info', lev=1, dur=5)
-            return
-
-        if len(investmentName) == 1:
-            self.ii = InfrastructureInput(self.iface, chart=self.ic)
-            self.ii.show()
-            self.ii.move(QPoint(450, 150))
-            self.ii.investmentLabel.setText(str(investmentName[0]))
-            self.ii.packageLabel2.setText('PACKAGE ' + str(package[0][-1:]))
-            # TODO: continue here: this doesn't work. Its about the WindowStaysOnTopHint, which Gustavo wants
-            #self.ii.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint)
-            #self.ii.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
-        else:
-            uf.showMessage(self.iface, "please select exactly one infrastructure project", type='Info', lev=1, dur=5)
-
-
-
+#### open dialogs:
     def openIndicatorsChart(self):
         #self.ic = IndicatorsChart(self.iface)  #old
         #self.ic = IndicatorsChartDocked(self.iface)    #new
@@ -633,3 +557,11 @@ class PlanningToolClass:
         self.ic.show()
         #self.ic.move(QPoint(100, 150))
         #self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+
+
+    def save(self):
+        pass
+
+
+
+

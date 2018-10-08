@@ -346,6 +346,15 @@ def getFeaturesByExpression(layer, expression):
             features[feature.id()] = feature.attributes()
     return features
 
+def getBoundingBoxByExpression(layer, expression):
+    if layer:
+        request = QgsFeatureRequest().setFilterExpression(expression)
+        iterator = layer.getFeatures(request)
+        box = QgsRectangle()
+        for feat in iterator:
+            box.combineExtentWith(feat.geometry().boundingBox())
+    return box
+
 
 def selectFeaturesByExpression(layer, expression):
     features = []
