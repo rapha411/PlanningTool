@@ -161,6 +161,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.canvas = self.iface.mapCanvas()
         self.book = book
 
+        # TODO: what should maybe be done is to implement my own data structure from the layer
+        # and excel data, e.g. a pandas table, and use that for loading and saving data.
+        # When the plugin is closed or changes are saved with saving button then this data structure is pushed to the
+        # layers and excel sheet. This also means that the OK button only saves in my own data structure, and the
+        # populate table function gets its values from that.
+
         # load project file
         self.loadProjectFile()
 
@@ -173,16 +179,39 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         # connect signal/slot
+        # table
         self.housingTable.cellClicked.connect(self.housingRowSelected)
         self.infraTable.cellClicked.connect(self.infraRowSelected)
+        # comboBox
         self.packageComboBox.currentIndexChanged.connect(self.packageSelected)
-
+        # layers
         self.infraLayer.selectionChanged.connect(self.infraLayerSelectionChanged)
         self.housingLayer.selectionChanged.connect(self.housingLayerSelectionChanged)
+        # sliders
+        self.housingSlider.valueChanged.connect(self.housingSliderChanged)
+        #self.housingLayer.valueChanged.connect(self.housingLayerSelectionChanged)
+
+
+        # buttons
+        # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
+        # in this way the plot is only update from the OK button and not from moving the slider, which obviously would be terrible
+
+
 
         # generate the plot
         self.refreshPlot()
-
+    ############################################################
+    ################## SLIDERS #################################
+    ############################################################
+    def housingSliderChanged(self):
+        #print self.housingSlider.value()
+        if self.housingTable.selectedItems():
+            # set current slider value in the housing table (works dynamic)
+            row = self.housingTable.currentRow()
+            percentItem = QtGui.QTableWidgetItem(str(self.housingSlider.value()))
+            percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            self.housingTable.setItem(row, 1, percentItem)
+            #self.housingTable.setItem(row, 1, QtGui.QTableWidgetItem(str(self.housingSlider.value())))
 
     ############################################################
     ################## COMBOBOX ################################
@@ -254,30 +283,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.canvas.refresh()
 
 
-
-
-
-
-    def loadProjectFile(self):
-
-        # open the QGIS project file
-        scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
-
-
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
-        else:
-            last_dir = uf.getLastDir("PlanningToolClass")
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(unicode(new_file))
-                scenario_open = True
-
-
-
     ############################################################
     ################## TABLE ###################################
     ############################################################
@@ -291,14 +296,20 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         for i, att in enumerate(attributes):
             # i is the table row, items mus tbe added as QTableWidgetItems
             table.setItem(i,0,QtGui.QTableWidgetItem(att))
-            table.setItem(i, 1, QtGui.QTableWidgetItem("percent"))
+            # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+            percentItem = QtGui.QTableWidgetItem('10')
+            percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            table.setItem(i, 1, percentItem)
+            #table.setItem(i, 1, QtGui.QTableWidgetItem('10'))
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         # horizontal
         table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
         #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        table.setColumnWidth(1, 50)
+
         #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
         # vertical
         table.resizeRowsToContents()
@@ -315,6 +326,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
+        self.housingLabel.setText(selectedItem)
 
     # infra
     def infraRowSelected(self):
@@ -323,6 +335,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
+        self.infraLabel.setText(selectedItem)
 
 
     ############################################################
@@ -350,12 +363,19 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 self.packageComboBox.setCurrentIndex(packageMap)
                 self.packageSelected()
 
-        ## select the corresponding row of the project
+        ## select the corresponding row of the project and update the label above sliders
         rowCount = self.housingTable.rowCount()
+        # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            project = self.housingTable.item(i, 0).text()
-            if project == feat.attribute("NameShort"):
+            tableName = self.housingTable.item(i, 0).text()
+            layerName = feat.attribute("NameShort")
+            if tableName == layerName:
+                # select/highlight matching row
                 self.housingTable.selectRow(i)
+                # update the label above the sliders
+                self.housingLabel.setText(tableName)
+                # update the slider position
+                self.housingSlider.setValue(int(self.housingTable.item(i,1).text()))
                 break
 
         self.housingTable.blockSignals(False)
@@ -381,12 +401,17 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 self.packageComboBox.setCurrentIndex(packageMap)
                 self.packageSelected()
 
-        ## select the corresponding row of the project
+        ## select the corresponding row of the project and update the label above sliders
         rowCount = self.infraTable.rowCount()
+        # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            project = self.infraTable.item(i, 0).text()
-            if project == feat.attribute("ShortName"):
+            tableName = self.infraTable.item(i, 0).text()
+            layerName = feat.attribute("ShortName")
+            if tableName == layerName:
+                # select/highlight matching row
                 self.infraTable.selectRow(i)
+                # update the label above the sliders
+                self.infraLabel.setText(tableName)
                 break
 
         #self.infraTable.selectRow(4)
@@ -396,6 +421,26 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     ################## CANVAS ##################################
     ############################################################
+    def loadProjectFile(self):
+
+        # open the QGIS project file
+        scenario_open = False
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
+
+
+        # check if file exists
+        if os.path.isfile(scenario_file):
+            self.iface.addProject(scenario_file)
+            scenario_open = True
+        else:
+            last_dir = uf.getLastDir("PlanningToolClass")
+            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            if new_file:
+                self.iface.addProject(unicode(new_file))
+                scenario_open = True
+
+
+
     def zoomToSelectedFeature(self, scale, layer):
 
         box = layer.boundingBoxOfSelected()
