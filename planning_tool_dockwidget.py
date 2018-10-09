@@ -188,12 +188,24 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ################## COMBOBOX ################################
     ############################################################
     def populateComboBox(self):
+        #
+        # listView = QtGui.QListView()
+        # listView.font().setPointSize(25)
+        #
+        # self.packageComboBox.setView(listView)
+        #
+        #
+        # font = self.packageComboBox.font()
+        # font.setPointSize(25)
+        # self.packageComboBox.setFont(font)
+
         self.packageComboBox.addItem("All Packages")
         self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
         self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
         self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
         self.packageComboBox.addItem("Package 4 - Hoorn")
         self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
+
 
 
     def packageSelected(self):

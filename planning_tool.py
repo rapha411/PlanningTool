@@ -536,6 +536,7 @@ class PlanningToolClass:
         #self.ic = IndicatorsChart(self.iface)  #old
         #self.ic = IndicatorsChartDocked(self.iface)    #new
         #self.ic is now already initialized at the initialization of the plugin, as it needs to be passed to the input forms, even if it has not yet been opened
+        self.ic.setFloating(False)
         self.iface.addDockWidget(Qt.RightDockWidgetArea, self.ic)
         self.ic.show()
         #self.ic.move(QPoint(100, 150))
