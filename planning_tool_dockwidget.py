@@ -82,6 +82,7 @@ class PointTool(QgsMapTool, QAction):
 
         self.cursor = QCursor(Qt.PointingHandCursor)
 
+        # layers need to be turned on when PointTool is opened for the first time, otherwise error when trying to access these layers
         self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
 
@@ -102,6 +103,7 @@ class PointTool(QgsMapTool, QAction):
         infra_layerPoint = self.toLayerCoordinates(self.infra_layer, mapPoint)
         housing_layerPoint = self.toLayerCoordinates(self.housing_layer, mapPoint)
 
+        # layers need to be turned on when PointTool is opened for the first time, otherwise error when trying to access these layers
         infra_intersection = [None, 10000000]
         for poly in self.infra_layer.getFeatures():
             if poly.geometry().contains(QgsGeometry.fromPoint(infra_layerPoint)):
@@ -137,7 +139,6 @@ class PointTool(QgsMapTool, QAction):
     #
     def deactivate(self):
         self.action.setChecked(False)
-        print "map tool deactivated"
 
 
 
@@ -154,15 +155,14 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         super(IndicatorsChartDocked, self).__init__(parent)
 
+        # initialisation
         self.setupUi(self)
-
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
-
         self.book = book
 
-        # generate the plot
-        self.refreshPlot()
+        # load project file
+        self.loadProjectFile()
 
         self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
@@ -180,8 +180,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraLayer.selectionChanged.connect(self.infraLayerSelectionChanged)
         self.housingLayer.selectionChanged.connect(self.housingLayerSelectionChanged)
 
-        ### TODO: now just put this in the SelectionChanged function
-        # self.widget.inputAmsterdam.setText("works")
+        # generate the plot
+        self.refreshPlot()
 
 
     ############################################################
@@ -220,7 +220,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         while housingFeatureIterator.nextFeature(feat):
             housingBox.combineExtentWith(feat.geometry().boundingBox())
             housingNames.append(feat.attribute('NameShort'))
-            #print "housing: ", feat
 
         request = QgsFeatureRequest().setFilterExpression(expressionInfra)
         infraFeatureIterator = self.infraLayer.getFeatures(request)
@@ -241,7 +240,30 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         housingBox.combineExtentWith(infraBox)
         self.canvas.setExtent(housingBox)
         self.canvas.refresh()
-        
+
+
+
+
+
+
+    def loadProjectFile(self):
+
+        # open the QGIS project file
+        scenario_open = False
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
+
+
+        # check if file exists
+        if os.path.isfile(scenario_file):
+            self.iface.addProject(scenario_file)
+            scenario_open = True
+        else:
+            last_dir = uf.getLastDir("PlanningToolClass")
+            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            if new_file:
+                self.iface.addProject(unicode(new_file))
+                scenario_open = True
+
 
 
     ############################################################
@@ -277,7 +299,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def housingRowSelected(self):
 
         selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
-        #print selectedItem
+
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
@@ -286,8 +308,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def infraRowSelected(self):
 
         selectedItem = self.infraTable.selectedItems()[0].text().encode('utf-8')
-        #if selectedItem[:-4]
-        #print selectedItem
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
@@ -306,11 +326,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         feat = self.housingLayer.selectedFeatures()
         if feat:
             feat = feat[0]
-            print "housingLayerSelectionChanged - new feature"
         else:
             self.housingTable.clearSelection()
             self.housingTable.blockSignals(False)
-            print "housingLayerSelectionChanged - no feature"
             return
 
         ## check if package changed
@@ -414,7 +432,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     #     sheet['W' + str(self.id + k)] = float(iM)
     #
     #     srcfile.save(self.excel_file)
-    #     print 'new values saved'
     #
     #     self.refreshPlot()
     ############################################################
@@ -452,7 +469,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ### INDICATORS
 
         #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-
 
         print "refreshing plot"
 
@@ -629,8 +645,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraTable.clearSelection()
         self.housingLayer.removeSelection()
         self.infraLayer.removeSelection()
-        self.canvas.setExtent(self.infraLayer.extent())
-        self.canvas.refresh()
+        self.packageComboBox.setCurrentIndex(0)
         self.closingPlugin.emit()
         event.accept()
 

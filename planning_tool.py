@@ -283,9 +283,6 @@ class PlanningToolClass:
         if not self.pluginIsActive:
             self.pluginIsActive = True
 
-            # load project file
-            self.loadProjectFile()
-
             #### toolbar stuff:
             # gathering all toolbars of the QGIS GUI and their visibility state
             # and save them as global variables
@@ -341,26 +338,6 @@ class PlanningToolClass:
 
 
     # ### helper functions
-    def loadProjectFile(self):
-
-
-        # open the QGIS project file
-        scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
-
-
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
-        else:
-            last_dir = uf.getLastDir("PlanningToolClass")
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(unicode(new_file))
-                scenario_open = True
-
-
     def updateToolbar(self):
 
         self.rgmsAction.setVisible(False)
