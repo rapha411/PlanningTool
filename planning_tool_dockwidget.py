@@ -177,7 +177,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # populate box and table
         self.populateComboBox()
-        self.packageSelected()
+        #self.packageSelected()
 
 
         # connect signal/slot
@@ -191,13 +191,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingLayer.selectionChanged.connect(self.housingLayerSelectionChanged)
         # sliders
         self.housingSlider.valueChanged.connect(self.housingSliderChanged)
-        #self.housingLayer.valueChanged.connect(self.housingLayerSelectionChanged)
 
 
         # buttons
         # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
         # in this way the plot is only update from the OK button and not from moving the slider, which obviously would be terrible
-        self.okHousing.clicked.connect(self.comboHeight)
+        self.okHousing.clicked.connect(self.packageSelected)
 
 
 
@@ -263,35 +262,14 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         #QComboBox { min-height: 40px;}
         #QListView::item:selected { color: red; background-color: lightgray; min-width: 1000px;}"
-        self.packageComboBox.setMinimumHeight(100)
-        self.packageComboBox.adjustSize()
+        #self.packageComboBox.setMinimumHeight(100)
+        #self.packageComboBox.adjustSize()
         #self.packageComboBox.update()
 
 
-    def comboHeight(self):
-        # print self.packageComboBox.model()
-        # self.packageComboBox.model().setData(self.packageComboBox.model().index(0, 0), QSize(100, 100), Qt.SizeHintRole)
-        # print self.packageComboBox.model()
-
-        # self.packageComboBox.setStyleSheet("QComboBox QAbstractItemView
-        #     {
-        #     min-width: 150px;
-        #     }
-
-        # listView = QtGui.QListView()
-        # self.packageComboBox.setView(listView)
-
-        # self.packageComboBox.setStyleSheet(
-        #     QComboBox QAbstractItemView::item { min-height: 35px; min-width: 50px; }QListView::item:selected { color: black; background-color: lightgray}")
-
-        # self.packageComboBox.addItem("All Packages")
-        # self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
-        # self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
-        # self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
-        # self.packageComboBox.addItem("Package 4 - Hoorn")
-        # self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
+    def testExe(self):
+        #self.populateTableInfra(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
         pass
-
 
 
 
@@ -300,7 +278,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         package = self.packageComboBox.currentIndex()
 
 
-        ####if "all packages" selected
+        ## if "all packages" selected
         if package == 0:
             #populate table with all packages
             expressionHousing = "Package IS 'p1' or Package IS 'p2' or Package IS 'p3' or Package IS 'p4' or Package IS 'p5'"
@@ -309,30 +287,50 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             expressionHousing = "Package IS " + "'p"+str(package)+"'"
             expressionInfra = "Package IS " + "'P"+str(package)+"'"
 
-        
+        ### HOUSING ###
+        # request only projects within the selected package
         request = QgsFeatureRequest().setFilterExpression(expressionHousing)
         housingFeatureIterator = self.housingLayer.getFeatures(request)
+        # get the feature name and ID for the first feature
         feat = QgsFeature()
         housingFeatureIterator.nextFeature(feat)
         housingBox = feat.geometry().boundingBox()
         housingNames = [feat.attribute('NameShort')]
+        #housingID = [int(str(feat.attribute('hID'))[-2:])]
+        housingID = [feat.id()]
+        # get the feature name and ID for the rest
         while housingFeatureIterator.nextFeature(feat):
             housingBox.combineExtentWith(feat.geometry().boundingBox())
             housingNames.append(feat.attribute('NameShort'))
+            #housingID.append(int(str(feat.attribute('hID'))[-2:]))
+            housingID.append(feat.id())
 
+        ### INFRA ###
         request = QgsFeatureRequest().setFilterExpression(expressionInfra)
         infraFeatureIterator = self.infraLayer.getFeatures(request)
         feat = QgsFeature()
         infraFeatureIterator.nextFeature(feat)
         infraBox = feat.geometry().boundingBox()
         infraNames = [feat.attribute('ShortName')]
+        infraID = [int(feat.attribute('id'))]
         while infraFeatureIterator.nextFeature(feat):
             infraBox.combineExtentWith(feat.geometry().boundingBox())
             infraNames.append(feat.attribute('ShortName'))
+            infraID.append(int(feat.attribute('id')))
+
+
+
+
+        print housingID
+        print infraID
+
 
         # populate the tables
-        self.populateTable(attributes=housingNames, table=self.housingTable, tableName='Housing Plans')
-        self.populateTable(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
+        #self.populateTable(attributes=housingNames, table=self.housingTable, tableName='Housing Plans')
+        #self.populateTable(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
+        self.populateTableHousing(shortName=housingNames, id=housingID)
+        self.populateTableInfra(shortName=infraNames, id=infraID)
+
 
         # zoom to package
         #if (not self.housingLayer.selectedFeatures()) and (not self.infraLayer.selectedFeatures()):
@@ -347,18 +345,32 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
     # housing
-    def populateTable(self, attributes=None, table=None, tableName=None):
+    def populateTableHousing(self, shortName=None, id=None):
+
+        # feautreID + 3 = excel row
+        id = np.asarray(id) + 3
+        cellList = []
+        for row in id:
+            cellList.append('M'+str(row))
+
+        print cellList
+        #print shortName[0].id()
+        #print shortName[3].id()
 
 
+
+        percents = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList)
+
+        table = self.housingTable
         table.clear()
         table.setColumnCount(2)
-        table.setHorizontalHeaderLabels([tableName, "%"])
-        table.setRowCount(len(attributes))
-        for i, att in enumerate(attributes):
+        table.setHorizontalHeaderLabels(['Housing plans', "%"])
+        table.setRowCount(len(shortName))
+        for i, att in enumerate(shortName):
             # i is the table row, items mus tbe added as QTableWidgetItems
             table.setItem(i,0,QtGui.QTableWidgetItem(att))
             # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
-            percentItem = QtGui.QTableWidgetItem('10')
+            percentItem = QtGui.QTableWidgetItem(str(int(percents[i])))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 1, percentItem)
 
@@ -378,27 +390,42 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
     # infra
-    def populateTable(self, attributes=None, table=None, tableName=None):
+    def populateTableInfra(self, shortName=None, id=None):
 
-
+        table = self.infraTable
         table.clear()
-        table.setColumnCount(2)
-        table.setHorizontalHeaderLabels([tableName, "%"])
-        table.setRowCount(len(attributes))
-        for i, att in enumerate(attributes):
-            # i is the table row, items mus tbe added as QTableWidgetItems
-            table.setItem(i,0,QtGui.QTableWidgetItem(att))
-            # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+        table.setColumnCount(3)
+        table.setHorizontalHeaderLabels(['y/n', 'Infrastructure Investments', "%"])
+        table.setRowCount(len(shortName))
+        # i is the table row, items mus tbe added as QTableWidgetItems
+        # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+        for i, att in enumerate(shortName):
+            # checkbox y/n per project
+            checkBoxWidget = QtGui.QWidget()
+            checkBox = QtGui.QCheckBox()
+            layoutCheckBox = QtGui.QHBoxLayout(checkBoxWidget)
+            layoutCheckBox.addWidget(checkBox)
+            layoutCheckBox.setAlignment(QtCore.Qt.AlignCenter)
+            layoutCheckBox.setContentsMargins(0,0,0,0)
+            checkBox.setChecked(True)
+            table.setCellWidget(i,0,checkBoxWidget)
+
+            # short name of the project
+            table.setItem(i,1,QtGui.QTableWidgetItem(att))
+
+            # housing percent per project
             percentItem = QtGui.QTableWidgetItem('10')
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-            table.setItem(i, 1, percentItem)
+            table.setItem(i, 2, percentItem)
+
 
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         # horizontal
-        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        table.setColumnWidth(1, 50)
+        table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        table.setColumnWidth(2, 50)
+        table.setColumnWidth(0, 50)
 
         # vertical
         table.resizeRowsToContents()
@@ -530,7 +557,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         rowCount = self.infraTable.rowCount()
         # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            tableName = self.infraTable.item(i, 0).text()
+            tableName = self.infraTable.item(i, 1).text()
             layerName = feat.attribute("ShortName")
             if tableName == layerName:
                 # select/highlight matching row
@@ -550,7 +577,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file24.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file25.qgs')
 
 
         # check if file exists
@@ -624,7 +651,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
         # # # with a put in Product Key Window. So maybe it is actually better to use win32com.client solution as this seems to work better here
         #
-        # TODO: open app and book in planning_tool.py and pass to the dockwidget, same way as done for the plot dockwidget that is passed to infrastructure input class
         # app = xw.App(visible=False)
         # book = app.books.open(filename)
         # #book = xw.Book(filename)
