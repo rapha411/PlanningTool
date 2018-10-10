@@ -344,6 +344,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     ################## TABLE ###################################
     ############################################################
+
+
+    # housing
     def populateTable(self, attributes=None, table=None, tableName=None):
 
 
@@ -358,25 +361,89 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             percentItem = QtGui.QTableWidgetItem('10')
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 1, percentItem)
-            #table.setItem(i, 1, QtGui.QTableWidgetItem('10'))
+
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         # horizontal
         table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
         table.setColumnWidth(1, 50)
 
-        #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
         # vertical
         table.resizeRowsToContents()
         table.verticalHeader().setVisible(True)
-        #table.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
         table.verticalHeader().setDefaultSectionSize(40)
 
 
+
+
+    # infra
+    def populateTable(self, attributes=None, table=None, tableName=None):
+
+
+        table.clear()
+        table.setColumnCount(2)
+        table.setHorizontalHeaderLabels([tableName, "%"])
+        table.setRowCount(len(attributes))
+        for i, att in enumerate(attributes):
+            # i is the table row, items mus tbe added as QTableWidgetItems
+            table.setItem(i,0,QtGui.QTableWidgetItem(att))
+            # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+            percentItem = QtGui.QTableWidgetItem('10')
+            percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            table.setItem(i, 1, percentItem)
+
+
+        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+
+        # horizontal
+        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        table.setColumnWidth(1, 50)
+
+        # vertical
+        table.resizeRowsToContents()
+        table.verticalHeader().setVisible(True)
+        table.verticalHeader().setDefaultSectionSize(40)
+
+
+
+
+    # def populateTable(self, attributes=None, table=None, tableName=None):
+    #
+    #
+    #     table.clear()
+    #     table.setColumnCount(2)
+    #     table.setHorizontalHeaderLabels([tableName, "%"])
+    #     table.setRowCount(len(attributes))
+    #     for i, att in enumerate(attributes):
+    #         # i is the table row, items mus tbe added as QTableWidgetItems
+    #         table.setItem(i,0,QtGui.QTableWidgetItem(att))
+    #         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+    #         percentItem = QtGui.QTableWidgetItem('10')
+    #         percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+    #         table.setItem(i, 1, percentItem)
+    #         #table.setItem(i, 1, QtGui.QTableWidgetItem('10'))
+    #
+    #     table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+    #
+    #     # horizontal
+    #     table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+    #     #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+    #     #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+    #     #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+    #     table.setColumnWidth(1, 50)
+    #
+    #     # vertical
+    #     table.resizeRowsToContents()
+    #     table.verticalHeader().setVisible(True)
+    #     #table.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
+    #     table.verticalHeader().setDefaultSectionSize(40)
+
+
     # housing
+
+
+
     def housingRowSelected(self):
 
         selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
