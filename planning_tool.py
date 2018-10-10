@@ -292,7 +292,7 @@ class PlanningToolClass:
 
             #### layertree icon size
             self.tree_size = self.iface.layerTreeView().iconSize()
-            self.iface.layerTreeView().setIconSize(QSize(50, 50))
+            self.iface.layerTreeView().setIconSize(QSize(40, 40))
 
             # set toolbars invisible
             for toolbar in self.toolbars0:
@@ -331,7 +331,7 @@ class PlanningToolClass:
             # show the dockwidget
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.ic)
 
-            self.ic.setWindowTitle(self.transl(u'&Regional Game Mobiele Stad'))
+            self.ic.setWindowTitle('Regional Game Mobiele Stad')
             self.ic.show()
 
             #self.ic = IndicatorsChartDocked(self.iface, book=self.book)
@@ -372,9 +372,9 @@ class PlanningToolClass:
         self.planning_toolbar.addAction(self.iface.actionTouch())
         self.actions.append(self.iface.actionTouch())
 
-        # # zoom window
-        # self.planning_toolbar.addAction(self.iface.actionZoomIn())
-        # self.actions.append(self.iface.actionZoomIn())
+        # zoom window
+        self.planning_toolbar.addAction(self.iface.actionZoomIn())
+        self.actions.append(self.iface.actionZoomIn())
 
         # zoom to previous extent
         self.planning_toolbar.addAction(self.iface.actionZoomLast())
@@ -443,6 +443,14 @@ class PlanningToolClass:
             parent=self.iface.mainWindow())
         self.iiAction.setObjectName('mSelectAction')
         self.iiAction.setCheckable(True)
+
+
+        # self.planning_toolbar.addAction(self.iface.actionSelect())
+        # self.actions.append(self.iface.actionSelect())
+
+        # add deselect function here
+        # self.planning_toolbar.addAction(self.iface.actionDeleteSelected())
+        # self.actions.append(self.iface.actionDeleteSelected())
 
 
         # # add calculate indicators button
@@ -528,7 +536,7 @@ class PlanningToolClass:
             self.mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
         self.canvas.setMapTool(self.mapTool)
         # self.iiAction.setChecked(True)
-        uf.showMessage(self.iface, 'tap on polygon to select, double-tap on canvas to remove selection', type='Info', lev=0, dur=10)
+        uf.showMessage(self.iface, 'Tap on a polygon to select the corresponding project. Double-tap on the map canvas to remove all selections.', type='Info', lev=1, dur=10)
 
 
 #### open dialogs:

@@ -25,6 +25,8 @@ import os
 import math
 
 from PyQt4 import QtGui, QtCore, uic
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
+
 from qgis.core import *
 from qgis.core import QgsGeometry, QgsMapLayerRegistry
 # from PyQt4 import QtCore
@@ -195,6 +197,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # buttons
         # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
         # in this way the plot is only update from the OK button and not from moving the slider, which obviously would be terrible
+        self.okHousing.clicked.connect(self.comboHeight)
+
 
 
 
@@ -228,12 +232,66 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # font.setPointSize(25)
         # self.packageComboBox.setFont(font)
 
+        view = QtGui.QListView()  # creat a ListView
+        #view.setFixedWidth(500)  # set the ListView with fixed Width
+        #view.setFixedHeight(200)
+
+        #self.packageComboBox.setMaximumWidth(500)  # will be overwritten by style-sheet
+        #self.packageComboBox.addItems(["TEsst1111", "TEsst11111111111111", "TEsst1111111111111111111111111"])
+
+
         self.packageComboBox.addItem("All Packages")
         self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
         self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
         self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
         self.packageComboBox.addItem("Package 4 - Hoorn")
         self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
+        #pass
+
+        #
+        self.packageComboBox.setStyleSheet('''
+        QComboBox { min-height: 40px; max-height: 40px;}
+        QComboBox QAbstractItemView::item { min-height: 40px; max-height: 40px;}"
+        ''')
+
+        self.packageComboBox.setView(view)
+
+
+        # self.packageComboBox.setIconSize(QSize(48, 48))
+        # self.packageComboBox.setSizePolicy(Qt.QSizePolicy.Preferred, Qt.QSizePolicy.Expanding)
+        # self.packageComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+
+        #QComboBox { min-height: 40px;}
+        #QListView::item:selected { color: red; background-color: lightgray; min-width: 1000px;}"
+        self.packageComboBox.setMinimumHeight(100)
+        self.packageComboBox.adjustSize()
+        #self.packageComboBox.update()
+
+
+    def comboHeight(self):
+        # print self.packageComboBox.model()
+        # self.packageComboBox.model().setData(self.packageComboBox.model().index(0, 0), QSize(100, 100), Qt.SizeHintRole)
+        # print self.packageComboBox.model()
+
+        # self.packageComboBox.setStyleSheet("QComboBox QAbstractItemView
+        #     {
+        #     min-width: 150px;
+        #     }
+
+        # listView = QtGui.QListView()
+        # self.packageComboBox.setView(listView)
+
+        # self.packageComboBox.setStyleSheet(
+        #     QComboBox QAbstractItemView::item { min-height: 35px; min-width: 50px; }QListView::item:selected { color: black; background-color: lightgray}")
+
+        # self.packageComboBox.addItem("All Packages")
+        # self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
+        # self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
+        # self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
+        # self.packageComboBox.addItem("Package 4 - Hoorn")
+        # self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
+        pass
+
 
 
 
@@ -315,7 +373,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.resizeRowsToContents()
         table.verticalHeader().setVisible(True)
         #table.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
-        table.verticalHeader().setDefaultSectionSize(30)
+        table.verticalHeader().setDefaultSectionSize(40)
 
 
     # housing
@@ -425,7 +483,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file23.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file24.qgs')
 
 
         # check if file exists

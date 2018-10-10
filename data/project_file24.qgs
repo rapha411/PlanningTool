@@ -5,18 +5,18 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans.shp" name="Housing_Plans">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/housing/Housing_Plans.shp" name="Housing_Plans">
       <customproperties>
         <property key="expandedLegendNodes" value="{d90b5184-bdf4-43e8-9584-b3b95ea85119}"/>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Investments20181002174821220" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Infrastructure_Projects.shp" name="Infrastructure_Investments">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Investments20181002174821220" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/infra/Infrastructure_Projects.shp" name="Infrastructure_Investments">
       <customproperties>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
-    <layer-tree-group expanded="1" checked="Qt::Checked" name="Acthergrond">
+    <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="Acthergrond">
       <customproperties/>
       <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Treinstations20180924143846273" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Treinstations.shp" name="Treinstations">
         <customproperties>
@@ -30,7 +30,7 @@
       <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="wegen2018100215271595218851" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Wegen.shp" name="Wegen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects_Total20180925142458441" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans_Total.shp" name="Housing_Plans_Total">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Unchecked" id="Housing_Projects_Total20180925142458441" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans_Total.shp" name="Housing_Plans_Total">
         <customproperties>
           <property key="expandedLegendNodes" value="{6b2f8a50-bcbd-408b-8859-befaaaf869d3}"/>
         </customproperties>
@@ -48,7 +48,7 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xa;  &lt;Service name=&quot;TMS&quot;>&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xa;  &lt;/Service>&#xa;  &lt;DataWindow>&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xa;  &lt;/DataWindow>&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xa;  &lt;Cache />&#xa;&lt;/GDAL_WMS>&#xa;" name="OpenStreetMap">
+    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xd;&#xa;  &lt;Service name=&quot;TMS&quot;>&#xd;&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xa;  &lt;/Service>&#xd;&#xa;  &lt;DataWindow>&#xd;&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xa;  &lt;/DataWindow>&#xd;&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xa;  &lt;Cache />&#xd;&#xa;&lt;/GDAL_WMS>&#xd;&#xa;" name="OpenStreetMap">
       <customproperties>
         <property key="expandedLegendNodes"/>
       </customproperties>
@@ -58,10 +58,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>106739.25332509365398437</xmin>
-      <ymin>489051.75540450669359416</ymin>
-      <xmax>147546.24299223953858018</xmax>
-      <ymax>523849.22910618351306766</ymax>
+      <xmin>105719.07858341501560062</xmin>
+      <ymin>488181.81856196478474885</ymin>
+      <xmax>148566.41773391817696393</xmax>
+      <ymax>524719.16594872542191297</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -117,7 +117,7 @@
         <legendlayerfile isInOverview="0" layerid="Infrastructure_Investments20181002174821220" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendgroup open="true" checked="Qt::Checked" name="Acthergrond">
+    <legendgroup open="true" checked="Qt::PartiallyChecked" name="Acthergrond">
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Treinstations" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="1" layerid="Treinstations20180924143846273" visible="1"/>
@@ -133,9 +133,9 @@
           <legendlayerfile isInOverview="0" layerid="wegen2018100215271595218851" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Housing_Plans_Total" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Housing_Plans_Total" showFeatureCount="0">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Housing_Projects_Total20180925142458441" visible="1"/>
+          <legendlayerfile isInOverview="0" layerid="Housing_Projects_Total20180925142458441" visible="0"/>
         </filegroup>
       </legendlayer>
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Groen" showFeatureCount="0">
@@ -174,7 +174,7 @@
         <ymax>521404.41059321851935238</ymax>
       </extent>
       <id>Housing_Projects20180906013549130</id>
-      <datasource>./Housing_Plans.shp</datasource>
+      <datasource>./housing/Housing_Plans.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1237,7 +1237,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>523849.22910618351306766</ymax>
       </extent>
       <id>Infrastructure_Investments20181002174821220</id>
-      <datasource>./Infrastructure_Projects.shp</datasource>
+      <datasource>./infra/Infrastructure_Projects.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1281,6 +1281,9 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="ShortName">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="Descriptio">
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
       </edittypes>
@@ -2231,7 +2234,7 @@ def my_form_open(dialog, layer, feature):
       </customproperties>
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
-      <layerTransparency>16</layerTransparency>
+      <layerTransparency>19</layerTransparency>
       <displayfield>id</displayfield>
       <label>0</label>
       <labelattributes>
@@ -2292,6 +2295,7 @@ def my_form_open(dialog, layer, feature):
         <alias field="PackProj" index="4" name=""/>
         <alias field="Type" index="5" name=""/>
         <alias field="ShortName" index="6" name=""/>
+        <alias field="Descriptio" index="7" name=""/>
       </aliases>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
@@ -2344,6 +2348,7 @@ def my_form_open(dialog, layer, feature):
         <default field="PackProj" expression=""/>
         <default field="Type" expression=""/>
         <default field="ShortName" expression=""/>
+        <default field="Descriptio" expression=""/>
       </defaults>
       <previewExpression>COALESCE( "InfrProj", '&lt;NULL>' )</previewExpression>
     </maplayer>
@@ -2355,26 +2360,26 @@ def my_form_open(dialog, layer, feature):
         <ymax>20037508.33999999985098839</ymax>
       </extent>
       <id>OpenStreetMap20180924145017200</id>
-      <datasource>&lt;GDAL_WMS>
-  &lt;Service name="TMS">
-    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>
-  &lt;/Service>
-  &lt;DataWindow>
-    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>
-    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>
-    &lt;LowerRightX>20037508.34&lt;/LowerRightX>
-    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>
-    &lt;TileLevel>19&lt;/TileLevel>
-    &lt;TileCountX>1&lt;/TileCountX>
-    &lt;TileCountY>1&lt;/TileCountY>
-    &lt;YOrigin>top&lt;/YOrigin>
-  &lt;/DataWindow>
-  &lt;Projection>EPSG:3857&lt;/Projection>
-  &lt;BlockSizeX>256&lt;/BlockSizeX>
-  &lt;BlockSizeY>256&lt;/BlockSizeY>
-  &lt;BandsCount>3&lt;/BandsCount>
-  &lt;Cache />
-&lt;/GDAL_WMS>
+      <datasource>&lt;GDAL_WMS>&#xd;
+  &lt;Service name="TMS">&#xd;
+    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;
+  &lt;/Service>&#xd;
+  &lt;DataWindow>&#xd;
+    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;
+    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;
+    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;
+    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;
+    &lt;TileLevel>19&lt;/TileLevel>&#xd;
+    &lt;TileCountX>1&lt;/TileCountX>&#xd;
+    &lt;TileCountY>1&lt;/TileCountY>&#xd;
+    &lt;YOrigin>top&lt;/YOrigin>&#xd;
+  &lt;/DataWindow>&#xd;
+  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;
+  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;
+  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;
+  &lt;BandsCount>3&lt;/BandsCount>&#xd;
+  &lt;Cache />&#xd;
+&lt;/GDAL_WMS>&#xd;
 </datasource>
       <keywordList>
         <value></value>
