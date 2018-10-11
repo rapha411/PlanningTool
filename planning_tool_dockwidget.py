@@ -163,6 +163,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.canvas = self.iface.mapCanvas()
         self.book = book
 
+        # define row height for tables and comboBox here
+        self.height = 30
+
         # TODO: what should maybe be done is to implement my own data structure from the layer
         # and excel data, e.g. a pandas table, and use that for loading and saving data.
         # When the plugin is closed or changes are saved with saving button then this data structure is pushed to the
@@ -177,7 +180,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # populate box and table
         self.populateComboBox()
-        self.packageSelected()
+        #self.packageSelected()
 
 
         # connect signal/slot
@@ -251,8 +254,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         #
         self.packageComboBox.setStyleSheet('''
-        QComboBox { min-height: 40px; max-height: 40px;}
-        QComboBox QAbstractItemView::item { min-height: 40px; max-height: 40px;}"
+        QComboBox { min-height: 30px; max-height: 30px;}
+        QComboBox QAbstractItemView::item { min-height: 30px; max-height: 30px;}"
         ''')
 
         self.packageComboBox.setView(view)
@@ -363,7 +366,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             table.setItem(i, 1, percentItem)
 
             # hidden excel id column (necessary for saving data to the excel file)
-            table.setItem(i,2,QtGui.QTableWidgetItem(str(id[i]+2)))
+            table.setItem(i,2,QtGui.QTableWidgetItem(str(id[i]+1)))
 
         #table.hideColumn(2)
 
@@ -376,7 +379,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # vertical
         table.resizeRowsToContents()
         table.verticalHeader().setVisible(True)
-        table.verticalHeader().setDefaultSectionSize(40)
+        table.verticalHeader().setDefaultSectionSize(self.height)
 
 
     ### populate infra table ###
@@ -422,7 +425,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             table.setItem(i, 2, percentItem)
 
             # hidden excel id column (necessary for saving data to the excel file)
-            table.setItem(i, 3, QtGui.QTableWidgetItem(str(id[i]+2)))
+            # item = QtGui.QTableWidgetItem()
+            # item.setData = (Qt.DisplayRole, int(id[i])-1)
+            # table.setItem(i, 3, item)
+            table.setItem(i, 3, QtGui.QTableWidgetItem(str(id[i]+1)))
             # TODO here the id is wrong, would be best to just have this hidden column as an integer ID,
             # instead of the stupid string
 
@@ -439,7 +445,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # vertical
         table.resizeRowsToContents()
         table.verticalHeader().setVisible(True)
-        table.verticalHeader().setDefaultSectionSize(40)
+        table.verticalHeader().setDefaultSectionSize(self.height)
 
 
     ### get table data ###
@@ -453,7 +459,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data = []
         for i in range(nRows):
             # checkbox value
-            data.append(self.housingTable.item(i, 0).text())
+            data.append(self.housingTable.item(i, 1).text())
             # id column
             id.append(self.housingTable.item(i,2).text())
 
@@ -678,62 +684,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def refreshPlot(self):
         ### INDICATORS
 
-        #self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel_data.xlsm')
-
         print "refreshing plot"
 
-        ### ACCESIBILITY
-        # sheet_name = 'INPUT - Infra Projects'
-        # ## Transit accesibility
-        # c = []
-        # af = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AF', row_start=3, row_end=40)
-        # aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
-        # ak = aj * 0.01
-        # p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
-        # ar = p * af * ak
-        # c.append(sum(ar))
-        # # c4
-        # ag = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AG', row_start=3, row_end=40)
-        # as1 = p * ag * ak
-        # c.append(sum(as1))
-        # # c5
-        # ah = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AH', row_start=3, row_end=40)
-        # at = p * ah * ak
-        # c.append(sum(at))
-        # # c6
-        # ai = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AI', row_start=3, row_end=40)
-        # au = p * ai * ak
-        # c.append(sum(au))
-        # ## Car accesibility
-        # d = []
-        # # d3
-        # aa = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AA', row_start=3, row_end=40)
-        # aj = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AJ', row_start=3, row_end=40)
-        # ak = aj * 0.01
-        # p = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='P', row_start=3, row_end=40)
-        # aw = p * aa * ak
-        # d.append(sum(aw))
-        # # d4
-        # ab = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AB', row_start=3, row_end=40)
-        # ax = p * ab * ak
-        # d.append(sum(ax))
-        # # d5
-        # ac = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AC', row_start=3, row_end=40)
-        # ay = p * ac * ak
-        # d.append(sum(ay))
-        # # d6
-        # ad = self.getValue(filepath=self.excel_file, sheetname=sheet_name, col='AD', row_start=3, row_end=40)
-        # az = p * ad * ak
-        # d.append(sum(az))
-        #
-        # cd = np.add(c, d)
-        # accesibility = np.append(cd, np.mean(cd))
 
-        ### Accesibility
-        #accesibility = self.getValue_xlwings(self.book, 'Indicator 1 Accessibility', ['E3', 'E4', 'E5', 'E6', 'E7'])
-        #accesibility = np.append(accesibility, np.mean(accesibility))
-
-        ### Market Balance
         market_balance = np.asarray([-1035, -1907, -3106, -7902, -3487])
         #market_balance = self.getValue_xlwings(self.excel_file, 'Indicator 2 Market balance', ['E3', 'E4', 'E5', 'E6', 'E7'])
 
@@ -744,16 +697,16 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         ### PLOT
-        # first clear the Figure() from the chartView layout,
+        # first clear the Figure() from the spatialChart layout,
         # so a new one will be printed when function is run several times
-        for i in reversed(range(self.chartView.count())):
-            self.chartView.itemAt(i).widget().setParent(None)
+        for i in reversed(range(self.spatialChart.count())):
+            self.spatialChart.itemAt(i).widget().setParent(None)
 
-        # add matplotlib Figure to chartFrame / chartView layout
+        # add matplotlib Figure to chartFrame / spatialChart layout
         self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
         #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
         self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.chartView.addWidget(self.chart_canvas)
+        self.spatialChart.addWidget(self.chart_canvas)
 
         self.plotChartHorizontal(self.chart_figure.add_subplot(111))
 
@@ -771,15 +724,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         return
 
-    # def getValue(self, filepath=None, sheetname=None, col=None, row_start=0, row_end=1):
-    #     source_file = openpyxl.load_workbook(filepath, read_only=False, keep_vba=True)  # to open the excel sheet and if it has macros
-    #     sheet = source_file.get_sheet_by_name(sheetname)
-    #     data = []
-    #     for i in range(row_start, row_end + 1):
-    #         val = float(sheet[col + str(i)].value)
-    #         data.append(val)
-    #     source_file.save(self.excel_file)
-    #     return np.array(data)
 
 
     def plotChart(self, ax, indicator, indicator_name, color):
