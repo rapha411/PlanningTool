@@ -296,13 +296,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         housingFeatureIterator.nextFeature(feat)
         housingBox = feat.geometry().boundingBox()
         housingNames = [feat.attribute('NameShort')]
-        #housingID = [int(str(feat.attribute('hID'))[-2:])]
         housingID = [feat.id()]
         # get the feature name and ID for the rest
         while housingFeatureIterator.nextFeature(feat):
             housingBox.combineExtentWith(feat.geometry().boundingBox())
             housingNames.append(feat.attribute('NameShort'))
-            #housingID.append(int(str(feat.attribute('hID'))[-2:]))
             housingID.append(feat.id())
 
         ### INFRA ###
@@ -312,25 +310,21 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         infraFeatureIterator.nextFeature(feat)
         infraBox = feat.geometry().boundingBox()
         infraNames = [feat.attribute('ShortName')]
-        infraID = [int(feat.attribute('id'))]
+        # get the feature name and ID for the rest
+        infraID = [feat.id()]
         while infraFeatureIterator.nextFeature(feat):
             infraBox.combineExtentWith(feat.geometry().boundingBox())
             infraNames.append(feat.attribute('ShortName'))
-            infraID.append(int(feat.attribute('id')))
-
-
-
+            infraID.append(feat.id())
 
         print housingID
         print infraID
-
 
         # populate the tables
         #self.populateTable(attributes=housingNames, table=self.housingTable, tableName='Housing Plans')
         #self.populateTable(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
         self.populateTableHousing(shortName=housingNames, id=housingID)
         self.populateTableInfra(shortName=infraNames, id=infraID)
-
 
         # zoom to package
         #if (not self.housingLayer.selectedFeatures()) and (not self.infraLayer.selectedFeatures()):
@@ -347,18 +341,15 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     # housing
     def populateTableHousing(self, shortName=None, id=None):
 
-        # feautreID + 3 = excel row
-        id = np.asarray(id) + 3
-        cellList = []
-        for row in id:
-            cellList.append('M'+str(row))
+        # ### get feature cells
+        # # feautreID + 3 = excel row
+        # id = np.asarray(id) + 3
+        # cellList = []
+        # for row in id:
+        #     cellList.append('M'+str(row))
+        cellList = self.getCellString(data=id, column='M')
 
-        print cellList
-        #print shortName[0].id()
-        #print shortName[3].id()
-
-
-
+        # get percent values from excel sheet
         percents = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList)
 
         table = self.housingTable
@@ -392,6 +383,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     # infra
     def populateTableInfra(self, shortName=None, id=None):
 
+
+        cellList = self.getCellString(data=id, column='R')
+
+        checkBoxValues = self.getValue_xlwings(book=self.book, sheet='INPUT - Infra Projects', cells=cellList)
+
+
         table = self.infraTable
         table.clear()
         table.setColumnCount(3)
@@ -400,20 +397,27 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # i is the table row, items mus tbe added as QTableWidgetItems
         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
         for i, att in enumerate(shortName):
-            # checkbox y/n per project
+            #### checkbox y/n per project
+
+            # setup chechbox so it can be used as qtablewidgetitem
             checkBoxWidget = QtGui.QWidget()
             checkBox = QtGui.QCheckBox()
             layoutCheckBox = QtGui.QHBoxLayout(checkBoxWidget)
             layoutCheckBox.addWidget(checkBox)
             layoutCheckBox.setAlignment(QtCore.Qt.AlignCenter)
             layoutCheckBox.setContentsMargins(0,0,0,0)
-            checkBox.setChecked(True)
+            # get value for checkbox from the excel data
+            if int(checkBoxValues[i]) == 1:
+                checkBox.setChecked(True)
+            else:
+                checkBox.setChecked(False)
+            # insert checkbox in the table
             table.setCellWidget(i,0,checkBoxWidget)
 
-            # short name of the project
+            #### short name of the project
             table.setItem(i,1,QtGui.QTableWidgetItem(att))
 
-            # housing percent per project
+            #### housing percent per project
             percentItem = QtGui.QTableWidgetItem('10')
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 2, percentItem)
@@ -592,7 +596,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 scenario_open = True
 
 
-
     def zoomToSelectedFeature(self, scale, layer):
 
         box = layer.boundingBoxOfSelected()
@@ -601,51 +604,21 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         #self.canvas.zoomScale(50000)
         self.canvas.refresh()
 
-    # # save value
-    # def saveValue(self):
-    #
-    #     iC = self.inputYes.isChecked()
-    #     iC2 = self.inputNo.isChecked()
-    #     iA = self.inputAmsterdam.text()
-    #     iE = self.inputEdam.text()
-    #     iH = self.inputHoorn.text()
-    #     iP = self.inputPurmerend.text()
-    #     iZ = self.inputZaanstad.text()
-    #     iPr = self.inputProvince.text()
-    #     iM = self.inputMinistry.text()
-    #
-    #     # take from input field and save to excel file, depending on polygonID = row in excel file
-    #     # column depending on which input field
-    #
-    #
-    #     srcfile = openpyxl.load_workbook(self.excel_file, read_only=False,
-    #                                      keep_vba=True)  # to open the excel sheet and if it has macros
-    #     sheet = srcfile.get_sheet_by_name(self.sheet_name)  # get sheetname from the file
-    #
-    #     # project id is at row+2 in excel, thats why I need to introduce this skip variable
-    #     k = 2
-    #     if iC == True and iC2 == False:
-    #         sheet['P' + str(self.id + k)] = 1
-    #     elif iC == False and iC2 == True:
-    #         sheet['P' + str(self.id + k)] = 0
-    #     else:
-    #         # chase case where both yes and no are checked
-    #         uf.showMessage(self.iface, 'Please select either "yes" or "no"', type='Info', lev=1, dur=5)
-    #         return
-    #     sheet['Q' + str(self.id + k)] = float(iA)
-    #     sheet['R' + str(self.id + k)] = float(iE)
-    #     sheet['S' + str(self.id + k)] = float(iH)
-    #     sheet['T' + str(self.id + k)] = float(iP)
-    #     sheet['U' + str(self.id + k)] = float(iZ)
-    #     sheet['V' + str(self.id + k)] = float(iPr)
-    #     sheet['W' + str(self.id + k)] = float(iM)
-    #
-    #     srcfile.save(self.excel_file)
-    #
-    #     self.refreshPlot()
     ############################################################
     ################## EXCEL ###################################
     ############################################################
+    def getCellString(self, data=None, column=None):
+        ### get feature cells
+        # feautreID + 3 = excel row
+        data = np.asarray(data) + 3
+        cellList = []
+        for row in data:
+            cellList.append(column+str(row))
+
+        return cellList
+
+
+
     def getValue_xlwings(self, book, sheet, cells):
         # # # run Excel with xlwings
         # # # this does not work on windows yet, but the only reason is probably that it cannot access the sheet because Excel opens
