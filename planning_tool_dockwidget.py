@@ -584,13 +584,15 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         rowCount = self.infraTable.rowCount()
         # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            tableName = self.infraTable.item(i, 1).text()
-            layerName = feat.attribute("ShortName")
-            if tableName == layerName:
+            tableFeatureName = self.infraTable.item(i, 1).text()
+            layerFeatureName = feat.attribute("ShortName")
+            if tableFeatureName == layerFeatureName:
                 # select/highlight matching row
                 self.infraTable.selectRow(i)
                 # update the label above the sliders
-                self.infraLabel.setText(tableName)
+                self.infraLabel.setText(tableFeatureName)
+                # update the infra project description
+                self.descriptionText.setText(feat.attribute("Descriptio"))
                 break
 
         #self.infraTable.selectRow(4)
@@ -604,7 +606,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file25.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file26.qgs')
 
 
         # check if file exists
