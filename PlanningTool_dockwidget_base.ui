@@ -451,7 +451,7 @@
                </widget>
               </item>
               <item row="4" column="1">
-               <widget class="QPushButton" name="okInfrastructure">
+               <widget class="QPushButton" name="okInfra">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>

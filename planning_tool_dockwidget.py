@@ -177,7 +177,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # populate box and table
         self.populateComboBox()
-        #self.packageSelected()
+        self.packageSelected()
 
 
         # connect signal/slot
@@ -196,7 +196,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # buttons
         # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
         # in this way the plot is only update from the OK button and not from moving the slider, which obviously would be terrible
-        self.okHousing.clicked.connect(self.packageSelected)
+        self.okHousing.clicked.connect(self.saveHousingTableData)
+        self.okInfra.clicked.connect(self.saveInfraTableData)
+
 
 
 
@@ -336,17 +338,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     ################## TABLE ###################################
     ############################################################
-
-
-    # housing
+    ### populate housing table ###
     def populateTableHousing(self, shortName=None, id=None):
 
-        # ### get feature cells
-        # # feautreID + 3 = excel row
-        # id = np.asarray(id) + 3
-        # cellList = []
-        # for row in id:
-        #     cellList.append('M'+str(row))
+        # get cell string for Rent percent data column
         cellList = self.getCellString(data=id, column='M')
 
         # get percent values from excel sheet
@@ -354,17 +349,23 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         table = self.housingTable
         table.clear()
-        table.setColumnCount(2)
+        table.setColumnCount(3)
         table.setHorizontalHeaderLabels(['Housing plans', "%"])
         table.setRowCount(len(shortName))
+        # i is the table row, items mus tbe added as QTableWidgetItems
         for i, att in enumerate(shortName):
-            # i is the table row, items mus tbe added as QTableWidgetItems
+            # set the short name in the table
             table.setItem(i,0,QtGui.QTableWidgetItem(att))
-            # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
+
+            # set the percent value from the excel data in the table
             percentItem = QtGui.QTableWidgetItem(str(int(percents[i])))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 1, percentItem)
 
+            # hidden excel id column (necessary for saving data to the excel file)
+            table.setItem(i,2,QtGui.QTableWidgetItem(str(id[i]+2)))
+
+        #table.hideColumn(2)
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
@@ -378,9 +379,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.verticalHeader().setDefaultSectionSize(40)
 
 
-
-
-    # infra
+    ### populate infra table ###
     def populateTableInfra(self, shortName=None, id=None):
 
 
@@ -391,7 +390,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         table = self.infraTable
         table.clear()
-        table.setColumnCount(3)
+        table.setColumnCount(4)
         table.setHorizontalHeaderLabels(['y/n', 'Infrastructure Investments', "%"])
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
@@ -422,7 +421,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 2, percentItem)
 
+            # hidden excel id column (necessary for saving data to the excel file)
+            table.setItem(i, 3, QtGui.QTableWidgetItem(str(id[i]+2)))
+            # TODO here the id is wrong, would be best to just have this hidden column as an integer ID,
+            # instead of the stupid string
 
+
+        #table.hideColumn(3)
 
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
@@ -437,44 +442,56 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.verticalHeader().setDefaultSectionSize(40)
 
 
-
-
-    # def populateTable(self, attributes=None, table=None, tableName=None):
-    #
-    #
-    #     table.clear()
-    #     table.setColumnCount(2)
-    #     table.setHorizontalHeaderLabels([tableName, "%"])
-    #     table.setRowCount(len(attributes))
-    #     for i, att in enumerate(attributes):
-    #         # i is the table row, items mus tbe added as QTableWidgetItems
-    #         table.setItem(i,0,QtGui.QTableWidgetItem(att))
-    #         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
-    #         percentItem = QtGui.QTableWidgetItem('10')
-    #         percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-    #         table.setItem(i, 1, percentItem)
-    #         #table.setItem(i, 1, QtGui.QTableWidgetItem('10'))
-    #
-    #     table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-    #
-    #     # horizontal
-    #     table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-    #     #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-    #     #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-    #     #table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-    #     table.setColumnWidth(1, 50)
-    #
-    #     # vertical
-    #     table.resizeRowsToContents()
-    #     table.verticalHeader().setVisible(True)
-    #     #table.verticalHeader().setResizeMode(QtGui.QHeaderView.Fixed)
-    #     table.verticalHeader().setDefaultSectionSize(40)
-
-
+    ### get table data ###
     # housing
+    def saveHousingTableData(self):
+
+
+        # get data from table
+        nRows = self.housingTable.rowCount()
+        id = []
+        data = []
+        for i in range(nRows):
+            # checkbox value
+            data.append(self.housingTable.item(i, 0).text())
+            # id column
+            id.append(self.housingTable.item(i,2).text())
+
+        print "housing percent: ", data
+        print "hidden housing table id: ", id
+
+    # infra
+    def saveInfraTableData(self):
+
+
+        # get data from table
+        nRows = self.infraTable.rowCount()
+        id = []
+        data = []
+        for i in range(nRows):
+            # checkbox value
+            checked = self.infraTable.item(i, 0).isChecked()
+            if checked:
+                data.append(1)
+            else:
+                data.append(0)
+
+            # id column
+            id.append(self.infraTable.item(i,3).text())
+
+        print "checkbox value: ", data
+        print "hidden infra table id: ", id
 
 
 
+
+
+
+    ############################################################
+    ############ LAYER OR TABLE SELECTION CHANGED ##############
+    ############################################################
+    ### table selection changed ###
+    # housing
     def housingRowSelected(self):
 
         selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
@@ -493,10 +510,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
         self.infraLabel.setText(selectedItem)
 
-
-    ############################################################
-    ################## LAYER SELECTION CHANGED #################
-    ############################################################
+    ### layer selection changed ###
+    # housing
     def housingLayerSelectionChanged(self):
         ## this is called if user changes the project selection on the canvas
 
@@ -519,6 +534,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 self.packageComboBox.setCurrentIndex(packageMap)
                 self.packageSelected()
 
+        # TODO: in the following function is where the Max. total amount label should also be updated
         ## select the corresponding row of the project and update the label above sliders
         rowCount = self.housingTable.rowCount()
         # iterate over all table rows and check where the name corresponds to the currently selected feature
@@ -536,6 +552,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         self.housingTable.blockSignals(False)
 
+    # infra
     def infraLayerSelectionChanged(self):
         ## this is called if user changes the project selection on the canvas
 
@@ -641,6 +658,18 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # return value
         return np.asarray(vals)
         #return [-1035, -1907, -3106, -7902, -3487]
+
+    def saveValue_xlwings(self, book, sheet, cells, vals):
+
+        # set new value
+        for i, cell in enumerate(cells):
+            book.sheets[sheet].range(cell).value = vals[i]
+        book.save()
+        # book.close()  # Ya puedo cerrar el libro.
+        # # app.kill()
+
+        # return value
+        return 0
 
 
     ###########################################################
