@@ -214,8 +214,14 @@ class PlanningToolClass:
 
         # close excel sheet
         if self.book:
+            #self.book.save()
             self.book.close()
+            #self.app.quit()
             self.app.kill()
+            self.book = None
+            self.app = None
+            del self.app
+            del self.book
 
         # disconnects
         self.ic.closingPlugin.disconnect(self.onClosePlugin)
@@ -308,9 +314,11 @@ class PlanningToolClass:
             #self.zoomToInfrastructureInvestments()
 
             # open excel
-            self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel', '20180926 Regional game IMS 2.3.xlsx')
-            self.app = xw.App(visible=False)
-            self.book = self.app.books.open(self.excel_file)
+            self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel', '20180926 Regional game IMS 2.4.xlsx')
+            self.app = xw.App(visible=True)
+            #self.book = self.app.books.open(self.excel_file)
+
+            print "open new app"
 
 
             ## initialise IndicatorsChart widget here
@@ -319,10 +327,16 @@ class PlanningToolClass:
             #    removed on close (see self.onClosePlugin method)
             if self.ic == None:
                 # Create the dockwidget (after translation) and keep reference
+                print "pass new book"
+                self.book = self.app.books.open(self.excel_file)
                 self.ic = IndicatorsChartDocked(self.iface, book=self.book)
                 # maptool = MapToolEmitPoint(self.canvas)
                 # self.canvas.setMapTool(maptool)
                 # maptool.canvasDoubleClicked.connect(self.handleDoubleClick)
+            else:
+                print "pass old book"
+                self.book = self.app.books.open(self.excel_file)
+                self.ic.book = self.book
 
 
             # connect to provide cleanup on closing of dockwidget

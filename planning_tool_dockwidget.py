@@ -203,11 +203,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.okInfra.clicked.connect(self.saveInfraTableData)
 
 
-
-
-
         # generate the plot
         self.refreshPlot()
+
+
+
+
     ############################################################
     ################## SLIDERS #################################
     ############################################################
@@ -216,7 +217,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         if self.housingTable.selectedItems():
             # set current slider value in the housing table (works dynamic)
             row = self.housingTable.currentRow()
-            percentItem = QtGui.QTableWidgetItem(str(self.housingSlider.value()))
+            # slider value returns an integer, so convert it to a float, divide by 10, round, and multiply by 10
+            val10 = int(round(float(self.housingSlider.value())/10)*10)
+            percentItem = QtGui.QTableWidgetItem(str(val10))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             self.housingTable.setItem(row, 1, percentItem)
             #self.housingTable.setItem(row, 1, QtGui.QTableWidgetItem(str(self.housingSlider.value())))
@@ -345,7 +348,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def populateTableHousing(self, shortName=None, id=None):
 
         # get cell string for Rent percent data column
-        cellList = self.getCellString(data=id, column='M')
+        cellList = self.getCellString(data=id, column='K', skip=3)
 
         # get percent values from excel sheet
         percents = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList)
@@ -386,7 +389,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def populateTableInfra(self, shortName=None, id=None):
 
 
-        cellList = self.getCellString(data=id, column='R')
+        cellList = self.getCellString(data=id, column='R', skip=3)
 
         checkBoxValues = self.getValue_xlwings(book=self.book, sheet='INPUT - Infra Projects', cells=cellList)
 
@@ -459,12 +462,21 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data = []
         for i in range(nRows):
             # checkbox value
-            data.append(self.housingTable.item(i, 1).text())
+            data.append(int(self.housingTable.item(i, 1).text()))
             # id column
-            id.append(self.housingTable.item(i,2).text())
+            id.append(int(self.housingTable.item(i,2).text()))
 
-        print "housing percent: ", data
-        print "hidden housing table id: ", id
+        #print "housing percent: ", data
+        #print "hidden housing table id: ", id
+
+        # save data to excel sheet
+        cellList = self.getCellString(data=id, column='K', skip=2)
+        sheet = 'INPUT - Housing per plan '
+        self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
+
+        print "housing cells: ", cellList
+
+
 
     # infra
     def saveInfraTableData(self):
@@ -476,17 +488,27 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data = []
         for i in range(nRows):
             # checkbox value
-            checked = self.infraTable.item(i, 0).isChecked()
+            checked = self.infraTable.cellWidget(i, 0).findChild(QtGui.QCheckBox).isChecked()
+            #print checked
+            #data.append(checked)
             if checked:
                 data.append(1)
             else:
                 data.append(0)
 
             # id column
-            id.append(self.infraTable.item(i,3).text())
+            id.append(int(self.infraTable.item(i,3).text()))
 
-        print "checkbox value: ", data
-        print "hidden infra table id: ", id
+        #print "checkbox value: ", data
+        #print "hidden infra table id: ", id
+
+        # save data to excel sheet
+        cellList = self.getCellString(data=id, column='R', skip=2)
+
+        print "infra cells: ", cellList
+
+        sheet = 'INPUT - Infra Projects'
+        self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
 
 
 
@@ -632,10 +654,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     ################## EXCEL ###################################
     ############################################################
-    def getCellString(self, data=None, column=None):
+    def getCellString(self, data=None, column=None, skip=None):
         ### get feature cells
         # feautreID + 3 = excel row
-        data = np.asarray(data) + 3
+        data = np.asarray(data) + skip
         cellList = []
         for row in data:
             cellList.append(column+str(row))
