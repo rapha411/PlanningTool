@@ -257,10 +257,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         self.packageComboBox.addItem("All Packages")
         self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
-        self.packageComboBox.addItem("Package 2 - Zaandam – Noord")
+        self.packageComboBox.addItem("Package 2 - Zaandam - Noord")
         self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
         self.packageComboBox.addItem("Package 4 - Hoorn")
-        self.packageComboBox.addItem("Package 5 - Ring A10 oost – Waterland")
+        self.packageComboBox.addItem("Package 5 - Ring A10 oost - Waterland")
         #pass
 
         #
