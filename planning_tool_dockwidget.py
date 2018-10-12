@@ -180,7 +180,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # populate box and table
         self.populateComboBox()
-        #self.packageSelected()
+        self.packageSelected()
 
 
         # connect signal/slot
@@ -195,6 +195,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # sliders
         self.housingSlider.valueChanged.connect(self.housingSliderChanged)
 
+        # toolBox
+        self.toolBox.currentChanged.connect(self.plot)
+
 
         # buttons
         # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
@@ -203,8 +206,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.okInfra.clicked.connect(self.saveInfraTableData)
 
 
-        # generate the plot
-        self.refreshPlot()
+        # generate the plots
+        self.accInputPlot()
+
+
+        # description text
+        self.descriptionText.setFontPointSize(14)
+        self.descriptionText.viewport().setAutoFillBackground(False)
 
 
 
@@ -221,7 +229,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             val10 = int(round(float(self.housingSlider.value())/10)*10)
             percentItem = QtGui.QTableWidgetItem(str(val10))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-            self.housingTable.setItem(row, 1, percentItem)
+            self.housingTable.setItem(row, 2, percentItem)
             #self.housingTable.setItem(row, 1, QtGui.QTableWidgetItem(str(self.housingSlider.value())))
 
     ############################################################
@@ -262,17 +270,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ''')
 
         self.packageComboBox.setView(view)
-
-
-        # self.packageComboBox.setIconSize(QSize(48, 48))
-        # self.packageComboBox.setSizePolicy(Qt.QSizePolicy.Preferred, Qt.QSizePolicy.Expanding)
-        # self.packageComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
-
-        #QComboBox { min-height: 40px;}
-        #QListView::item:selected { color: red; background-color: lightgray; min-width: 1000px;}"
-        #self.packageComboBox.setMinimumHeight(100)
-        #self.packageComboBox.adjustSize()
-        #self.packageComboBox.update()
 
 
     def testExe(self):
@@ -334,10 +331,28 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.populateTableHousing(shortName=housingNames, id=housingID)
         self.populateTableInfra(shortName=infraNames, id=infraID)
 
-        # zoom to package
-        #if (not self.housingLayer.selectedFeatures()) and (not self.infraLayer.selectedFeatures()):
-        housingBox.combineExtentWith(infraBox)
-        self.canvas.setExtent(housingBox)
+        # # zoom to package
+        # #if (not self.housingLayer.selectedFeatures()) and (not self.infraLayer.selectedFeatures()):
+        # housingBox.combineExtentWith(infraBox)
+        # self.canvas.setExtent(housingBox)
+        # self.canvas.refresh()
+
+
+        # zoom to package - bookmarks
+        if package == 0:
+            extent = QgsRectangle(105719,486317,148566,526584)
+        if package == 1:
+            extent = QgsRectangle(114177,490653,122483,497105)
+        elif package == 2:
+            extent = QgsRectangle(107662,494165,120349,504020)
+        elif package == 3:
+            extent = QgsRectangle(118401,496246,129810,505108)
+        elif package == 4:
+            extent = QgsRectangle(124656,510813,139329,522787)
+        elif package == 5:
+            extent = QgsRectangle(122776, 489456, 138727, 504447)
+
+        self.canvas.setExtent(extent)
         self.canvas.refresh()
 
 
@@ -348,40 +363,52 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def populateTableHousing(self, shortName=None, id=None):
 
         # get cell string for Rent percent data column
-        cellList = self.getCellString(data=id, column='K', skip=3)
+        cellList1 = self.getCellString(data=id, column='K', skip=3)
+        cellList2 = self.getCellString(data=id, column='J', skip=3)
 
         # get percent values from excel sheet
-        percents = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList)
+        percents = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList1)
+        maxAmount = self.getValue_xlwings(book=self.book, sheet='INPUT - Housing per plan ', cells=cellList2)
 
         table = self.housingTable
         table.clear()
-        table.setColumnCount(3)
-        table.setHorizontalHeaderLabels(['Housing plans', "%"])
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(['ID','Housing plans', "%", "MAX"])
+        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         for i, att in enumerate(shortName):
+            # hidden excel id column (necessary for saving data to the excel file)
+            idItem = QtGui.QTableWidgetItem(str(id[i]+1))
+            #idItem.setBackground(QtGui.QColor("grey"))
+            idItem.setTextAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+            #table.setItem(i,0,QtGui.QTableWidgetItem(str(id[i]+1)))
+            table.setItem(i,0,idItem)
+
             # set the short name in the table
-            table.setItem(i,0,QtGui.QTableWidgetItem(att))
+            table.setItem(i,1,QtGui.QTableWidgetItem(att))
 
             # set the percent value from the excel data in the table
             percentItem = QtGui.QTableWidgetItem(str(int(percents[i])))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-            table.setItem(i, 1, percentItem)
+            table.setItem(i, 2, percentItem)
+            
+            # set the maxAmount value from the excel data in the table
+            maxAmountItem = QtGui.QTableWidgetItem(str(int(maxAmount[i])))
+            maxAmountItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            table.setItem(i, 3, maxAmountItem)
 
-            # hidden excel id column (necessary for saving data to the excel file)
-            table.setItem(i,2,QtGui.QTableWidgetItem(str(id[i]+1)))
-
-        #table.hideColumn(2)
-
-        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         # horizontal
-        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        table.setColumnWidth(1, 50)
+        #table.hideColumn(0)
+        table.setColumnWidth(0, 22)
+        table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        table.setColumnWidth(2, 50)
+        table.setColumnWidth(3, 50)
 
         # vertical
         table.resizeRowsToContents()
-        table.verticalHeader().setVisible(True)
+        table.verticalHeader().setVisible(False)
         table.verticalHeader().setDefaultSectionSize(self.height)
 
 
@@ -396,14 +423,17 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         table = self.infraTable
         table.clear()
-        table.setColumnCount(4)
-        table.setHorizontalHeaderLabels(['y/n', 'Infrastructure Investments', "%"])
+        table.setColumnCount(3)
+        table.setHorizontalHeaderLabels(['ID','y/n', 'Infrastructure Investments'])
+        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
         for i, att in enumerate(shortName):
-            #### checkbox y/n per project
+            # hidden excel id column (necessary for saving data to the excel file)
+            table.setItem(i, 0, QtGui.QTableWidgetItem(str(id[i]+1)))
 
+            #### checkbox y/n per project
             # setup chechbox so it can be used as qtablewidgetitem
             checkBoxWidget = QtGui.QWidget()
             checkBox = QtGui.QCheckBox()
@@ -417,37 +447,23 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             else:
                 checkBox.setChecked(False)
             # insert checkbox in the table
-            table.setCellWidget(i,0,checkBoxWidget)
+            table.setCellWidget(i,1,checkBoxWidget)
 
             #### short name of the project
-            table.setItem(i,1,QtGui.QTableWidgetItem(att))
-
-            #### housing percent per project
-            percentItem = QtGui.QTableWidgetItem('10')
-            percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-            table.setItem(i, 2, percentItem)
-
-            # hidden excel id column (necessary for saving data to the excel file)
-            # item = QtGui.QTableWidgetItem()
-            # item.setData = (Qt.DisplayRole, int(id[i])-1)
-            # table.setItem(i, 3, item)
-            table.setItem(i, 3, QtGui.QTableWidgetItem(str(id[i]+1)))
-            # TODO here the id is wrong, would be best to just have this hidden column as an integer ID,
-            # instead of the stupid string
+            table.setItem(i,2,QtGui.QTableWidgetItem(att))
 
 
-        #table.hideColumn(3)
-
-        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
 
         # horizontal
-        table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        table.setColumnWidth(2, 50)
-        table.setColumnWidth(0, 50)
+        #table.hideColumn(0)
+        table.setColumnWidth(0, 20)                                                     # id column
+        table.setColumnWidth(1, 50)                                                     # checkbox column
+        table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)            # name column
+
 
         # vertical
         table.resizeRowsToContents()
-        table.verticalHeader().setVisible(True)
+        table.verticalHeader().setVisible(False)
         table.verticalHeader().setDefaultSectionSize(self.height)
 
 
@@ -461,10 +477,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         id = []
         data = []
         for i in range(nRows):
-            # checkbox value
-            data.append(int(self.housingTable.item(i, 1).text()))
+            # housing percent value
+            data.append(int(self.housingTable.item(i, 2).text()))
             # id column
-            id.append(int(self.housingTable.item(i,2).text()))
+            id.append(int(self.housingTable.item(i,0).text()))
 
         #print "housing percent: ", data
         #print "hidden housing table id: ", id
@@ -488,7 +504,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data = []
         for i in range(nRows):
             # checkbox value
-            checked = self.infraTable.cellWidget(i, 0).findChild(QtGui.QCheckBox).isChecked()
+            checked = self.infraTable.cellWidget(i, 1).findChild(QtGui.QCheckBox).isChecked()
             #print checked
             #data.append(checked)
             if checked:
@@ -497,7 +513,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 data.append(0)
 
             # id column
-            id.append(int(self.infraTable.item(i,3).text()))
+            id.append(int(self.infraTable.item(i,0).text()))
 
         #print "checkbox value: ", data
         #print "hidden infra table id: ", id
@@ -522,8 +538,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     # housing
     def housingRowSelected(self):
 
-        selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
-
+        # get the name of the selected item from the table
+        selectedItem = self.housingTable.selectedItems()[1].text().encode('utf-8')
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
@@ -532,7 +548,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     # infra
     def infraRowSelected(self):
 
-        selectedItem = self.infraTable.selectedItems()[0].text().encode('utf-8')
+        # get the name of the selected item from the table
+        selectedItem = self.infraTable.selectedItems()[1].text().encode('utf-8')
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
@@ -567,7 +584,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         rowCount = self.housingTable.rowCount()
         # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            tableName = self.housingTable.item(i, 0).text()
+            tableName = self.housingTable.item(i, 1).text()
             layerName = feat.attribute("NameShort")
             if tableName == layerName:
                 # select/highlight matching row
@@ -575,7 +592,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 # update the label above the sliders
                 self.housingLabel.setText(tableName)
                 # update the slider position
-                self.housingSlider.setValue(int(self.housingTable.item(i,1).text()))
+                self.housingSlider.setValue(int(self.housingTable.item(i,2).text()))
                 break
 
         self.housingTable.blockSignals(False)
@@ -606,7 +623,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         rowCount = self.infraTable.rowCount()
         # iterate over all table rows and check where the name corresponds to the currently selected feature
         for i in range(rowCount):
-            tableFeatureName = self.infraTable.item(i, 1).text()
+            tableFeatureName = self.infraTable.item(i, 2).text()
             layerFeatureName = feat.attribute("ShortName")
             if tableFeatureName == layerFeatureName:
                 # select/highlight matching row
@@ -705,20 +722,225 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ###########################################################
     ################## PLOT ###################################
     ###########################################################
-    def refreshPlot(self):
+    def plot(self):
+
+        if self.toolBox.currentIndex() == 1:
+            self.accPlot()
+            self.marketPlot()
+            self.financialPlot()
+            self.spatialPlot()
+        else:
+            pass
+
+
+
+    def accInputPlot(self):
         ### INDICATORS
 
         print "refreshing plot"
 
+        ### PLOT
+        # first clear the Figure() from the accessibilityInputChart layout,
+        # so a new one will be printed when function is run several times
+        for i in reversed(range(self.accessibilityInputChart.count())):
+            self.accessibilityInputChart.itemAt(i).widget().setParent(None)
 
-        market_balance = np.asarray([-1035, -1907, -3106, -7902, -3487])
-        #market_balance = self.getValue_xlwings(self.excel_file, 'Indicator 2 Market balance', ['E3', 'E4', 'E5', 'E6', 'E7'])
+        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
+        self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
+        #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
+        self.chart_canvas = FigureCanvas(self.chart_figure)
+        self.accessibilityInputChart.addWidget(self.chart_canvas)
 
-        ### Market Balance
-        finances = np.asarray([-5.01, 0, -35.2, 0, 0, 0])
-        #finances = self.getValue_xlwings(self.excel_file, 'Indicator 3 Finances', ['E3', 'E4', 'E5', 'E6', 'E7', 'E8'])
+        self.plotChartHorizontal(self.chart_figure.add_subplot(111))
+
+        # plot the subplots
+        #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
+        #self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
+        #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
+        #self.chart_figure.tight_layout()
+        # you can actually probably adjust it perfectly with this
+        #self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
+        #self.chart_figure.subplots_adjust(hspace=0.53)
+        # make background of plot transparent
+        self.chart_figure.patch.set_alpha(0.0)
+        #self.chart_figure.patch.set_facecolor('red')
+
+        return
+
+    def accPlot(self):
+        ### INDICATORS
+
+        ### PLOT
+        ## first clear the Figure() from the accessibilityInputChart layout,
+        ## so a new one will be printed when function is run several times
+        for i in reversed(range(self.accChart.count())):
+            self.accChart.itemAt(i).widget().setParent(None)
+
+        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
+        figure = Figure(figsize=(1,1), tight_layout=True)
+        figure.suptitle("Accessibility", fontsize=12)
+        figureCanvas = FigureCanvas(figure)
+        self.accChart.addWidget(figureCanvas)
+        figure.patch.set_alpha(0.0)
+        ax = figure.add_subplot(111)
 
 
+        # get values from excel sheets
+        sheet = 'Indicator 1 Accessibility'
+        data = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C18','D18','E18'])
+        labels = ('Car', 'Public transport', 'Bicycle')
+
+        y_pos = np.arange(len(data))
+        #performance = 100 * np.random.rand(len(data))
+        #error = np.random.rand(len(people))
+
+        ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        #ax.set_xlabel('acc balance')
+        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_title('How fast do you want to go today?')
+
+        return
+
+
+    def marketPlot(self):
+        ### INDICATORS
+
+        ### PLOT
+        ## first clear the Figure() from the accessibilityInputChart layout,
+        ## so a new one will be printed when function is run several times
+        for i in reversed(range(self.marketChart.count())):
+            self.marketChart.itemAt(i).widget().setParent(None)
+
+        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
+        figure = Figure(figsize=(1,1), tight_layout=True)
+        figure.suptitle("Market balance \n\n ", fontsize=12)
+        figureCanvas = FigureCanvas(figure)
+        self.marketChart.addWidget(figureCanvas)
+        figure.patch.set_alpha(0.0)
+        ax = figure.add_subplot(111)
+
+
+        # get values from excel sheets
+        sheet = 'Indicator 2 Market balance'
+        data = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['E3','E4','E5','E6','E8'])
+        labels = ('Edam-Volendam', 'Hoorn', 'Purmerend (+ Beemster)', 'Zaanstad', 'Regional excl Ams')
+
+        y_pos = np.arange(len(data))
+        #performance = 100 * np.random.rand(len(data))
+        #error = np.random.rand(len(people))
+
+        ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        #ax.set_xlabel('Market balance')
+        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_title('How fast do you want to go today?')
+
+        return
+
+
+    def financialPlot(self):
+        ### INDICATORS
+
+        ### PLOT
+        ## first clear the Figure() from the accessibilityInputChart layout,
+        ## so a new one will be printed when function is run several times
+        for i in reversed(range(self.financialChart.count())):
+            self.financialChart.itemAt(i).widget().setParent(None)
+
+        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
+        figure = Figure(figsize=(1,1), tight_layout=True)
+        figure.suptitle("Financial result", fontsize=12)
+        figureCanvas = FigureCanvas(figure)
+        self.financialChart.addWidget(figureCanvas)
+        figure.patch.set_alpha(0.0)
+        ax = figure.add_subplot(111)
+
+
+        # get values from excel sheets
+        sheet = 'Indicator 3 Finances'
+        data1 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['B25','B26','B27','B28','B29'])
+        data2 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C25','C26','C27','C28','C29'])
+        data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D25','D26','D27','D28','D29'])
+        labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
+
+        #print data1
+        #print data2
+        #print data3
+
+        y_pos = np.arange(len(data1))
+        #performance = 100 * np.random.rand(len(data))
+        #error = np.random.rand(len(people))
+        width = 0.35
+
+        a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
+        b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
+        c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        #ax.set_xlabel('Financial result')
+        ax.legend((a[0], b[0], c[0]), ('Housing revenue', 'Transport investments', 'Financial result'))
+        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_title('How fast do you want to go today?')
+
+        return
+
+    def spatialPlot(self):
+        ### INDICATORS
+
+        ### PLOT
+        ## first clear the Figure() from the accessibilityInputChart layout,
+        ## so a new one will be printed when function is run several times
+        for i in reversed(range(self.spatialChart.count())):
+            self.spatialChart.itemAt(i).widget().setParent(None)
+
+        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
+        figure = Figure(figsize=(1,1), tight_layout=True)
+        figure.suptitle("Spatial goals", fontsize=12)
+        figureCanvas = FigureCanvas(figure)
+        self.spatialChart.addWidget(figureCanvas)
+        figure.patch.set_alpha(0.0)
+        ax = figure.add_subplot(111)
+
+
+        # get values from excel sheets
+        sheet = 'Indicator 4 Spatial Goals'
+        data1 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['B11','B12','B13','B14','B15'])
+        data2 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D11','D12','D13','D14','D15'])
+        data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['F11','F12','F13','F14','F15'])
+        labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
+
+        print data1
+        print data2
+        print data3
+
+        y_pos = np.arange(len(data1))
+        #performance = 100 * np.random.rand(len(data))
+        #error = np.random.rand(len(people))
+        width = 0.35
+
+        a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
+        b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
+        c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        #ax.set_xlabel('spatial result')
+        ax.legend((a[0], b[0], c[0]), ('TOD', 'Infill', 'Rental'), loc='lower right')
+        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_title('How fast do you want to go today?')
+
+        return
+
+    def refreshPlot(self):
+        ### INDICATORS
+
+        print "refreshing plot"
 
         ### PLOT
         # first clear the Figure() from the spatialChart layout,
@@ -728,7 +950,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # add matplotlib Figure to chartFrame / spatialChart layout
         self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
-        #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
+        self.chart_figure.suptitle("Accessibility", fontsize=12)
         self.chart_canvas = FigureCanvas(self.chart_figure)
         self.spatialChart.addWidget(self.chart_canvas)
 
@@ -805,8 +1027,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         performance = 100 * np.random.rand(len(people))
         #error = np.random.rand(len(people))
 
-        ax.barh(y_pos, performance, align='center',
-                color='blue', ecolor='black')
+        ax.barh(y_pos, performance, align='center', color='blue', ecolor='black')
         ax.set_yticks(y_pos)
         ax.set_yticklabels(people)
         ax.invert_yaxis()  # labels read top-to-bottom
