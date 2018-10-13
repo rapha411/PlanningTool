@@ -322,8 +322,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             infraNames.append(feat.attribute('ShortName'))
             infraID.append(feat.id())
 
-        print housingID
-        print infraID
+        # print housingID
+        # print infraID
 
         # populate the tables
         #self.populateTable(attributes=housingNames, table=self.housingTable, tableName='Housing Plans')
@@ -490,8 +490,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         sheet = 'INPUT - Housing per plan '
         self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
 
-        print "housing cells: ", cellList
-
+        # refresh accInput
+        self.accInputPlot()
 
 
     # infra
@@ -521,12 +521,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # save data to excel sheet
         cellList = self.getCellString(data=id, column='R', skip=2)
 
-        print "infra cells: ", cellList
-
         sheet = 'INPUT - Infra Projects'
         self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
 
-
+        # refresh accInput
+        self.accInputPlot()
 
 
 
@@ -543,7 +542,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
-        self.housingLabel.setText(selectedItem)
+        #self.housingLabel.setText(selectedItem)
 
     # infra
     def infraRowSelected(self):
@@ -553,7 +552,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
         self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
-        self.infraLabel.setText(selectedItem)
+        #self.infraLabel.setText(selectedItem)
 
     ### layer selection changed ###
     # housing
@@ -590,7 +589,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 # select/highlight matching row
                 self.housingTable.selectRow(i)
                 # update the label above the sliders
-                self.housingLabel.setText(tableName)
+                #self.housingLabel.setText(tableName)
                 # update the slider position
                 self.housingSlider.setValue(int(self.housingTable.item(i,2).text()))
                 break
@@ -629,7 +628,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
                 # select/highlight matching row
                 self.infraTable.selectRow(i)
                 # update the label above the sliders
-                self.infraLabel.setText(tableFeatureName)
+                #self.infraLabel.setText(tableFeatureName)
                 # update the infra project description
                 self.descriptionText.setText(feat.attribute("Descriptio"))
                 break
@@ -697,7 +696,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ##get new value based on UDF (user defined function)
         vals = []
         for cell in cells:
-            vals.append(book.sheets[sheet].range(cell).value)
+            val = book.sheets[sheet].range(cell).value
+            # sometimes there are strange values coming from the excel formulas, e.g. very close to zero. So filter them:
+            if ((val < 0.01) and (val > -0.01)) or (val < -10000000 ):
+                val = 0
+            vals.append(val)
 
         # book.close()
         # app.kill()
@@ -737,33 +740,50 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     def accInputPlot(self):
         ### INDICATORS
 
-        print "refreshing plot"
-
         ### PLOT
-        # first clear the Figure() from the accessibilityInputChart layout,
-        # so a new one will be printed when function is run several times
-        for i in reversed(range(self.accessibilityInputChart.count())):
-            self.accessibilityInputChart.itemAt(i).widget().setParent(None)
+        ## first clear the Figure() from the accessibilityInputChart layout,
+        ## so a new one will be printed when function is run several times
+        for i in reversed(range(self.accInputChart.count())):
+            self.accInputChart.itemAt(i).widget().setParent(None)
 
         # add matplotlib Figure to chartFrame / accessibilityInputChart layout
-        self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
-        #self.chart_figure.suptitle("Indicators \n\n ", fontsize=18, fontweight='bold')
-        self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.accessibilityInputChart.addWidget(self.chart_canvas)
+        figure = Figure(figsize=(1,1), tight_layout=True)
+        figure.suptitle("Accessibility", fontsize=12)
+        figureCanvas = FigureCanvas(figure)
+        self.accInputChart.addWidget(figureCanvas)
+        figure.patch.set_alpha(0.0)
+        ax = figure.add_subplot(111)
 
-        self.plotChartHorizontal(self.chart_figure.add_subplot(111))
 
-        # plot the subplots
-        #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
-        #self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
-        #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
-        #self.chart_figure.tight_layout()
-        # you can actually probably adjust it perfectly with this
-        #self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
-        #self.chart_figure.subplots_adjust(hspace=0.53)
-        # make background of plot transparent
-        self.chart_figure.patch.set_alpha(0.0)
-        #self.chart_figure.patch.set_facecolor('red')
+        # get values from excel sheets
+        sheet = 'Indicator 1 Accessibility'
+        data1 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C10','C11','C12','C13','C14'])
+        data2 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D10','D11','D12','D13','D14'])
+        data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['E10','E11','E12','E13','E14'])
+        labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
+
+
+
+        y_pos = np.arange(len(data1))
+        width = 0.35
+
+        a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
+        b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
+        c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels, fontsize=9)
+        ax.xaxis.set_tick_params(labelsize=9)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        #figure.legend((a[0], b[0], c[0]), ('Car', 'Public transport', 'Bicycle'), bbox_to_anchor=(0.02, 0.01), loc='lower left', ncol=3, prop={'size': 9})
+        ax.legend((a[0], b[0], c[0]), ('Car', 'Public transport', 'Bicycle'), loc='lower right', prop={'size': 7})
+
+        # set the xlims
+        xlims = ax.get_xlim()
+        ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        # annotate bars
+        self.labelBars(ax, data1, -width)
+        self.labelBars(ax, data2, 0)
+        self.labelBars(ax, data3, width)
 
         return
 
@@ -778,7 +798,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # add matplotlib Figure to chartFrame / accessibilityInputChart layout
         figure = Figure(figsize=(1,1), tight_layout=True)
-        figure.suptitle("Accessibility", fontsize=12)
+        figure.suptitle("Accessibility total", fontsize=12)
         figureCanvas = FigureCanvas(figure)
         self.accChart.addWidget(figureCanvas)
         figure.patch.set_alpha(0.0)
@@ -796,11 +816,20 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
         ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels)
+        ax.set_yticklabels(labels, fontsize=9)
+        ax.xaxis.set_tick_params(labelsize=9)
         ax.invert_yaxis()  # labels read top-to-bottom
-        #ax.set_xlabel('acc balance')
-        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
-        #ax.set_title('How fast do you want to go today?')
+
+        # set the xlims
+        xlims = ax.get_xlim()
+        if (xlims[0]<0) and (xlims[1]>0):
+            m = max(abs(np.array(xlims)))
+            ax.set_xlim(-m*1.5, m*1.5)
+        else:
+            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+
+        # annotate bars
+        self.labelBars(ax,data)
 
         return
 
@@ -834,11 +863,20 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
         ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels)
+        ax.set_yticklabels(labels, fontsize=9)
+        ax.xaxis.set_tick_params(labelsize=9)
         ax.invert_yaxis()  # labels read top-to-bottom
-        #ax.set_xlabel('Market balance')
-        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
-        #ax.set_title('How fast do you want to go today?')
+
+        # set the xlims
+        xlims = ax.get_xlim()
+        if (xlims[0]<0) and (xlims[1]>0):
+            m = max(abs(np.array(xlims)))
+            ax.set_xlim(-m*1.5, m*1.5)
+        else:
+            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+
+        # annotate bars
+        self.labelBars(ax,data)
 
         return
 
@@ -868,25 +906,36 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D25','D26','D27','D28','D29'])
         labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
 
+
+
         #print data1
         #print data2
         #print data3
 
         y_pos = np.arange(len(data1))
-        #performance = 100 * np.random.rand(len(data))
-        #error = np.random.rand(len(people))
+
         width = 0.35
 
         a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
         c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
         ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels)
+        ax.set_yticklabels(labels, fontsize=9)
+        ax.xaxis.set_tick_params(labelsize=9)
         ax.invert_yaxis()  # labels read top-to-bottom
-        #ax.set_xlabel('Financial result')
-        ax.legend((a[0], b[0], c[0]), ('Housing revenue', 'Transport investments', 'Financial result'))
+        ax.legend((a[0], b[0], c[0]), ('Housing revenue', 'Transport investments', 'Financial result'), loc='lower right', prop={'size': 7})
+        #figure.legend((a[0], b[0], c[0]), ('Housing revenue', 'Transport investments', 'Financial result'), bbox_to_anchor=(0.02, 0.01), loc='lower left', ncol=3, prop={'size': 9})
+
         #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
         #ax.set_title('How fast do you want to go today?')
+
+        # set the xlims
+        xlims = ax.get_xlim()
+        ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        # annotate bars
+        self.labelBars(ax, data1, -width)
+        self.labelBars(ax, data2, 0)
+        self.labelBars(ax, data3, width)
 
         return
 
@@ -915,9 +964,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['F11','F12','F13','F14','F15'])
         labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
 
-        print data1
-        print data2
-        print data3
+        # data1 = 100 * np.random.rand(len(labels))
+        # data2 = 100 * np.random.rand(len(labels))
+        # data3 = 100 * np.random.rand(len(labels))
+
+        # print "spatial1: ", data1
+        # print "spatial2: ", data2
+        # print "spatial3: ", data3
 
         y_pos = np.arange(len(data1))
         #performance = 100 * np.random.rand(len(data))
@@ -928,47 +981,76 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
         c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
         ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels)
+        ax.set_yticklabels(labels, fontsize=9)
+        ax.xaxis.set_tick_params(labelsize=9)
         ax.invert_yaxis()  # labels read top-to-bottom
-        #ax.set_xlabel('spatial result')
-        ax.legend((a[0], b[0], c[0]), ('TOD', 'Infill', 'Rental'), loc='lower right')
-        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
-        #ax.set_title('How fast do you want to go today?')
+        # legend
+        #figure.legend((a[0], b[0], c[0]), ('TOD', 'Infill', 'Rental'), bbox_to_anchor=(0.02, 0.01), loc='lower left', ncol=3, prop={'size': 9})
+        ax.legend((a[0], b[0], c[0]), ('TOD', 'Infill', 'Rental'), loc='lower right', prop={'size': 7})
+
+        #figure.tight_layout(rect=[0.4, 0.4, 1, 1])
+        #figure.tight_layout(pad=0.05)
+        #figure.subplots_adjust(hspace=0.53)
+
+        # set the xlims
+        xlims = ax.get_xlim()
+        ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        # annotate bars
+        self.labelBars(ax, data1, -width)
+        self.labelBars(ax, data2, 0)
+        self.labelBars(ax, data3, width)
+
+
 
         return
 
-    def refreshPlot(self):
-        ### INDICATORS
+    def labelBars(self, axis=None, data=None, offset=0):
 
-        print "refreshing plot"
+        # annotate bars
+        m = max(abs(data))
+        for i, v in enumerate(data):
+            t = str(int(v))
+            if v < 0:
+                align = 'right'
+                p = -m
+            else:
+                align = 'left'
+                p = m
+            axis.text(v+(p*0.05), i+offset, str(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=7)
 
-        ### PLOT
-        # first clear the Figure() from the spatialChart layout,
-        # so a new one will be printed when function is run several times
-        for i in reversed(range(self.spatialChart.count())):
-            self.spatialChart.itemAt(i).widget().setParent(None)
 
-        # add matplotlib Figure to chartFrame / spatialChart layout
-        self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
-        self.chart_figure.suptitle("Accessibility", fontsize=12)
-        self.chart_canvas = FigureCanvas(self.chart_figure)
-        self.spatialChart.addWidget(self.chart_canvas)
-
-        self.plotChartHorizontal(self.chart_figure.add_subplot(111))
-
-        # plot the subplots
-        #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
-        #self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
-        #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
-        #self.chart_figure.tight_layout()
-        # you can actually probably adjust it perfectly with this
-        #self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
-        #self.chart_figure.subplots_adjust(hspace=0.53)
-        # make background of plot transparent
-        self.chart_figure.patch.set_alpha(0.0)
-        #self.chart_figure.patch.set_facecolor('red')
-
-        return
+    # def refreshPlot(self):
+    #     ### INDICATORS
+    #
+    #     print "refreshing plot"
+    #
+    #     ### PLOT
+    #     # first clear the Figure() from the Chart layout,
+    #     # so a new one will be printed when function is run several times
+    #     for i in reversed(range(self.Chart.count())):
+    #         self.Chart.itemAt(i).widget().setParent(None)
+    #
+    #     # add matplotlib Figure to chartFrame / Chart layout
+    #     self.chart_figure = Figure(figsize=(1,1), tight_layout=True)
+    #     self.chart_figure.suptitle("Accessibility", fontsize=12)
+    #     self.chart_canvas = FigureCanvas(self.chart_figure)
+    #     self.Chart.addWidget(self.chart_canvas)
+    #
+    #     self.plotChartHorizontal(self.chart_figure.add_subplot(111))
+    #
+    #     # plot the subplots
+    #     #self.plotChart(self.chart_figure.add_subplot(111), accesibility, "Accessibility", 'b')
+    #     #self.plotChart(self.chart_figure.add_subplot(111), market_balance, "Market Balance", 'g')
+    #     #self.plotChart(self.chart_figure.add_subplot(313), finances, "Finances", 'r')
+    #     #self.chart_figure.tight_layout()
+    #     # you can actually probably adjust it perfectly with this
+    #     #self.chart_figure.tight_layout(rect=[0.1, -0.05, 0.94, 1])
+    #     #self.chart_figure.subplots_adjust(hspace=0.53)
+    #     # make background of plot transparent
+    #     self.chart_figure.patch.set_alpha(0.0)
+    #     #self.chart_figure.patch.set_facecolor('red')
+    #
+    #     return
 
 
 
@@ -1018,22 +1100,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         autolabel(rects)
 
 
-    def plotChartHorizontal(self, ax):
-        #fig, ax = plt.subplots()
-
-        # Example data
-        people = ('Hoorn', 'Amsterdam', 'Municipality')
-        y_pos = np.arange(len(people))
-        performance = 100 * np.random.rand(len(people))
-        #error = np.random.rand(len(people))
-
-        ax.barh(y_pos, performance, align='center', color='blue', ecolor='black')
-        ax.set_yticks(y_pos)
-        ax.set_yticklabels(people)
-        ax.invert_yaxis()  # labels read top-to-bottom
-        ax.set_xlabel('Percent')
-        ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
-        #ax.set_title('How fast do you want to go today?')
 
 
     ############################################################
