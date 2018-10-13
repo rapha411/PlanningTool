@@ -314,7 +314,7 @@ class PlanningToolClass:
             #self.zoomToInfrastructureInvestments()
 
             # open excel
-            self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel', '20180926 Regional game IMS 2.4.xlsx')
+            self.excel_file = os.path.join(os.path.dirname(__file__), 'data', 'excel', '20180926 Regional game IMS 2.5.xlsx')
             self.app = xw.App(visible=False)
             #self.book = self.app.books.open(self.excel_file)
 

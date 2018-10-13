@@ -401,7 +401,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # horizontal
         #table.hideColumn(0)
-        table.setColumnWidth(0, 22)
+        table.setColumnWidth(0, 28)
         table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
         table.setColumnWidth(2, 50)
         table.setColumnWidth(3, 50)
@@ -456,8 +456,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # horizontal
         #table.hideColumn(0)
-        table.setColumnWidth(0, 20)                                                     # id column
+        table.setColumnWidth(0, 28)                                                     # id column
+        #table.horizontalHeader().setResizeMode(0,QtGui.QSizePolicy.MinimumExpanding)
         table.setColumnWidth(1, 50)                                                     # checkbox column
+        #table.horizontalHeader().setResizeMode(1,QtGui.QHeaderView.MinimumExpanding)
         table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)            # name column
 
 
