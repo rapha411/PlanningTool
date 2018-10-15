@@ -39,8 +39,11 @@ import xlwings as xw
 
 # Import the code for the DockWidget
 from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
-#from planning_tool_dockwidget import HousingInput, InfrastructureInput, IndicatorsChart
+#from planning_tool_dockwidget import HousingInput, InfrastructureInput
+#from planning_tool_dockwidget import IndicatorsChart
+
 import os.path
+import subprocess
 
 
 class PlanningToolClass:
@@ -353,18 +356,18 @@ class PlanningToolClass:
 
         self.rgmsAction.setVisible(False)
 
-        # save
-        icon_path = ':/plugins/PlanningToolClass/icons/save.png'
-        self.add_action(
-            icon_path,
-            text=self.transl(u'Save'),
-            callback=self.save,
-            parent=self.iface.mainWindow())
-
-        ##toolbar icons /  add the map navigation actions
+        # # save
+        # icon_path = ':/plugins/PlanningToolClass/icons/save.png'
+        # self.add_action(
+        #     icon_path,
+        #     text=self.transl(u'Save'),
+        #     callback=self.save,
+        #     parent=self.iface.mainWindow())
+        #
+        # ##toolbar icons /  add the map navigation actions
         # separator
         self.separators = []
-        self.separators.append(self.planning_toolbar.addSeparator())
+        # self.separators.append(self.planning_toolbar.addSeparator())
 
 
         # zoom to infrastructure investments / home
@@ -456,6 +459,14 @@ class PlanningToolClass:
         self.iiAction.setCheckable(True)
 
 
+        # add infrastructure input
+        icon_path = ':/plugins/PlanningToolClass/icons/help.png'
+        self.add_action(
+            icon_path,
+            text=self.transl(u'Help'),
+            callback=self.openHelp,
+            parent=self.iface.mainWindow())
+
         # self.planning_toolbar.addAction(self.iface.actionSelect())
         # self.actions.append(self.iface.actionSelect())
 
@@ -546,7 +557,6 @@ class PlanningToolClass:
         if self.mapTool == None:
             self.mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
         self.canvas.setMapTool(self.mapTool)
-        # self.iiAction.setChecked(True)
         uf.showMessage(self.iface, 'Tap on a polygon to select the corresponding project. Double-tap on the map canvas to remove all selections.', type='Info', lev=1, dur=10)
 
 
@@ -566,5 +576,10 @@ class PlanningToolClass:
         pass
 
 
+    def openHelp(self):
+        print "open help"
+        filepath = os.path.join(os.path.dirname(__file__), 'Help.pdf')
+        subprocess.Popen([filepath], shell=True)
+        #print "open PDF"
 
 
