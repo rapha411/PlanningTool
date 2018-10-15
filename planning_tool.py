@@ -41,7 +41,6 @@ import xlwings as xw
 from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
 #from planning_tool_dockwidget import HousingInput, InfrastructureInput
 #from planning_tool_dockwidget import IndicatorsChart
-from nearest_feature_map_tool import NearestFeatureMapTool
 
 import os.path
 import subprocess
@@ -579,7 +578,7 @@ class PlanningToolClass:
 
     def openHelp(self):
         print "open help"
-        filepath = os.path.join(os.path.dirname(__file__), 'help.pdf')
+        filepath = os.path.join(os.path.dirname(__file__), 'Help.pdf')
         subprocess.Popen([filepath], shell=True)
         #print "open PDF"
 

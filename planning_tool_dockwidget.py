@@ -434,9 +434,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # horizontal
         #table.hideColumn(0)
         table.setColumnWidth(0, 28)
+        table.horizontalHeader().setSizePolicy(0,QtGui.QSizePolicy.MinimumExpanding)
         table.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
         table.setColumnWidth(2, 50)
+        table.horizontalHeader().setSizePolicy(2,QtGui.QSizePolicy.MinimumExpanding)
         table.setColumnWidth(3, 50)
+        table.horizontalHeader().setSizePolicy(3,QtGui.QSizePolicy.MinimumExpanding)
 
         # vertical
         table.resizeRowsToContents()
@@ -490,9 +493,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # horizontal
         #table.hideColumn(0)
         table.setColumnWidth(0, 28)                                                     # id column
-        #table.horizontalHeader().setResizeMode(0,QtGui.QSizePolicy.MinimumExpanding)
+        #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(0,QtGui.QSizePolicy.MinimumExpanding)
         table.setColumnWidth(1, 50)                                                     # checkbox column
-        #table.horizontalHeader().setResizeMode(1,QtGui.QHeaderView.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(1,QtGui.QSizePolicy.MinimumExpanding)
         table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)            # name column
 
 
@@ -680,7 +684,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','project_file26.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data','RegionalGamesIII.qgs')
 
 
         # check if file exists
