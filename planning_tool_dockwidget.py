@@ -88,6 +88,11 @@ class PointTool(QgsMapTool, QAction):
         self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
         self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
 
+        #self.canvas.setMapTool().connect(self.deactivate)
+        #self.canvas.mapToolSet.connect(self.deactivate)
+
+        print self.action.isCheckable()
+
 
 
     # def canvasPressEvent(self, event):
@@ -138,9 +143,12 @@ class PointTool(QgsMapTool, QAction):
     def activate(self):
         self.action.setChecked(True)
         self.canvas.setCursor(self.cursor)
+        print "map tool activated"
+
     #
     def deactivate(self):
         self.action.setChecked(False)
+        print "map tool deactivated"
 
 
 
@@ -274,7 +282,29 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
     def testExe(self):
         #self.populateTableInfra(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
-        pass
+        layer = self.iface.activeLayer()  # load the layer as you want
+
+        # define the lookup >> value : (color, label)
+        colors = {1: ('red', 'some_text_for_red'), 2: ('yellow', 'some_text_for_yellow'),
+                  3: ('cyan', 'some_text_for_cyan'), 4: ('green', 'some_text_for_green'),
+                  5: ('blue', 'some_text_for_blue'), 6: ('magenta', 'some_text_for_magenta'),
+                  7: ('grey', 'some_text_for_grey')}
+
+        # create a category for each item in your layer
+        categories = []
+        for value, (color, label) in colors.items():
+            symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
+            symbol.setColor(QColor(color))
+            category = QgsRendererCategoryV2(value, symbol, label)
+            categories.append(category)
+
+        # create the renderer and assign it to the layer
+        expression = 'my_field'  # field name
+        renderer = QgsCategorizedSymbolRendererV2(expression, categories)
+
+        renderer = QgsCategorizedSymbolRendererV2(expression, categories)
+        layer.setRendererV2(renderer)
+        layer.triggerRepaint()
 
 
 
@@ -340,7 +370,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # zoom to package - bookmarks
         if package == 0:
-            extent = QgsRectangle(105719,486317,148566,526584)
+            extent = self.infraLayer.extent()
+            #extent = QgsRectangle(105719,486317,148566,526584)
         if package == 1:
             extent = QgsRectangle(114177,490653,122483,497105)
         elif package == 2:
@@ -375,6 +406,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.setColumnCount(4)
         table.setHorizontalHeaderLabels(['ID','Housing plans', "%", "MAX"])
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         for i, att in enumerate(shortName):
@@ -426,6 +458,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.setColumnCount(3)
         table.setHorizontalHeaderLabels(['ID','y/n', 'Infrastructure Investments'])
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
@@ -543,7 +576,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         selectedItem = self.housingTable.selectedItems()[1].text().encode('utf-8')
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
-        self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
+        self.zoomToSelectedFeature(scale=1.5, layer=self.housingLayer)
         #self.housingLabel.setText(selectedItem)
 
     # infra
@@ -553,7 +586,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         selectedItem = self.infraTable.selectedItems()[1].text().encode('utf-8')
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
-        self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
+        self.zoomToSelectedFeature(scale=1.5, layer=self.infraLayer)
         #self.infraLabel.setText(selectedItem)
 
     ### layer selection changed ###
@@ -567,6 +600,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
         feat = self.housingLayer.selectedFeatures()
         if feat:
+            print len(feat)
             feat = feat[0]
         else:
             self.housingTable.clearSelection()
@@ -1018,7 +1052,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             else:
                 align = 'left'
                 p = m
-            axis.text(v+(p*0.05), i+offset, str(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=7)
+            axis.text(v+(p*0.05), i+offset, str(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=7, style='italic')
 
 
     # def refreshPlot(self):
