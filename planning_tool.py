@@ -40,7 +40,6 @@ import xlwings as xw
 # Import the code for the DockWidget
 from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
 #from planning_tool_dockwidget import HousingInput, InfrastructureInput
-#from planning_tool_dockwidget import IndicatorsChart
 
 import os.path
 import subprocess
