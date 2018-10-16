@@ -21,24 +21,16 @@
  ***************************************************************************/
 """
 
-import os
-import math
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
 
 from qgis.core import *
-from qgis.core import QgsGeometry, QgsMapLayerRegistry
-# from PyQt4 import QtCore
-# from PyQt4 import QtGui
-
 from qgis.gui import *
 from qgis.gui import QgsMapTool
 from qgis.networkanalysis import *
 
-from PyQt4.QtGui import QCursor, QPixmap, QAction
 from PyQt4.QtCore import Qt, pyqtSignal, QPoint
-#from PyQt4.QtCore import pyqtSignal
+
 from . import utility_functions as uf
 
 # this is for adding the "external" folder to the system path, because the QGIS python is only looking in the system path for python packages
@@ -46,111 +38,17 @@ from . import utility_functions as uf
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 
-import processing
-import random
 import numpy as np
-import openpyxl
-import xlwings as xw
+
 # matplotlib for the charts
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
+
+
 FORM_BASE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
-
-FORM_INDICATORS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_chart.ui'))
-
-FORM_HOUSING, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_housing.ui'))
-
-FORM_INFRASTRUCTURE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_infrastructure.ui'))
-
-
-
-
-################################################################################################################
-###################################################### SELECT-TOOL #############################################
-################################################################################################################
-class PointTool(QgsMapTool, QAction):
-    def __init__(self, widget, canvas, action):
-        QgsMapTool.__init__(self, canvas)
-        self.canvas = canvas
-        self.action = action
-        self.widget = widget
-        #self.book = self.widget.book
-
-        self.cursor = QCursor(Qt.PointingHandCursor)
-
-        # layers need to be turned on when PointTool is opened for the first time, otherwise error when trying to access these layers
-        self.infra_layer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
-        self.housing_layer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
-
-        #self.canvas.setMapTool().connect(self.deactivate)
-        #self.canvas.mapToolSet.connect(self.deactivate)
-
-        print self.action.isCheckable()
-
-
-
-    # def canvasPressEvent(self, event):
-    #     pass
-    #
-    # def canvasMoveEvent(self, event):
-    #     x = event.pos().x()
-    #     y = event.pos().y()
-    #
-    #     point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
-
-    def canvasReleaseEvent(self, event):
-
-        mapPoint = self.toMapCoordinates(event.pos())
-        infra_layerPoint = self.toLayerCoordinates(self.infra_layer, mapPoint)
-        housing_layerPoint = self.toLayerCoordinates(self.housing_layer, mapPoint)
-
-        # layers need to be turned on when PointTool is opened for the first time, otherwise error when trying to access these layers
-        infra_intersection = [None, 10000000]
-        for poly in self.infra_layer.getFeatures():
-            if poly.geometry().contains(QgsGeometry.fromPoint(infra_layerPoint)):
-                self.infra_layer.removeSelection()
-                self.infra_layer.select([poly.id()])
-                break
-        #         cent = poly.geometry().centroid().asPoint()
-        #
-        #         dist = cent.distance(infra_layerPoint)
-        #
-        #         if dist < infra_intersection[1]:
-        #             infra_intersection[0] = poly
-        #             infra_intersection[1] = dist
-        #
-        # if infra_intersection[0]:
-        #     infra_layer.select([infra_intersection[0].id()])
-
-        housing_intersections = [None, 10000000]
-        for poly in self.housing_layer.getFeatures():
-            if poly.geometry().contains(QgsGeometry.fromPoint(housing_layerPoint)):
-                self.housing_layer.removeSelection()
-                self.housing_layer.select([poly.id()])
-                break
-
-
-    def canvasDoubleClickEvent(self, event):
-        self.infra_layer.removeSelection()
-        self.housing_layer.removeSelection()
-
-    def activate(self):
-        self.action.setChecked(True)
-        self.canvas.setCursor(self.cursor)
-        print "map tool activated"
-
-    #
-    def deactivate(self):
-        self.action.setChecked(False)
-        print "map tool deactivated"
-
-
+    os.path.dirname(__file__), 'PlanningTool_dockwidget_base_2.ui'))
 
 
 ################################################################################################################
@@ -172,7 +70,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.book = book
 
         # define row height for tables and comboBox here
-        self.height = 30
+        self.height = 40
 
         # TODO: what should maybe be done is to implement my own data structure from the layer
         # and excel data, e.g. a pandas table, and use that for loading and saving data.
@@ -183,8 +81,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # load project file
         self.loadProjectFile()
 
-        self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure_Investments")
-        self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing_Plans")
+        self.infraLayer = uf.getCanvasLayerByName(self.canvas, "Infrastructure Projects")
+        self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing Plans")
 
         # populate box and table
         self.populateComboBox()
@@ -203,6 +101,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # sliders
         self.housingSlider.valueChanged.connect(self.housingSliderChanged)
 
+        # maptool changed
+        self.currentMapTool = self.canvas.mapTool()
+        self.currentMapTool.canvasDoubleClickEvent = self.testExe
+        #self.canvas.mapToolSet.connect(self.testExe)
+
         # toolBox
         self.toolBox.currentChanged.connect(self.plot)
 
@@ -219,7 +122,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         # description text
-        self.descriptionText.setFontPointSize(14)
+        self.descriptionText.setFontPointSize(12)
         self.descriptionText.viewport().setAutoFillBackground(False)
 
 
@@ -280,31 +183,34 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.packageComboBox.setView(view)
 
 
-    def testExe(self):
-        #self.populateTableInfra(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
-        layer = self.iface.activeLayer()  # load the layer as you want
+    # def testExe(self):
+    #     #self.populateTableInfra(attributes=infraNames, table=self.infraTable, tableName='Infrastructure Investments')
+    #     layer = self.iface.activeLayer()  # load the layer as you want
+    #
+    #     # define the lookup >> value : (color, label)
+    #     colors = {1: ('red', 'some_text_for_red'), 2: ('yellow', 'some_text_for_yellow'),
+    #               3: ('cyan', 'some_text_for_cyan'), 4: ('green', 'some_text_for_green'),
+    #               5: ('blue', 'some_text_for_blue'), 6: ('magenta', 'some_text_for_magenta'),
+    #               7: ('grey', 'some_text_for_grey')}
+    #
+    #     # create a category for each item in your layer
+    #     categories = []
+    #     for value, (color, label) in colors.items():
+    #         symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
+    #         symbol.setColor(QColor(color))
+    #         category = QgsRendererCategoryV2(value, symbol, label)
+    #         categories.append(category)
+    #
+    #     # create the renderer and assign it to the layer
+    #     expression = 'my_field'  # field name
+    #     renderer = QgsCategorizedSymbolRendererV2(expression, categories)
+    #
+    #     renderer = QgsCategorizedSymbolRendererV2(expression, categories)
+    #     layer.setRendererV2(renderer)
+    #     layer.triggerRepaint()
 
-        # define the lookup >> value : (color, label)
-        colors = {1: ('red', 'some_text_for_red'), 2: ('yellow', 'some_text_for_yellow'),
-                  3: ('cyan', 'some_text_for_cyan'), 4: ('green', 'some_text_for_green'),
-                  5: ('blue', 'some_text_for_blue'), 6: ('magenta', 'some_text_for_magenta'),
-                  7: ('grey', 'some_text_for_grey')}
-
-        # create a category for each item in your layer
-        categories = []
-        for value, (color, label) in colors.items():
-            symbol = QgsSymbolV2.defaultSymbol(layer.geometryType())
-            symbol.setColor(QColor(color))
-            category = QgsRendererCategoryV2(value, symbol, label)
-            categories.append(category)
-
-        # create the renderer and assign it to the layer
-        expression = 'my_field'  # field name
-        renderer = QgsCategorizedSymbolRendererV2(expression, categories)
-
-        renderer = QgsCategorizedSymbolRendererV2(expression, categories)
-        layer.setRendererV2(renderer)
-        layer.triggerRepaint()
+    def testExe(self, event1, event2):
+        print "here"
 
 
 
@@ -404,7 +310,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table = self.housingTable
         table.clear()
         table.setColumnCount(4)
-        table.setHorizontalHeaderLabels(['ID','Housing plans', "%", "MAX"])
+        table.setHorizontalHeaderLabels(['ID','Housing Plans', "%", "MAX"])
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
@@ -459,7 +365,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table = self.infraTable
         table.clear()
         table.setColumnCount(3)
-        table.setHorizontalHeaderLabels(['ID','y/n', 'Infrastructure Investments'])
+        table.setHorizontalHeaderLabels(['ID','y/n', 'Infrastructure Projects'])
         table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
@@ -684,7 +590,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data','RegionalGamesIII.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_2.qgs')
 
 
         # check if file exists

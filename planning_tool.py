@@ -38,8 +38,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 import xlwings as xw
 
 # Import the code for the DockWidget
-from planning_tool_dockwidget import IndicatorsChartDocked, PointTool
-#from planning_tool_dockwidget import HousingInput, InfrastructureInput
+from planning_tool_dockwidget import IndicatorsChartDocked
+from SelectionMappingTool import SelectionTool
 
 import os.path
 import subprocess
@@ -237,6 +237,10 @@ class PlanningToolClass:
         for separator in self.separators:
             self.planning_toolbar.removeAction(separator)
 
+        # set icon size back, iface.mainWindow().findChildren(QToolBar)[i].iconSize() reveals that it is 24x24
+        self.planning_toolbar.setIconSize(QSize(24, 24))
+
+
 
         # toolbars that were present before opening plugin are restored here
         for i, toolbar in enumerate(self.toolbars0):
@@ -381,10 +385,6 @@ class PlanningToolClass:
         # self.planning_toolbar.addAction(self.iface.actionPan())
         # self.actions.append(self.iface.actionPan())
 
-        # touch
-        self.planning_toolbar.addAction(self.iface.actionTouch())
-        self.actions.append(self.iface.actionTouch())
-
         # zoom window
         self.planning_toolbar.addAction(self.iface.actionZoomIn())
         self.actions.append(self.iface.actionZoomIn())
@@ -392,6 +392,9 @@ class PlanningToolClass:
         # zoom to previous extent
         self.planning_toolbar.addAction(self.iface.actionZoomLast())
         self.actions.append(self.iface.actionZoomLast())
+
+        # separator
+        self.separators.append(self.planning_toolbar.addSeparator())
 
         # identify features
         self.planning_toolbar.addAction(self.iface.actionIdentify())
@@ -404,7 +407,7 @@ class PlanningToolClass:
         # self.municipalityCombo.setToolTip("Municipalities")
         # self.actions.append(self.municipalityComboAction)
         #
-        # layer_housing = uf.getLegendLayerByName(self.iface, "Housing_Plans")
+        # layer_housing = uf.getLegendLayerByName(self.iface, "Housing Plans")
         #
         # idx = layer_housing.fieldNameIndex('GEMEENTE')
         # municipalities = layer_housing.uniqueValues(idx)
@@ -425,7 +428,7 @@ class PlanningToolClass:
         # self.packageCombo.setToolTip("Packages")
         # self.actions.append(self.packageComboAction)
         #
-        # layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
+        # layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure Projects")
         #
         # idx = layer_infra.fieldNameIndex('Package')
         # packages = layer_infra.uniqueValues(idx)
@@ -446,9 +449,12 @@ class PlanningToolClass:
         # self.planning_toolbar.addAction(self.iface.actionSelect())
         # self.actions.append(self.iface.actionSelect())
 
+        # touch
+        self.planning_toolbar.addAction(self.iface.actionTouch())
+        self.actions.append(self.iface.actionTouch())
 
         # add infrastructure input
-        icon_path = ':/plugins/PlanningToolClass/icons/select_2.png'
+        icon_path = ':/plugins/PlanningToolClass/icons/select.png'
         self.iiAction = self.add_action(
             icon_path,
             text=self.transl(u'Select'),
@@ -457,6 +463,7 @@ class PlanningToolClass:
         self.iiAction.setObjectName('mSelectAction')
         self.iiAction.setCheckable(True)
 
+        self.separators.append(self.planning_toolbar.addSeparator())
 
         # add infrastructure input
         icon_path = ':/plugins/PlanningToolClass/icons/help.png'
@@ -501,16 +508,16 @@ class PlanningToolClass:
         # self.planning_toolbar.addAction(self.iface.actionDraw())
         # self.planning_toolbar.addAction(self.iface.actionSelect())
 
-
+        self.planning_toolbar.setIconSize(QSize(40, 40))
 
     def zoomToInfrastructureInvestments(self):
         # zoom on infrastructure investments layer extent / home
-        uf.zoomToLayer(self.iface, "Infrastructure_Investments")
+        uf.zoomToLayer(self.iface, "Infrastructure Projects")
 
     def zoomToMunicipality(self):
 
         # get the Housing_Projects layer
-        layer = uf.getLegendLayerByName(self.iface, "Housing_Plans")
+        layer = uf.getLegendLayerByName(self.iface, "Housing Plans")
         # remove current selections on this layer
         layer.removeSelection()
         # get the currently selected item in the municipality combo box
@@ -528,8 +535,8 @@ class PlanningToolClass:
     def zoomToPackage(self):
 
         # get the Housing_Projects layer
-        layer1 = uf.getLegendLayerByName(self.iface, "Housing_Plans")
-        layer2 = uf.getLegendLayerByName(self.iface, "Infrastructure_Investments")
+        layer1 = uf.getLegendLayerByName(self.iface, "Housing Plans")
+        layer2 = uf.getLegendLayerByName(self.iface, "Infrastructure Projects")
         # remove current selections on this layer
         layer1.removeSelection()
         layer2.removeSelection()
@@ -554,9 +561,9 @@ class PlanningToolClass:
     def activateSelectionTool(self):
 
         if self.mapTool == None:
-            self.mapTool = PointTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
+            self.mapTool = SelectionTool(widget=self.ic, canvas=self.canvas, action=self.iiAction)
         self.canvas.setMapTool(self.mapTool)
-        uf.showMessage(self.iface, 'Tap on a polygon to select the corresponding project. Double-tap on the map canvas to remove all selections.', type='Info', lev=1, dur=10)
+        #uf.showMessage(self.iface, 'Tap on a polygon to select the corresponding project. Double-tap on the map canvas to remove all selections.', type='Info', lev=1, dur=10)
 
 
 #### open dialogs:
