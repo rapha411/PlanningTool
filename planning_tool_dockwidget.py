@@ -48,7 +48,7 @@ from matplotlib.figure import Figure
 
 
 FORM_BASE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_dockwidget_base_2.ui'))
+    os.path.dirname(__file__), 'PlanningTool_dockwidget_base_3.ui'))
 
 
 ################################################################################################################
@@ -70,7 +70,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.book = book
 
         # define row height for tables and comboBox here
-        self.height = 40
+        self.height = 30
 
         # TODO: what should maybe be done is to implement my own data structure from the layer
         # and excel data, e.g. a pandas table, and use that for loading and saving data.
@@ -85,7 +85,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingLayer = uf.getCanvasLayerByName(self.canvas, "Housing Plans")
 
         # populate box and table
-        self.populateComboBox()
+        #self.populateComboBox()
+        self.populateTablePackage()
         self.packageSelected()
 
 
@@ -94,7 +95,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingTable.cellClicked.connect(self.housingRowSelected)
         self.infraTable.cellClicked.connect(self.infraRowSelected)
         # comboBox
-        self.packageComboBox.currentIndexChanged.connect(self.packageSelected)
+        #self.packageComboBox.currentIndexChanged.connect(self.packageSelected)
+        self.packageTable.cellClicked.connect(self.packageSelected)
         # layers
         self.infraLayer.selectionChanged.connect(self.infraLayerSelectionChanged)
         self.housingLayer.selectionChanged.connect(self.housingLayerSelectionChanged)
@@ -102,27 +104,25 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.housingSlider.valueChanged.connect(self.housingSliderChanged)
 
         # maptool changed
-        self.currentMapTool = self.canvas.mapTool()
-        self.currentMapTool.canvasDoubleClickEvent = self.testExe
+        #self.currentMapTool = self.canvas.mapTool()
+        #self.currentMapTool.canvasDoubleClickEvent = self.testExe
         #self.canvas.mapToolSet.connect(self.testExe)
 
         # toolBox
-        self.toolBox.currentChanged.connect(self.plot)
+        #self.toolBox.currentChanged.connect(self.plot)
+        self.plot()
 
 
         # buttons
         # signal slots for buttons should simly save all the current percentages to the excel sheet and then update the plot
         # in this way the plot is only update from the OK button and not from moving the slider, which obviously would be terrible
-        self.okHousing.clicked.connect(self.saveHousingTableData)
-        self.okInfra.clicked.connect(self.saveInfraTableData)
+        #self.okHousing.clicked.connect(self.saveHousingTableData)
+        self.okInfra.clicked.connect(self.saveData)
 
-
-        # generate the plots
-        self.accInputPlot()
 
 
         # description text
-        self.descriptionText.setFontPointSize(12)
+        self.descriptionText.setFontPointSize(11)
         self.descriptionText.viewport().setAutoFillBackground(False)
 
 
@@ -146,41 +146,66 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ############################################################
     ################## COMBOBOX ################################
     ############################################################
-    def populateComboBox(self):
-        #
-        # listView = QtGui.QListView()
-        # listView.font().setPointSize(25)
-        #
-        # self.packageComboBox.setView(listView)
-        #
-        #
-        # font = self.packageComboBox.font()
-        # font.setPointSize(25)
-        # self.packageComboBox.setFont(font)
+    # def populateComboBox(self):
+    #     #
+    #     # listView = QtGui.QListView()
+    #     # listView.font().setPointSize(25)
+    #     #
+    #     # self.packageComboBox.setView(listView)
+    #     #
+    #     #
+    #     # font = self.packageComboBox.font()
+    #     # font.setPointSize(25)
+    #     # self.packageComboBox.setFont(font)
+    #
+    #     view = QtGui.QListView()  # creat a ListView
+    #     #view.setFixedWidth(500)  # set the ListView with fixed Width
+    #     #view.setFixedHeight(200)
+    #
+    #     #self.packageComboBox.setMaximumWidth(500)  # will be overwritten by style-sheet
+    #     #self.packageComboBox.addItems(["TEsst1111", "TEsst11111111111111", "TEsst1111111111111111111111111"])
+    #
+    #
+    #     self.packageComboBox.addItem("All Packages")
+    #     self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
+    #     self.packageComboBox.addItem("Package 2 - Zaandam - Noord")
+    #     self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
+    #     self.packageComboBox.addItem("Package 4 - Hoorn")
+    #     self.packageComboBox.addItem("Package 5 - Ring A10 oost - Waterland")
+    #     #pass
+    #
+    #     #
+    #     self.packageComboBox.setStyleSheet('''
+    #     QComboBox { min-height: 30px; max-height: 30px;}
+    #     QComboBox QAbstractItemView::item { min-height: 30px; max-height: 30px;}"
+    #     ''')
+    #
+    #     self.packageComboBox.setView(view)
 
-        view = QtGui.QListView()  # creat a ListView
-        #view.setFixedWidth(500)  # set the ListView with fixed Width
-        #view.setFixedHeight(200)
 
-        #self.packageComboBox.setMaximumWidth(500)  # will be overwritten by style-sheet
-        #self.packageComboBox.addItems(["TEsst1111", "TEsst11111111111111", "TEsst1111111111111111111111111"])
+    ############################################################
+    ################## COMBOBOX ################################
+    ############################################################
+    def populateTablePackage(self):
 
+        table = self.packageTable
+        table.clear()
+        table.setColumnCount(1)
+        table.setHorizontalHeaderLabels(['Package'])
+        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        table.verticalHeader().setVisible(False)
+        table.setRowCount(6)
+        table.setItem(0,0,QtGui.QTableWidgetItem("All Packages"))
+        table.setItem(0,1,QtGui.QTableWidgetItem("Package 1 - Noordoever Noordzeekanaal"))
+        table.setItem(0,2,QtGui.QTableWidgetItem("Package 2 - Zaandam - Noord"))
+        table.setItem(0,3,QtGui.QTableWidgetItem("Package 3 - Purmerend: BBG of A7"))
+        table.setItem(0,4,QtGui.QTableWidgetItem("Package 4 - Hoorn"))
+        table.setItem(0,5,QtGui.QTableWidgetItem("Package 5 - Ring A10 oost - Waterland"))
+        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
 
-        self.packageComboBox.addItem("All Packages")
-        self.packageComboBox.addItem("Package 1 - Noordoever Noordzeekanaal")
-        self.packageComboBox.addItem("Package 2 - Zaandam - Noord")
-        self.packageComboBox.addItem("Package 3 - Purmerend: BBG of A7")
-        self.packageComboBox.addItem("Package 4 - Hoorn")
-        self.packageComboBox.addItem("Package 5 - Ring A10 oost - Waterland")
-        #pass
+        # select the "All Packages" row
+        table.selectRow(0)
 
-        #
-        self.packageComboBox.setStyleSheet('''
-        QComboBox { min-height: 30px; max-height: 30px;}
-        QComboBox QAbstractItemView::item { min-height: 30px; max-height: 30px;}"
-        ''')
-
-        self.packageComboBox.setView(view)
 
 
     # def testExe(self):
@@ -216,8 +241,9 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
     def packageSelected(self):
 
-        package = self.packageComboBox.currentIndex()
-
+        #package = self.packageComboBox.currentIndex()
+        package = self.packageTable.currentRow()
+        print package
 
         ## if "all packages" selected
         if package == 0:
@@ -413,6 +439,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
     ### get table data ###
+    def saveData(self):
+        self.saveHousingTableData()
+        self.saveInfraTableData()
+        self.plot()
+
+
+
     # housing
     def saveHousingTableData(self):
 
@@ -436,7 +469,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
 
         # refresh accInput
-        self.accInputPlot()
+        #self.accInputPlot()
 
 
     # infra
@@ -470,7 +503,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.saveValue_xlwings(book=self.book, sheet=sheet, cells=cellList, vals=data)
 
         # refresh accInput
-        self.accInputPlot()
+        #self.accInputPlot()
 
 
 
@@ -519,9 +552,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         ## check if package changed
         packageMap = int(feat.attribute("Package")[1])
-        packageTable = self.packageComboBox.currentIndex()
+        #packageTable = self.packageComboBox.currentIndex()
+        packageTable = self.packageTable.currentRow()
         if packageMap != packageTable and packageTable != 0:
-                self.packageComboBox.setCurrentIndex(packageMap)
+                #self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageTable.selectRow(packageMap)
                 self.packageSelected()
 
         # TODO: in the following function is where the Max. total amount label should also be updated
@@ -559,9 +594,11 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         ## check if package changed
         packageMap = int(feat.attribute("Package")[1])
-        packageTable = self.packageComboBox.currentIndex()
+        #packageTable = self.packageComboBox.currentIndex()
+        packageTable = self.packageTable.currentRow()
         if packageMap != packageTable and packageTable != 0:
-                self.packageComboBox.setCurrentIndex(packageMap)
+                #self.packageComboBox.setCurrentIndex(packageMap)
+                self.packageTable.selectRow(packageMap)
                 self.packageSelected()
 
         ## select the corresponding row of the project and update the label above sliders
@@ -590,7 +627,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_2.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_4.qgs')
 
 
         # check if file exists
@@ -673,40 +710,56 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
     ###########################################################
     def plot(self):
 
-        if self.toolBox.currentIndex() == 1:
-            self.accPlot()
-            self.marketPlot()
-            self.financialPlot()
-            self.spatialPlot()
-        else:
-            pass
+        #if self.toolBox.currentIndex() == 1:
+            # generate the plots
+        self.accPlot()
+        self.marketPlot()
+        self.financialPlot()
+        self.spatialPlot()
+        #else:
+            #pass
 
 
 
-    def accInputPlot(self):
+    def accPlot(self):
         ### INDICATORS
 
         ### PLOT
         ## first clear the Figure() from the accessibilityInputChart layout,
         ## so a new one will be printed when function is run several times
-        for i in reversed(range(self.accInputChart.count())):
-            self.accInputChart.itemAt(i).widget().setParent(None)
+        for i in reversed(range(self.accessibilityChart.count())):
+            self.accessibilityChart.itemAt(i).widget().setParent(None)
 
         # add matplotlib Figure to chartFrame / accessibilityInputChart layout
         figure = Figure(figsize=(1,1), tight_layout=True)
         figure.suptitle("Accessibility", fontsize=12)
         figureCanvas = FigureCanvas(figure)
-        self.accInputChart.addWidget(figureCanvas)
+        self.accessibilityChart.addWidget(figureCanvas)
         figure.patch.set_alpha(0.0)
         ax = figure.add_subplot(111)
 
 
         # get values from excel sheets
         sheet = 'Indicator 1 Accessibility'
+        # data for package 1 to 5
+        # car
         data1 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C10','C11','C12','C13','C14'])
+        # public transport
         data2 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D10','D11','D12','D13','D14'])
+        # bike
         data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['E10','E11','E12','E13','E14'])
-        labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5')
+        # data for all packages; car, bike, public transport
+        data4 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C18','D18','E18'])
+        # add all packages to the plot data
+        data1=np.append(data1, data4[0])
+        data2=np.append(data2, data4[1])
+        data3=np.append(data3, data4[2])
+
+
+        print data1
+        print data4
+
+        labels = ('Package 1', 'Package 2', 'Package 3', 'Package 4', 'Package 5', 'All packages')
 
 
 
@@ -730,52 +783,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.labelBars(ax, data1, -width)
         self.labelBars(ax, data2, 0)
         self.labelBars(ax, data3, width)
-
-        return
-
-    def accPlot(self):
-        ### INDICATORS
-
-        ### PLOT
-        ## first clear the Figure() from the accessibilityInputChart layout,
-        ## so a new one will be printed when function is run several times
-        for i in reversed(range(self.accChart.count())):
-            self.accChart.itemAt(i).widget().setParent(None)
-
-        # add matplotlib Figure to chartFrame / accessibilityInputChart layout
-        figure = Figure(figsize=(1,1), tight_layout=True)
-        figure.suptitle("Accessibility total", fontsize=12)
-        figureCanvas = FigureCanvas(figure)
-        self.accChart.addWidget(figureCanvas)
-        figure.patch.set_alpha(0.0)
-        ax = figure.add_subplot(111)
-
-
-        # get values from excel sheets
-        sheet = 'Indicator 1 Accessibility'
-        data = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['C18','D18','E18'])
-        labels = ('Car', 'Public transport', 'Bicycle')
-
-        y_pos = np.arange(len(data))
-        #performance = 100 * np.random.rand(len(data))
-        #error = np.random.rand(len(people))
-
-        ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
-        ax.set_yticks(y_pos)
-        ax.set_yticklabels(labels, fontsize=9)
-        ax.xaxis.set_tick_params(labelsize=9)
-        ax.invert_yaxis()  # labels read top-to-bottom
-
-        # set the xlims
-        xlims = ax.get_xlim()
-        if (xlims[0]<0) and (xlims[1]>0):
-            m = max(abs(np.array(xlims)))
-            ax.set_xlim(-m*1.5, m*1.5)
-        else:
-            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
-
-        # annotate bars
-        self.labelBars(ax,data)
 
         return
 
@@ -838,7 +845,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # add matplotlib Figure to chartFrame / accessibilityInputChart layout
         figure = Figure(figsize=(1,1), tight_layout=True)
-        figure.suptitle("Financial result", fontsize=12)
+        figure.suptitle("Finances", fontsize=12)
         figureCanvas = FigureCanvas(figure)
         self.financialChart.addWidget(figureCanvas)
         figure.patch.set_alpha(0.0)
@@ -1056,7 +1063,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.infraTable.clearSelection()
         self.housingLayer.removeSelection()
         self.infraLayer.removeSelection()
-        self.packageComboBox.setCurrentIndex(0)
+        #self.packageComboBox.setCurrentIndex(0)
+        self.packageTable.selectRow(0)
         self.closingPlugin.emit()
         event.accept()
 
