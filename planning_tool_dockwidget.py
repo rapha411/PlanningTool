@@ -70,7 +70,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.book = book
 
         # define row height for tables and comboBox here
-        self.height = 30
+        self.height = 24
+        self.barHeight = 0.25
 
         # TODO: what should maybe be done is to implement my own data structure from the layer
         # and excel data, e.g. a pandas table, and use that for loading and saving data.
@@ -122,7 +123,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         # description text
-        self.descriptionText.setFontPointSize(11)
+        self.descriptionText.setFontPointSize(10)
         self.descriptionText.viewport().setAutoFillBackground(False)
 
 
@@ -167,6 +168,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # select the "All Packages" row
         table.selectRow(0)
+        table.verticalHeader().setDefaultSectionSize(self.height)
+
 
 
 
@@ -237,7 +240,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         elif package == 2:
             extent = QgsRectangle(107662,494165,120349,504020)
         elif package == 3:
-            extent = QgsRectangle(118401,496246,129810,505108)
+            #extent = QgsRectangle(118401,496246,129810,505108)
+            extent = QgsRectangle(118370,490064,131057,505361)
         elif package == 4:
             extent = QgsRectangle(124656,510813,139329,522787)
         elif package == 5:
@@ -330,7 +334,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # vertical
         table.resizeRowsToContents()
-        table.verticalHeader().setVisible(False)
+        table.verticalHeader().setVisible(True)
         table.verticalHeader().setDefaultSectionSize(self.height)
 
 
@@ -398,7 +402,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # vertical
         table.resizeRowsToContents()
-        table.verticalHeader().setVisible(False)
+        table.verticalHeader().setVisible(True)
         table.verticalHeader().setDefaultSectionSize(self.height)
 
 
@@ -483,7 +487,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         selectedItem = self.housingTable.selectedItems()[0].text().encode('utf-8')
         self.housingLayer.removeSelection()
         uf.selectFeaturesByExpression(self.housingLayer, "NameShort IS " + "'"+selectedItem+"'")
-        self.zoomToSelectedFeature(scale=1.5, layer=self.housingLayer)
+        self.zoomToSelectedFeature(scale=1.3, layer=self.housingLayer)
         #self.housingLabel.setText(selectedItem)
 
     # infra
@@ -493,7 +497,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         selectedItem = self.infraTable.selectedItems()[0].text().encode('utf-8')
         self.infraLayer.removeSelection()
         uf.selectFeaturesByExpression(self.infraLayer, "ShortName IS " + "'"+selectedItem+"'")
-        self.zoomToSelectedFeature(scale=1.5, layer=self.infraLayer)
+        if selectedItem == "HOV Purmerend-Adam":
+            extent = QgsRectangle(118370,490064,131057,505361)
+            self.canvas.setExtent(extent)
+            self.canvas.refresh()
+        else:
+            self.zoomToSelectedFeature(scale=1.3, layer=self.infraLayer)
         #self.infraLabel.setText(selectedItem)
 
     ### layer selection changed ###
@@ -593,7 +602,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_4.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_5.qgs')
 
 
         # check if file exists
@@ -731,7 +740,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
         y_pos = np.arange(len(data1))
-        width = 0.40
+        width = self.barHeight
 
         a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
@@ -742,7 +751,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ax.set_yticklabels(labels, fontsize=7)
         ax.invert_yaxis()  # labels read top-to-bottom
         ax.set_ylabel('Package', fontsize=7)
-        ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
+        #ax.set_xticks([-100,-80,-60,-40,-20,0,20,40,60,80,100])
+        ax.set_xticks([0,20,40,60,80,100])
         ax.xaxis.set_tick_params(labelsize=7)
         ax.set_xlabel('[%]', fontsize=7)
         ax.xaxis.set_label_coords(1, -0.025)
@@ -753,8 +763,14 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         #ax.legend((a[0], b[0], c[0]), ('Car', 'Public \n Transport', 'Bicycle'), loc='lower right', prop={'size': 7})
 
         # set the xlims
+        # xlims = ax.get_xlim()
+        # ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
         xlims = ax.get_xlim()
-        ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        if (xlims[0]<0) and (xlims[1]>0):
+            m = max(abs(np.array(xlims)))
+            ax.set_xlim(-m*1.5, m*1.5)
+        else:
+            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
         # annotate bars
         self.labelBars(ax, data1, -width)
         self.labelBars(ax, data2, 0)
@@ -784,7 +800,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # get values from excel sheets
         sheet = 'Indicator 2 Market balance'
         data = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['E3','E4','E5','E6','E8'])
-        labels = ('Edam-Volendam', 'Hoorn', 'Purmerend', 'Zaanstad', 'Regional excl Ams')
+        labels = ('Edam-Volendam', 'Hoorn', 'Purmerend', 'Zaanstad', 'Total')
 
         #print "market balance", data
 
@@ -795,11 +811,15 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ax.barh(y_pos, data, align='center', color='blue', ecolor='black')
 
         # label
+        #y
         ax.set_yticks(y_pos)
         ax.set_yticklabels(labels, fontsize=7)
         ax.invert_yaxis()  # labels read top-to-bottom
         ax.set_ylabel('Municipality', fontsize=7)
+        #x
         ax.xaxis.set_tick_params(labelsize=7)
+        ax.set_xlabel('HU', fontsize=7)
+        ax.xaxis.set_label_coords(1.05, -0.025)
 
 
 
@@ -850,7 +870,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         y_pos = np.arange(len(data1))
 
-        width = 0.40
+        width = self.barHeight
 
         a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
@@ -863,10 +883,12 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ax.invert_yaxis()  # labels read top-to-bottom
         ax.set_ylabel('Package', fontsize=7)
 
-        #ax.xaxis.set_tick_params(labelsize=7)
-        ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
-        ax.set_xticklabels(labels=['-1000M EUR', '-500M EUR', '0', '500M EUR', '1000M EUR'], fontsize=7)
 
+        #ax.xaxis.set_tick_params(labelsize=7)
+        #ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
+        #ax.set_xticklabels(labels=['-300M EUR', '-200M EUR', '', '0', '250M EUR', '500M EUR'], fontsize=7)
+
+        ax.xaxis.set_tick_params(labelsize=7, labelrotation=15)
 
         #ax.set_xlabel('[€]', fontsize=7)
 
@@ -878,13 +900,24 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
         #ax.set_title('How fast do you want to go today?')
 
-        # set the xlims
-        #xlims = ax.get_xlim()
-        #ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        ##set the xlims
+        # xlims = ax.get_xlim()
+        # ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        xlims = ax.get_xlim()
+        if (xlims[0]<0) and (xlims[1]>0):
+            m = max(abs(np.array(xlims)))
+            ax.set_xlim(-m*1.5, m*1.5)
+        else:
+            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
         # annotate bars
         self.labelBars(ax, data1, -width)
         self.labelBars(ax, data2, 0)
         self.labelBars(ax, data3, width)
+
+        # xlabels = ax.get_xticklabels()
+        # for xlab in xlabels:
+        #     print xlab.get_text()
+
 
         return
 
@@ -928,7 +961,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         y_pos = np.arange(len(data1))
         #performance = 100 * np.random.rand(len(data))
         #error = np.random.rand(len(people))
-        width = 0.40
+        width = self.barHeight
 
         a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
@@ -954,7 +987,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # set the xlims
         xlims = ax.get_xlim()
-        ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        if (xlims[0]<0) and (xlims[1]>0):
+            m = max(abs(np.array(xlims)))
+            ax.set_xlim(-m*1.5, m*1.5)
+        else:
+            ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
+        # xlims = ax.get_xlim()
+        # ax.set_xlim(xlims[0]*1.2, xlims[1]*1.2)
         # annotate bars
         self.labelBars(ax, data1, -width)
         self.labelBars(ax, data2, 0)
@@ -978,7 +1017,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             else:
                 align = 'left'
                 p = m
-            axis.text(v+(p*0.05), i+offset, str(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=6, style='italic')
+            #axis.text(v+(p*0.05), i+offset, str(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=6, style='italic')
+            axis.text(v+(p*0.05), i+offset, "{:,}".format(int(t)), horizontalalignment=align, verticalalignment='center', color='black', fontsize=6, style='italic')
 
 
 
