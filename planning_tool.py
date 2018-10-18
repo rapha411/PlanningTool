@@ -400,49 +400,6 @@ class PlanningToolClass:
         self.planning_toolbar.addAction(self.iface.actionIdentify())
         self.actions.append(self.iface.actionIdentify())
 
-
-        # # select municipality, bookmarks button and combo box, the combo box is filled with the unique GEMEENTE fields in zoomToMunicipality
-        # self.municipalityCombo = QComboBox(self.iface.mainWindow())
-        # self.municipalityComboAction = self.planning_toolbar.addWidget(self.municipalityCombo)
-        # self.municipalityCombo.setToolTip("Municipalities")
-        # self.actions.append(self.municipalityComboAction)
-        #
-        # layer_housing = uf.getLegendLayerByName(self.iface, "Housing Plans")
-        #
-        # idx = layer_housing.fieldNameIndex('GEMEENTE')
-        # municipalities = layer_housing.uniqueValues(idx)
-        # for municipality in municipalities:
-        #     #print str(municipality)
-        #     self.municipalityCombo.addItem("'"+str(municipality)+"'")
-        #
-        # icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        # self.add_action(
-        #     icon_path,
-        #     text=self.transl(u'Zoom to Municipality'),
-        #     callback=self.zoomToMunicipality,
-        #     parent=self.iface.mainWindow())
-
-        #### zoom to package
-        # self.packageCombo = QComboBox(self.iface.mainWindow())
-        # self.packageComboAction = self.planning_toolbar.addWidget(self.packageCombo)
-        # self.packageCombo.setToolTip("Packages")
-        # self.actions.append(self.packageComboAction)
-        #
-        # layer_infra = uf.getLegendLayerByName(self.iface, "Infrastructure Projects")
-        #
-        # idx = layer_infra.fieldNameIndex('Package')
-        # packages = layer_infra.uniqueValues(idx)
-        # for package in packages:
-        #     #print str(package)
-        #     self.packageCombo.addItem("'"+str(package)+"'")
-        #
-        # icon_path = ':/plugins/PlanningToolClass/icons/magnifier.png'
-        # self.add_action(
-        #     icon_path,
-        #     text=self.transl(u'Zoom to Package'),
-        #     callback=self.zoomToPackage,
-        #     parent=self.iface.mainWindow())
-
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())
 
@@ -462,6 +419,14 @@ class PlanningToolClass:
             parent=self.iface.mainWindow())
         self.iiAction.setObjectName('mSelectAction')
         self.iiAction.setCheckable(True)
+
+        # remove selection tool
+        icon_path = ':/plugins/PlanningToolClass/icons/deselectAll.png'
+        self.iiAction = self.add_action(
+            icon_path,
+            text=self.transl(u'Clear selection'),
+            callback=self.clearSelectedFeatures,
+            parent=self.iface.mainWindow())
 
         self.separators.append(self.planning_toolbar.addSeparator())
 
@@ -514,47 +479,13 @@ class PlanningToolClass:
         # zoom on infrastructure investments layer extent / home
         uf.zoomToLayer(self.iface, "Infrastructure Projects")
 
-    def zoomToMunicipality(self):
 
-        # get the Housing_Projects layer
-        layer = uf.getLegendLayerByName(self.iface, "Housing Plans")
-        # remove current selections on this layer
-        layer.removeSelection()
-        # get the currently selected item in the municipality combo box
-        gemeente = str(self.municipalityCombo.currentText())
-        # select the features for this municipality
-        uf.selectFeaturesByExpression(layer, '"GEMEENTE" IS ' + gemeente)
-        # make box around the features
-        box = layer.boundingBoxOfSelected()
-        # unselect features again
-        layer.removeSelection()
-        # zoom to the box
-        self.canvas.setExtent(box)
-        self.canvas.refresh()
+    def clearSelectedFeatures(self):
 
-    def zoomToPackage(self):
+        uf.getCanvasLayerByName(self.canvas, "Infrastructure Projects").removeSelection()
+        uf.getCanvasLayerByName(self.canvas, "Housing Plans").removeSelection()
 
-        # get the Housing_Projects layer
-        layer1 = uf.getLegendLayerByName(self.iface, "Housing Plans")
-        layer2 = uf.getLegendLayerByName(self.iface, "Infrastructure Projects")
-        # remove current selections on this layer
-        layer1.removeSelection()
-        layer2.removeSelection()
-        # get the currently selected item in the municipality combo box
-        package = str(self.packageCombo.currentText())
-        # select the features for this municipality
-        uf.selectFeaturesByExpression(layer1, '"Package" IS ' + package)
-        uf.selectFeaturesByExpression(layer2, '"Package" IS ' + package)
-        # make box around the features
-        box1 = layer1.boundingBoxOfSelected()
-        box2 = layer2.boundingBoxOfSelected()
-        box1.combineExtentWith(box2)
-        # unselect features again
-        layer1.removeSelection()
-        layer2.removeSelection()
-        # zoom to the box
-        self.canvas.setExtent(box1)
-        self.canvas.refresh()
+
 
 
 ### activate map Tool

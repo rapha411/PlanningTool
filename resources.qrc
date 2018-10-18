@@ -6,6 +6,7 @@
         <file>icons/save.png</file>
         <file>icons/help.png</file>
         <file>icons/select.png</file>
+        <file>icons/deselectAll.png</file>
         <file>icons/calculator.png</file>
         <file>icons/close.png</file>
     </qresource>
