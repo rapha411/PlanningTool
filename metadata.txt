@@ -9,15 +9,16 @@
 [general]
 name=PlanningTool
 qgisMinimumVersion=2.18
+qgisMaximumVersion=3.2
 description=This is a planning support system
-version=0.1
+version=0.8.2
 author=Raphael Sulzer
 email=raphaelsulzer@gmx.de
 
-about=This plugin will help you find your way in case of a storm.
+about=This is a planning support tool
 
-tracker=https://github.com/muha321/2016_Group4_PlanningTool
-repository=https://github.com/muha321/2016_Group4_PlanningTool
+tracker=https://github.com/raphaelsulzer/PlanningTool
+repository=https://github.com/raphaelsulzer/PlanningTool
 # End of mandatory metadata
 
 # Recommended items:
