@@ -888,7 +888,13 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         #ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
         #ax.set_xticklabels(labels=['-300M EUR', '-200M EUR', '', '0', '250M EUR', '500M EUR'], fontsize=7)
 
-        ax.xaxis.set_tick_params(labelsize=7, rotation=15)
+        xlabels=ax.get_xticklabels()
+        xlabs=[]
+        for xlab in xlabels:
+            xlabs.append(xlab.get_text())
+
+        ax.set_xticklabels(labels=xlabs,rotation=15)
+        ax.xaxis.set_tick_params(labelsize=7)
 
         #ax.set_xlabel('[€]', fontsize=7)
 
