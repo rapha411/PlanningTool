@@ -732,8 +732,8 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3=np.append(data3, data4[2])
 
 
-        print data1
-        print data4
+        #print data1
+        #print data4
 
         labels = ('1', '2', '3', '4', '5', 'All')
 
@@ -862,52 +862,46 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D25','D26','D27','D28','D29'])
         labels = ('1', '2', '3', '4', '5')
 
-
-
-        print data1
-        print data2
-        print data3
-
+        # create the bars
         y_pos = np.arange(len(data1))
-
         width = self.barHeight
-
+        # plot
         a=ax.barh(y_pos-width, data1, width, color='blue', ecolor='black')
         b=ax.barh(y_pos, data2, width, color='red', ecolor='black')
         c=ax.barh(y_pos+width, data3, width, color='green', ecolor='black')
 
         # labels
+        # y
         ax.set_yticks(y_pos)
         ax.set_yticklabels(labels, fontsize=7)
-        ax.ticklabel_format(style='plain', axis='x')
         ax.invert_yaxis()  # labels read top-to-bottom
         ax.set_ylabel('Package', fontsize=7)
-
-
-        ax.xaxis.set_tick_params(labelsize=7)
+        # x
+        ax.ticklabel_format(style='plain', axis='x')        # this is for not having 1e7 in the label
+        try:
+            ax.xaxis.set_tick_params(labelsize=7, labelrotation=15)
+        except:
+            ax.xaxis.set_tick_params(labelsize=7)
         #ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
         #ax.set_xticklabels(labels=['-300M EUR', '-200M EUR', '', '0', '250M EUR', '500M EUR'], fontsize=7)
 
+        # TODO: this doesn't work bc, see here: https://stackoverflow.com/questions/32700935/get-xticklabels-contains-empty-text-instances
+        # I would need to return ax from every plot and do it outside of this function maybe
         # xlabels=ax.get_xticklabels()
         # xlabs=[]
         # for xlab in xlabels:
         #     xlabs.append(xlab.get_text())
+        # ax.xaxis.set_ticklabels(ticklabels=xlabs)
+        # ax.xaxis.set_tick_params(labelsize=7)
         #
         # ax.set_xticklabels(labels=xlabs,rotation=15)
-        # ax.xaxis.set_tick_params(labelsize=7)
 
         ax.set_xlabel('EUR', fontsize=7)
         ax.xaxis.set_label_coords(1.05, -0.025)
 
-        #ax.set_xlabel('[€]', fontsize=7)
-
-
         # legend
         #ax.legend((a[0], b[0], c[0]), ('Housing revenue', 'Transport investments', 'Financial result'), loc='lower right', prop={'size': 7})
         figure.legend((a[0], b[0], c[0]), ('Housing rev.', 'Transport investm.', 'Finances'), bbox_to_anchor=(0.5, 1.01), loc='upper center', ncol=3, prop={'size': 7})
-
-        #ax.set_xticks([0,10,20,30,40,50,60,70,80,90,100])
-        #ax.set_title('How fast do you want to go today?')
 
         ##set the xlims
         # xlims = ax.get_xlim()
@@ -923,12 +917,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         self.labelBars(ax, data2, 0)
         self.labelBars(ax, data3, width)
 
-        # xlabels = ax.get_xticklabels()
-        # for xlab in xlabels:
-        #     print xlab.get_text()
-
-
-        return
+        return ax
 
     def spatialPlot(self):
         ### INDICATORS

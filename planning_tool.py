@@ -422,7 +422,7 @@ class PlanningToolClass:
 
         # remove selection tool
         icon_path = ':/plugins/PlanningToolClass/icons/deselectAll.png'
-        self.iiAction = self.add_action(
+        self.add_action(
             icon_path,
             text=self.transl(u'Clear selection'),
             callback=self.clearSelectedFeatures,
