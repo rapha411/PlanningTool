@@ -144,7 +144,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Percentage:</string>
+                   <string>Percentag:</string>
                   </property>
                   <property name="buddy">
                    <cstring>inpuGroup</cstring>
@@ -173,11 +173,11 @@
                    <enum>Qt::Horizontal</enum>
                   </property>
                   <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
+                   <enum>QSizePolicy::Preferred</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>70</width>
+                    <width>90</width>
                     <height>10</height>
                    </size>
                   </property>

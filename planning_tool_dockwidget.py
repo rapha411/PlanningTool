@@ -48,7 +48,7 @@ from matplotlib.figure import Figure
 
 
 FORM_BASE, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'PlanningTool_dockwidget_base_3.ui'))
+    os.path.dirname(__file__), 'PlanningTool_dockwidget_base.ui'))
 
 
 ################################################################################################################
@@ -884,7 +884,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ax.set_ylabel('Package', fontsize=7)
 
 
-        ax.xaxis.set_tick_params(labelsize=6)
+        ax.xaxis.set_tick_params(labelsize=7)
         #ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
         #ax.set_xticklabels(labels=['-300M EUR', '-200M EUR', '', '0', '250M EUR', '500M EUR'], fontsize=7)
 
