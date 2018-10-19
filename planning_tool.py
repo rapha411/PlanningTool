@@ -33,7 +33,9 @@ import utility_functions as uf
 import resources
 
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+#sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+sys.path.append("/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/aeosa")
+
 
 import xlwings as xw
 
@@ -88,7 +90,6 @@ class PlanningToolClass:
         self.planning_toolbar.setObjectName(u'mRGMSToolbar')
 
 
-        print "** INITIALIZING PlanningToolClass"
 
         self.pluginIsActive = False
         self.ic = None
@@ -209,7 +210,6 @@ class PlanningToolClass:
         """Cleanup necessary items here when plugin dockwidget is closed"""
 
         # TODO: this is only printed when the plugin is reopened, is that correct?
-        print "** CLOSING PlanningToolClass"
 
         # close excel sheet
         if self.book:
@@ -266,12 +266,10 @@ class PlanningToolClass:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
-        print "** UNLOAD PlanningToolClass"
         #self.iface.mainWindow().removeToolBar(self.planning_toolbar)
 
 
         if self.pluginIsActive:
-            print "active"
             self.onClosePlugin()
 
         for action in self.actions:
@@ -321,7 +319,6 @@ class PlanningToolClass:
             self.app = xw.App(visible=False)
             #self.book = self.app.books.open(self.excel_file)
 
-            print "open new app"
 
 
             ## initialise IndicatorsChart widget here
@@ -330,14 +327,12 @@ class PlanningToolClass:
             #    removed on close (see self.onClosePlugin method)
             if self.ic == None:
                 # Create the dockwidget (after translation) and keep reference
-                print "pass new book"
                 self.book = self.app.books.open(self.excel_file)
                 self.ic = IndicatorsChartDocked(self.iface, book=self.book)
                 # maptool = MapToolEmitPoint(self.canvas)
                 # self.canvas.setMapTool(maptool)
                 # maptool.canvasDoubleClicked.connect(self.handleDoubleClick)
             else:
-                print "pass old book"
                 self.book = self.app.books.open(self.excel_file)
                 self.ic.book = self.book
 
@@ -515,9 +510,7 @@ class PlanningToolClass:
 
 
     def openHelp(self):
-        print "open help"
         filepath = os.path.join(os.path.dirname(__file__), 'Help.pdf')
         subprocess.Popen([filepath], shell=True)
-        #print "open PDF"
 
 

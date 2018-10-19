@@ -12,7 +12,7 @@ from . import utility_functions as uf
 # this is for adding the "external" folder to the system path, because the QGIS python is only looking in the system path for python packages
 # you can see that this works by doing import sys, sys.path inside the QGIS python console
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+#sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
 
 
 ################################################################################################################
@@ -86,11 +86,9 @@ class SelectionTool(QgsMapTool, QAction):
     def activate(self):
         self.action.setChecked(True)
         self.canvas.setCursor(self.cursor)
-        print "map tool activated"
 
     #
     def deactivate(self):
         self.action.setChecked(False)
-        print "map tool deactivated"
 
 

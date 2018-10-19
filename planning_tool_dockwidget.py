@@ -36,7 +36,9 @@ from . import utility_functions as uf
 # this is for adding the "external" folder to the system path, because the QGIS python is only looking in the system path for python packages
 # you can see that this works by doing import sys, sys.path inside the QGIS python console
 import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+#sys.path.append(os.path.join(os.path.dirname(__file__), "external"))
+#sys.path.append("/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/aeosa")
+
 
 import numpy as np
 
@@ -174,7 +176,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
     def testExe(self, event1, event2):
-        print "here"
+        print("here")
 
 
 
@@ -182,7 +184,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         #package = self.packageComboBox.currentIndex()
         package = self.packageTable.currentRow()
-        print package
 
         ## if "all packages" selected
         if package == 0:
@@ -516,7 +517,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ## check if it wasn't just a double click, in which case clear the selected tableWidgetItem
         feat = self.housingLayer.selectedFeatures()
         if feat:
-            print len(feat)
             feat = feat[0]
         else:
             self.housingTable.clearSelection()
@@ -732,8 +732,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3=np.append(data3, data4[2])
 
 
-        print data1
-        print data4
 
         labels = ('1', '2', '3', '4', '5', 'All')
 
@@ -862,11 +860,6 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data3 = self.getValue_xlwings(book=self.book, sheet=sheet, cells=['D25','D26','D27','D28','D29'])
         labels = ('1', '2', '3', '4', '5')
 
-
-
-        print data1
-        print data2
-        print data3
 
         y_pos = np.arange(len(data1))
 
