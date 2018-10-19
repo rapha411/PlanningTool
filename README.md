@@ -13,16 +13,16 @@ After downloading it, you must install the plugin in the QGIS plugins folder, lo
 
 The plugin does not require any additional configuration. An activated Microsoft Excel installation on the computer is necessary for the plugin to work. Formulas for calculating indicators are in spreadsheet ‘20180904 Regional game IMS 2.8.xlsx’, located inside the PlanningTool/data/excel folder.
 
+For an optimal user experience set your screen to a resolution 1920x1080.
+
 
 # User interaction
 
-![alt text](images/gui.png?raw=true "QGIS user interface with Regional Game Mobiele Stad")
 ![alt text](images/start.png?raw=true "Title")
 
-
-To start the plugin simply click the toolbar button or ‘Planning Tool’ entry in the ‘Plugins’ menu. When the plugin starts, it automatically loads the data system and the user interface provided to interact and explore the data. You should now see the screen below.
-
 The plugin shows four main components: toolbar (top left), layers panel (left), map interface (center), input and output window (right).
+
+![alt text](images/gui.png?raw=true "QGIS user interface with Regional Game Mobiele Stad")
 
 
 # Toolbar
