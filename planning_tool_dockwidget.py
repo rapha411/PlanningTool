@@ -291,7 +291,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             table.setItem(i,1,QtGui.QTableWidgetItem(att))
 
             # BBG
-            if int(BBG[i]) == 0:
+            if int(BBG[i]) == 1:
                 bbgItem = QtGui.QTableWidgetItem('BBG')
             else:
                 bbgItem = QtGui.QTableWidgetItem('not')
@@ -300,7 +300,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
 
             # TOD
-            if int(TOD[i]) == 0:
+            if int(TOD[i]) == 1:
                 todItem = QtGui.QTableWidgetItem('TOD')
             else:
                 todItem = QtGui.QTableWidgetItem('not')
@@ -884,17 +884,20 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         ax.set_ylabel('Package', fontsize=7)
 
 
-        #ax.xaxis.set_tick_params(labelsize=7)
+        ax.xaxis.set_tick_params(labelsize=6)
         #ax.set_xticks([-1000000000, -500000000, 0, 500000000, 1000000000])
         #ax.set_xticklabels(labels=['-300M EUR', '-200M EUR', '', '0', '250M EUR', '500M EUR'], fontsize=7)
 
-        xlabels=ax.get_xticklabels()
-        xlabs=[]
-        for xlab in xlabels:
-            xlabs.append(xlab.get_text())
+        # xlabels=ax.get_xticklabels()
+        # xlabs=[]
+        # for xlab in xlabels:
+        #     xlabs.append(xlab.get_text())
+        #
+        # ax.set_xticklabels(labels=xlabs,rotation=15)
+        # ax.xaxis.set_tick_params(labelsize=7)
 
-        ax.set_xticklabels(labels=xlabs,rotation=15)
-        ax.xaxis.set_tick_params(labelsize=7)
+        ax.set_xlabel('EUR', fontsize=7)
+        ax.xaxis.set_label_coords(1.05, -0.025)
 
         #ax.set_xlabel('[€]', fontsize=7)
 
