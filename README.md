@@ -39,3 +39,8 @@ Interaction with the map interface is only possible if one of the mapping tools 
 
 ![alt text](images/input_output.png?raw=true "Title")
 
+
+
+Raphael Sulzer (raphaelsulzer@gmx.de)
+Gustavo Arciniegas (geocolconsultant@gmail.com)
+
