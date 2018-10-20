@@ -41,6 +41,5 @@ Interaction with the map interface is only possible if one of the mapping tools 
 
 
 
-Raphael Sulzer (raphaelsulzer@gmx.de)
-Gustavo Arciniegas (geocolconsultant@gmail.com)
+Raphael Sulzer (raphaelsulzer@gmx.de); Gustavo Arciniegas (geocolconsultant@gmail.com)
 
