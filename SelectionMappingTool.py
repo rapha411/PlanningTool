@@ -1,12 +1,16 @@
 from qgis.core import *
-from qgis.core import QgsGeometry, QgsMapLayerRegistry
+#from qgis.core import QgsGeometry, QgsMapLayerRegistry
+from qgis.core import QgsGeometry
+
 
 from qgis.gui import *
 from qgis.gui import QgsMapTool
-from qgis.networkanalysis import *
 
-from PyQt4.QtGui import QCursor, QPixmap, QAction
-from PyQt4.QtCore import Qt, pyqtSignal, QPoint
+from qgis.PyQt.QtGui import QCursor, QPixmap
+from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtCore import Qt, pyqtSignal, QPoint
+
+
 from . import utility_functions as uf
 
 # this is for adding the "external" folder to the system path, because the QGIS python is only looking in the system path for python packages

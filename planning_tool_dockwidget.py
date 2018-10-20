@@ -11,25 +11,18 @@
         email                : raphaelsulzer@gmx.de
  ***************************************************************************/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 """
 
-
-from PyQt4 import QtGui, QtCore, uic
+from builtins import str
+from builtins import range
+from qgis.PyQt import QtWidgets, QtCore, uic, QtWidgets
 
 from qgis.core import *
 from qgis.gui import *
 from qgis.gui import QgsMapTool
-from qgis.networkanalysis import *
 
-from PyQt4.QtCore import Qt, pyqtSignal, QPoint
+from qgis.PyQt.QtCore import Qt, pyqtSignal, QPoint
+
 
 from . import utility_functions as uf
 
@@ -56,7 +49,7 @@ FORM_BASE, _ = uic.loadUiType(os.path.join(
 ################################################################################################################
 ###################################################### PLUGIN WIDGET ###########################################
 ################################################################################################################
-class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
+class IndicatorsChartDocked(QtWidgets.QDockWidget, FORM_BASE, QgsMapTool):
 
     closingPlugin = pyqtSignal()
     # canvasDoubleClicked = pyqtSignal(object, object)
@@ -141,10 +134,10 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             row = self.housingTable.currentRow()
             # slider value returns an integer, so convert it to a float, divide by 10, round, and multiply by 10
             val10 = int(round(float(self.housingSlider.value())/10)*10)
-            percentItem = QtGui.QTableWidgetItem(str(val10))
+            percentItem = QtWidgets.QTableWidgetItem(str(val10))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             self.housingTable.setItem(row, 5, percentItem)
-            #self.housingTable.setItem(row, 1, QtGui.QTableWidgetItem(str(self.housingSlider.value())))
+            #self.housingTable.setItem(row, 1, QtWidgets.QTableWidgetItem(str(self.housingSlider.value())))
 
         #TODO put the value in a numpy array with ID same as project ID, save it as self.housingPercentage, and push it to excel when data is saved
 
@@ -157,16 +150,16 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.clear()
         table.setColumnCount(1)
         table.setHorizontalHeaderLabels(['Package'])
-        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         table.verticalHeader().setVisible(False)
         table.setRowCount(6)
-        table.setItem(0,0,QtGui.QTableWidgetItem("All Packages"))
-        table.setItem(0,1,QtGui.QTableWidgetItem("Package 1 - Noordoever Noordzeekanaal"))
-        table.setItem(0,2,QtGui.QTableWidgetItem("Package 2 - Zaandam - Noord"))
-        table.setItem(0,3,QtGui.QTableWidgetItem("Package 3 - Purmerend: BBG of A7"))
-        table.setItem(0,4,QtGui.QTableWidgetItem("Package 4 - Hoorn"))
-        table.setItem(0,5,QtGui.QTableWidgetItem("Package 5 - Ring A10 oost - Waterland"))
-        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        table.setItem(0,0,QtWidgets.QTableWidgetItem("All Packages"))
+        table.setItem(0,1,QtWidgets.QTableWidgetItem("Package 1 - Noordoever Noordzeekanaal"))
+        table.setItem(0,2,QtWidgets.QTableWidgetItem("Package 2 - Zaandam - Noord"))
+        table.setItem(0,3,QtWidgets.QTableWidgetItem("Package 3 - Purmerend: BBG of A7"))
+        table.setItem(0,4,QtWidgets.QTableWidgetItem("Package 4 - Hoorn"))
+        table.setItem(0,5,QtWidgets.QTableWidgetItem("Package 5 - Ring A10 oost - Waterland"))
+        table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         # select the "All Packages" row
         table.selectRow(0)
@@ -276,46 +269,46 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.clear()
         table.setColumnCount(6)
         table.setHorizontalHeaderLabels(['ID','Housing Plan', "BBG", "TOD", "MAX", "%"])
-        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        #table.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         for i, att in enumerate(shortName):
             # hidden excel id column (necessary for saving data to the excel file)
-            idItem = QtGui.QTableWidgetItem(str(id[i]+1))
-            #idItem.setBackground(QtGui.QColor("grey"))
+            idItem = QtWidgets.QTableWidgetItem(str(id[i]+1))
+            #idItem.setBackground(QtWidgets.QColor("grey"))
             idItem.setTextAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-            #table.setItem(i,0,QtGui.QTableWidgetItem(str(id[i]+1)))
+            #table.setItem(i,0,QtWidgets.QTableWidgetItem(str(id[i]+1)))
             table.setItem(i,0,idItem)
 
             # set the short name in the table
-            table.setItem(i,1,QtGui.QTableWidgetItem(att))
+            table.setItem(i,1,QtWidgets.QTableWidgetItem(att))
 
             # BBG
             if int(BBG[i]) == 0:
-                bbgItem = QtGui.QTableWidgetItem('BBG')
+                bbgItem = QtWidgets.QTableWidgetItem('BBG')
             else:
-                bbgItem = QtGui.QTableWidgetItem('not')
+                bbgItem = QtWidgets.QTableWidgetItem('not')
             bbgItem.setTextAlignment(QtCore.Qt.AlignCenter)
             table.setItem(i, 2, bbgItem)
 
 
             # TOD
             if int(TOD[i]) == 0:
-                todItem = QtGui.QTableWidgetItem('TOD')
+                todItem = QtWidgets.QTableWidgetItem('TOD')
             else:
-                todItem = QtGui.QTableWidgetItem('not')
+                todItem = QtWidgets.QTableWidgetItem('not')
             todItem.setTextAlignment(QtCore.Qt.AlignCenter)
             table.setItem(i, 3, todItem)
 
 
             # set the maxAmount value from the excel data in the table
-            maxAmountItem = QtGui.QTableWidgetItem(str(int(maxAmount[i])))
+            maxAmountItem = QtWidgets.QTableWidgetItem(str(int(maxAmount[i])))
             maxAmountItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 4, maxAmountItem)
 
             # set the maxAmount value from the excel data in the table
-            percentItem = QtGui.QTableWidgetItem(str(int(percents[i])))
+            percentItem = QtWidgets.QTableWidgetItem(str(int(percents[i])))
             percentItem.setTextAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
             table.setItem(i, 5, percentItem)
 
@@ -324,14 +317,14 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         # horizontal
         table.hideColumn(0)
         #table.horizontalHeader().setStretchLastSection(True)
-        table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-        table.horizontalHeader().setResizeMode(1,QtGui.QHeaderView.ResizeToContents)
+        table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        table.horizontalHeader().setSectionResizeMode(1,QtWidgets.QHeaderView.ResizeToContents)
 
-        table.horizontalHeader().setSizePolicy(1,QtGui.QSizePolicy.MinimumExpanding)
-        table.horizontalHeader().setSizePolicy(2,QtGui.QSizePolicy.MinimumExpanding)
-        table.horizontalHeader().setSizePolicy(3,QtGui.QSizePolicy.MinimumExpanding)
-        table.horizontalHeader().setSizePolicy(4,QtGui.QSizePolicy.MinimumExpanding)
-        table.horizontalHeader().setSizePolicy(5,QtGui.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(1,QtWidgets.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(2,QtWidgets.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(3,QtWidgets.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(4,QtWidgets.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(5,QtWidgets.QSizePolicy.MinimumExpanding)
 
         # vertical
         table.resizeRowsToContents()
@@ -354,20 +347,20 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         table.clear()
         table.setColumnCount(3)
         table.setHorizontalHeaderLabels(['ID','y/n', 'Infrastructure Project'])
-        table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        #table.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        #table.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
         table.setRowCount(len(shortName))
         # i is the table row, items mus tbe added as QTableWidgetItems
         # TODO: here is need to get the previous value of this row, instead of just setting it to a constant value
         for i, att in enumerate(shortName):
             # hidden excel id column (necessary for saving data to the excel file)
-            table.setItem(i, 0, QtGui.QTableWidgetItem(str(id[i]+1)))
+            table.setItem(i, 0, QtWidgets.QTableWidgetItem(str(id[i]+1)))
 
             #### checkbox y/n per project
             # setup chechbox so it can be used as qtablewidgetitem
-            checkBoxWidget = QtGui.QWidget()
-            checkBox = QtGui.QCheckBox()
-            layoutCheckBox = QtGui.QHBoxLayout(checkBoxWidget)
+            checkBoxWidget = QtWidgets.QWidget()
+            checkBox = QtWidgets.QCheckBox()
+            layoutCheckBox = QtWidgets.QHBoxLayout(checkBoxWidget)
             layoutCheckBox.addWidget(checkBox)
             layoutCheckBox.setAlignment(QtCore.Qt.AlignCenter)
             layoutCheckBox.setContentsMargins(0,0,0,0)
@@ -380,7 +373,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             table.setCellWidget(i,1,checkBoxWidget)
 
             #### short name of the project
-            table.setItem(i,2,QtGui.QTableWidgetItem(att))
+            table.setItem(i,2,QtWidgets.QTableWidgetItem(att))
 
         table.setStyleSheet("QTableWidget::item { padding: 3px}")
 
@@ -388,18 +381,18 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # horizontal
         table.setColumnWidth(1, 40)
-        table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)
-        #table.horizontalHeader().setResizeMode(1,QtGui.QHeaderView.ResizeToContents)
+        table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        #table.horizontalHeader().setSectionResizeMode(1,QtWidgets.QHeaderView.ResizeToContents)
 
-        table.horizontalHeader().setSizePolicy(1,QtGui.QSizePolicy.MinimumExpanding)
-        table.horizontalHeader().setSizePolicy(2,QtGui.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(1,QtWidgets.QSizePolicy.MinimumExpanding)
+        table.horizontalHeader().setSizePolicy(2,QtWidgets.QSizePolicy.MinimumExpanding)
 
         # #table.setColumnWidth(0, 28)                                                     # id column
-        # #table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.MinimumExpanding)
-        # table.horizontalHeader().setSizePolicy(1,QtGui.QSizePolicy.MinimumExpanding)
+        # #table.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.MinimumExpanding)
+        # table.horizontalHeader().setSizePolicy(1,QtWidgets.QSizePolicy.MinimumExpanding)
         # table.setColumnWidth(2, 50)                                                     # checkbox column
-        # table.horizontalHeader().setSizePolicy(1,QtGui.QSizePolicy.MinimumExpanding)
-        # table.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)            # name column
+        # table.horizontalHeader().setSizePolicy(1,QtWidgets.QSizePolicy.MinimumExpanding)
+        # table.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)            # name column
 
         # vertical
         table.resizeRowsToContents()
@@ -451,7 +444,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
         data = []
         for i in range(nRows):
             # checkbox value
-            checked = self.infraTable.cellWidget(i, 1).findChild(QtGui.QCheckBox).isChecked()
+            checked = self.infraTable.cellWidget(i, 1).findChild(QtWidgets.QCheckBox).isChecked()
             #print checked
             #data.append(checked)
             if checked:
@@ -611,7 +604,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
             scenario_open = True
         else:
             last_dir = uf.getLastDir("PlanningToolClass")
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            new_file = QtWidgets.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
             if new_file:
                 self.iface.addProject(unicode(new_file))
                 scenario_open = True

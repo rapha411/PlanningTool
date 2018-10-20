@@ -11,22 +11,17 @@
         email                : raphaelsulzer@gmx.de
  ***************************************************************************/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
-from PyQt4.QtGui import QAction, QIcon, QToolBar, QComboBox, QColor
+from builtins import next
+from builtins import object
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt, QPoint, QSize
+from qgis.PyQt.QtWidgets import QAction, QToolBar, QComboBox
+from qgis.PyQt.QtGui import QIcon, QColor
 from qgis.gui import QgsMapTool
 
 
-#from . import utility_functions as uf
-import utility_functions as uf
+from . import utility_functions as uf
+#import utility_functions as uf
 
 
 # Initialize Qt resources from file resources.py
@@ -40,8 +35,8 @@ sys.path.append("/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6
 import xlwings as xw
 
 # Import the code for the DockWidget
-from planning_tool_dockwidget import IndicatorsChartDocked
-from SelectionMappingTool import SelectionTool
+from .planning_tool_dockwidget import IndicatorsChartDocked
+from .SelectionMappingTool import SelectionTool
 
 import os.path
 import subprocess
@@ -243,8 +238,8 @@ class PlanningToolClass:
 
 
         # toolbars that were present before opening plugin are restored here
-        for i, toolbar in enumerate(self.toolbars0):
-            toolbar.setVisible(self.toolbars0_visible[i])
+        # for i, toolbar in enumerate(self.toolbars0):
+        #     toolbar.setVisible(self.toolbars0_visible[i])
 
         ### layer tree icon size
         self.iface.layerTreeView().setIconSize(self.tree_size)
@@ -299,12 +294,12 @@ class PlanningToolClass:
 
             #### layertree icon size
             self.tree_size = self.iface.layerTreeView().iconSize()
-            self.iface.layerTreeView().setIconSize(QSize(40, 40))
+            self.iface.layerTreeView().setIconSize(QSize(30, 30))
 
             # set toolbars invisible
             for toolbar in self.toolbars0:
                 self.toolbars0_visible.append(toolbar.isVisible())
-                toolbar.setVisible(False)
+                #toolbar.setVisible(False)
 
             # show planning toolbar
             self.planning_toolbar.show()
@@ -398,12 +393,12 @@ class PlanningToolClass:
         # separator
         self.separators.append(self.planning_toolbar.addSeparator())
 
-        # self.planning_toolbar.addAction(self.iface.actionSelect())
-        # self.actions.append(self.iface.actionSelect())
+        self.planning_toolbar.addAction(self.iface.actionSelect())
+        self.actions.append(self.iface.actionSelect())
 
         # touch
-        self.planning_toolbar.addAction(self.iface.actionTouch())
-        self.actions.append(self.iface.actionTouch())
+        #self.planning_toolbar.addAction(self.iface.actionTouch())
+        #self.actions.append(self.iface.actionTouch())
 
         # add infrastructure input
         icon_path = ':/plugins/PlanningToolClass/icons/select.png'

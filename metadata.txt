@@ -11,7 +11,7 @@ name=PlanningTool
 qgisMinimumVersion=2.18
 qgisMaximumVersion=3.2
 description=This is a planning support system
-version=0.8.2
+version=2.0.1
 author=Raphael Sulzer
 email=raphaelsulzer@gmx.de
 

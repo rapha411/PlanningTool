@@ -20,14 +20,10 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4 import QtGui, QtCore
+from builtins import str
+from qgis.PyQt import QtGui, QtCore
 from qgis.core import *
-#from qgis.networkanalysis import *
 
-#from pyspatialite import dbapi2 as sqlite
-#import psycopg2 as pgsql
-#import numpy as np
-#import math
 import os.path
 import processing
 
@@ -811,7 +807,7 @@ def createTempLayerFull(name, srid, attributes, types, values, coords):
     vlayer.commitChanges()
     vlayer.updateExtents()
     if not vlayer.isValid():
-        print "Layer failed to create!"
+        #print("Layer failed to create!")
         return None
     return vlayer
 
@@ -838,7 +834,7 @@ def copyLayerToShapeFile(layer, path, name):
     # create an instance of vector file writer, which will create the vector file.
     writer = QgsVectorFileWriter(filename, "CP1250", fields, geometry, srid, "ESRI Shapefile")
     if writer.hasError() != QgsVectorFileWriter.NoError:
-        print "Error when creating shapefile: ", writer.hasError()
+        ##print "Error when creating shapefile: ", writer.hasError()
         return None
     # add features by iterating the values
     for feat in layer.getFeatures():
@@ -848,7 +844,7 @@ def copyLayerToShapeFile(layer, path, name):
     # open the newly created file
     vlayer = QgsVectorLayer(filename, name, "ogr")
     if not vlayer.isValid():
-        print "Layer failed to load!"
+        ##print "Layer failed to load!"
         return None
     return vlayer
 
@@ -871,14 +867,14 @@ def createShapeFileLayer(path, name, srid, attributes, types, geometrytype):
     elif 'polygon' in geometrytype.lower():
         writer = QgsVectorFileWriter(filename, "CP1250", fields, QGis.WKBPolygon, srid, "ESRI Shapefile")
     if writer.hasError() != QgsVectorFileWriter.NoError:
-        print "Error when creating shapefile: ", writer.hasError()
+        #print "Error when creating shapefile: ", writer.hasError()
         return None
     # delete the writer to flush features to disk (optional)
     del writer
     # open the newly created file
     vlayer = QgsVectorLayer(filename, name, "ogr")
     if not vlayer.isValid():
-        print "Layer failed to open!"
+        #print "Layer failed to open!"
         return None
     return vlayer
 
@@ -899,7 +895,7 @@ def createShapeFileFullLayer(path, name, srid, attributes, types, values, coords
         type = 'line'
         writer = QgsVectorFileWriter(filename, "CP1250", fields, QGis.WKBLineString, srid, "ESRI Shapefile")
     if writer.hasError() != QgsVectorFileWriter.NoError:
-        print "Error when creating shapefile: ", writer.hasError()
+        #print "Error when creating shapefile: ", writer.hasError()
         return None
     # add features by iterating the values
     feat = QgsFeature()
@@ -923,7 +919,7 @@ def createShapeFileFullLayer(path, name, srid, attributes, types, values, coords
     # open the newly created file
     vlayer = QgsVectorLayer(filename, name, "ogr")
     if not vlayer.isValid():
-        print "Layer failed to load!"
+        #print "Layer failed to load!"
         return None
     return vlayer
 
@@ -1006,9 +1002,9 @@ def closeFeatures(layer, mapPoint):
     # Loop through all features in the layer
     for f in layer.getFeatures():
         dist = f.geometry().distance(QgsGeometry.fromPoint(mapPoint))
-        # print(f.id())
-        # print(dist)
-        print(dist)
+        # #print(f.id())
+        # #print(dist)
+        #print(dist)
 
         #if dist < shortestDistance:
         shortestDistance = dist
@@ -1021,7 +1017,7 @@ def closeFeatures(layer, mapPoint):
     # Sort the layer information by shortest distance
     layerData.sort(key=lambda element: element[1], reverse=False)
 
-    print(layerData)
+    #print(layerData)
 
     # Select the closest feature
     closestFeatureId, shortestDistance = layerData[0]
@@ -1097,7 +1093,7 @@ def zoomToLayer(iface, name):
 
     layer = getLegendLayerByName(iface, name)
 
-    print layer
+    #print layer
 
     layer.dataProvider().updateExtents()
 
