@@ -1,54 +1,54 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="2.18.20">
+<qgis projectname="" version="2.18.24">
   <title></title>
   <autotransaction active="0"/>
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/housing/Housing_Plans_sorted.shp" name="Housing_Plans">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Housing_Projects20180906013549130" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/housing/Housing_Plans_sorted.shp" name="Housing Plans">
       <customproperties>
         <property key="expandedLegendNodes" value="{d90b5184-bdf4-43e8-9584-b3b95ea85119}"/>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Investments20181002174821220" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/infra/Infrastructure_Projects.shp" name="Infrastructure_Investments">
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Infrastructure_Projects20181017151804280" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/infra/Infrastructure_Projects.shp" name="Infrastructure Projects">
       <customproperties>
         <property key="showFeatureCount" value="1"/>
       </customproperties>
     </layer-tree-layer>
     <layer-tree-group expanded="1" checked="Qt::PartiallyChecked" name="Acthergrond">
       <customproperties/>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Treinstations20180924143846273" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Treinstations.shp" name="Treinstations">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="Treinstations20180924143846273" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/treinstations/Treinstations.shp" name="Treinstations">
         <customproperties>
           <property key="expandedLegendNodes"/>
           <property key="overview" value="1"/>
         </customproperties>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="spoorwegen2018100215271595124246" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Spoorwegen.shp" name="Spoorwegen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="spoorwegen2018100215271595124246" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/spoorwegen/Spoorwegen.shp" name="Spoorwegen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="wegen2018100215271595218851" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Wegen.shp" name="Wegen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="wegen2018100215271595218851" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/wegen/Wegen.shp" name="Wegen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Unchecked" id="Housing_Projects_Total20180925142458441" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Housing_Plans_Total.shp" name="Housing_Plans_Total">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Unchecked" id="Housing_Projects_Total20180925142458441" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/housing_total/Housing_Plans_Total.shp" name="Housing_Plans_Total">
         <customproperties>
           <property key="expandedLegendNodes" value="{6b2f8a50-bcbd-408b-8859-befaaaf869d3}"/>
         </customproperties>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="groen201810021527159521392" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Groen.shp" name="Groen">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="groen201810021527159521392" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/groen/Groen.shp" name="Groen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="water2018100215271595225642" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Water.shp" name="Water">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="water2018100215271595225642" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/water/Water.shp" name="Water">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="bebouwdgebieden201810021527159522506" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Bebouwdgebieden.shp" name="Bebouwdgebieden">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="bebouwdgebieden201810021527159522506" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/bebouwdgebieden/Bebouwdgebieden.shp" name="Bebouwdgebieden">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="gemeenten2018100215271595310990" source="/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/Gemeenten.shp" name="Gemeenten">
+      <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="gemeenten2018100215271595310990" source="D:/Users/Raphael/.qgis2/python/plugins/PlanningTool/data/gemeenten/Gemeenten.shp" name="Gemeenten">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xd;&#xd;&#xa;  &lt;Service name=&quot;TMS&quot;>&#xd;&#xd;&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xd;&#xa;  &lt;/Service>&#xd;&#xd;&#xa;  &lt;DataWindow>&#xd;&#xd;&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xd;&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xd;&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xd;&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xd;&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xd;&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xd;&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xd;&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xd;&#xa;  &lt;/DataWindow>&#xd;&#xd;&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xd;&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xd;&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xd;&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xd;&#xa;  &lt;Cache />&#xd;&#xd;&#xa;&lt;/GDAL_WMS>&#xd;&#xd;&#xa;" name="OpenStreetMap">
+    <layer-tree-layer expanded="1" providerKey="gdal" checked="Qt::Unchecked" id="OpenStreetMap20180924145017200" source="&lt;GDAL_WMS>&#xd;&#xd;&#xd;&#xa;  &lt;Service name=&quot;TMS&quot;>&#xd;&#xd;&#xd;&#xa;    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xd;&#xd;&#xa;  &lt;/Service>&#xd;&#xd;&#xd;&#xa;  &lt;DataWindow>&#xd;&#xd;&#xd;&#xa;    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xd;&#xd;&#xa;    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xd;&#xd;&#xa;    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xd;&#xd;&#xa;    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xd;&#xd;&#xa;    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xd;&#xd;&#xa;    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xd;&#xd;&#xa;    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xd;&#xd;&#xa;    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xd;&#xd;&#xa;  &lt;/DataWindow>&#xd;&#xd;&#xd;&#xa;  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xd;&#xd;&#xa;  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xd;&#xd;&#xa;  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xd;&#xd;&#xa;  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xd;&#xd;&#xa;  &lt;Cache />&#xd;&#xd;&#xd;&#xa;&lt;/GDAL_WMS>&#xd;&#xd;&#xd;&#xa;" name="OpenStreetMap">
       <customproperties>
         <property key="expandedLegendNodes"/>
       </customproperties>
@@ -58,16 +58,16 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>105719.07858341501560062</xmin>
-      <ymin>488181.81856196478474885</ymin>
-      <xmax>148566.41773391817696393</xmax>
-      <ymax>524719.16594872542191297</ymax>
+      <xmin>106739.25332509365398437</xmin>
+      <ymin>490205.21039507852401584</ymin>
+      <xmax>147546.24299223953858018</xmax>
+      <ymax>523849.22910618351306766</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
     <destinationsrs>
       <spatialrefsys>
-        <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+        <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
         <srsid>2517</srsid>
         <srid>28992</srid>
         <authid>EPSG:28992</authid>
@@ -79,6 +79,7 @@
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Projects2018101715020792913243"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="bebouwdgebieden201810021527159522506"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Treinstations20180924143846273"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Investments20181002174821220"/>
@@ -87,8 +88,11 @@
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects_Total20180925142458441"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Housing_Projects20180906013549130"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="wegen2018100215271595218851"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Projects20181017150140830"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Projects201810171518181325968"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="groen201810021527159521392"/>
       <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="water2018100215271595225642"/>
+      <layer_coordinate_transform destAuthId="EPSG:28992" srcAuthId="EPSG:28992" srcDatumTransform="-1" destDatumTransform="-1" layerid="Infrastructure_Projects20181017151804280"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
@@ -103,18 +107,18 @@
       <item>water2018100215271595225642</item>
       <item>bebouwdgebieden201810021527159522506</item>
       <item>gemeenten2018100215271595310990</item>
-      <item>Infrastructure_Investments20181002174821220</item>
+      <item>Infrastructure_Projects20181017151804280</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Housing_Plans" showFeatureCount="1">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Housing Plans" showFeatureCount="1">
       <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" layerid="Housing_Projects20180906013549130" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Infrastructure_Investments" showFeatureCount="1">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Infrastructure Projects" showFeatureCount="1">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="Infrastructure_Investments20181002174821220" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="Infrastructure_Projects20181017151804280" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendgroup open="true" checked="Qt::PartiallyChecked" name="Acthergrond">
@@ -174,14 +178,14 @@
         <ymax>521404.41059321851935238</ymax>
       </extent>
       <id>Housing_Projects20180906013549130</id>
-      <datasource>./housing/Housing_Plans_sorted.shp</datasource>
+      <datasource>../housing/Housing_Plans_sorted.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Housing_Plans</layername>
+      <layername>Housing Plans</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -718,14 +722,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>521404.41059321851935238</ymax>
       </extent>
       <id>Housing_Projects_Total20180925142458441</id>
-      <datasource>./Housing_Plans_Total.shp</datasource>
+      <datasource>../housing_total/Housing_Plans_Total.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Housing_Plans_Total</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -1232,19 +1236,19 @@ def my_form_open(dialog, layer, feature):
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
         <xmin>106739.25332509365398437</xmin>
-        <ymin>489051.75540450669359416</ymin>
+        <ymin>490205.2103950785822235</ymin>
         <xmax>147546.24299223953858018</xmax>
         <ymax>523849.22910618351306766</ymax>
       </extent>
-      <id>Infrastructure_Investments20181002174821220</id>
-      <datasource>./infra/Infrastructure_Projects.shp</datasource>
+      <id>Infrastructure_Projects20181017151804280</id>
+      <datasource>../infra/Infrastructure_Projects.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Infrastructure_Investments</layername>
+      <layername>Infrastructure Projects</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -1288,62 +1292,45 @@ def my_form_open(dialog, layer, feature):
         </edittype>
       </edittypes>
       <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
-        <rules key="{aaa59643-61cd-4062-b6f8-2751b4c0df75}">
-          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'CAR' " key="{b453d2e4-de08-4c20-ba28-765163487777}" symbol="0" label="P1 - Auto"/>
-          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'BIC' " key="{aae85b52-a1bd-40c0-9716-02844bfc559d}" symbol="1" label="P1 - Fiets"/>
-          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'PT' " key="{1bad2713-2a3a-4aa5-88f6-561d3098aaf1}" symbol="2" label="P1 - OV"/>
-          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'CAR' " key="{dd70787a-8c18-4dfe-987b-f0d05cf0aa92}" symbol="3" label="P2 - Auto"/>
-          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'BIC' " key="{dd70787a-8c18-4dfe-987b-f0d05cf0aa92}" symbol="4" label="P2 - Fiets"/>
-          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'PT' " key="{d56a573e-5570-42f9-8e2b-0692c2b56950}" symbol="5" label="P2 - OV"/>
-          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'CAR'" key="{70249818-496a-4175-87d3-d9b3d89557a2}" symbol="6" label="P3 - Auto"/>
-          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'BIC'" key="{ba35f83c-d486-45d8-b3ac-2f3e96ef98a8}" symbol="7" label="P3 - Fiets"/>
-          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'PT'" key="{70249818-496a-4175-87d3-d9b3d89557a2}" symbol="8" label="P3 - OV"/>
-          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'CAR'" key="{25e12bc0-9c53-48da-ab57-8f0a8ed1058e}" symbol="9" label="P4 - Auto"/>
-          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'BIC'" key="{25e12bc0-9c53-48da-ab57-8f0a8ed1058e}" symbol="10" label="P4 - Fiets"/>
-          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'PT'" key="{d3065c49-5cf1-492e-9b88-2ba21930af43}" symbol="11" label="P4 - OV"/>
-          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'CAR'" key="{d2bb839e-96bb-4fdf-b600-4df0df3d03ee}" symbol="12" label="P5 - Auto"/>
-          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'BIC'" key="{d2bb839e-96bb-4fdf-b600-4df0df3d03ee}" symbol="13" label="P5 - Fiets"/>
-          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'PT'" key="{956b3963-104a-44a9-855e-9e6e1581ec40}" symbol="14" label="P5 - OV"/>
+        <rules key="{ba2848f5-5713-471e-8aa5-9dc54e91e69e}">
+          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'CAR' " key="{c91dc1f2-dedf-4e61-91b0-19294fe05e91}" symbol="0" label="P1 - Auto"/>
+          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'BIC' " key="{c91dc1f2-dedf-4e61-91b0-19294fe05e91}" symbol="1" label="P1 - Fiets"/>
+          <rule filter="&quot;Package&quot; = 'P1' and  &quot;Type&quot;  =  'PT' " key="{3b100f6c-40b5-43ef-8385-e09509f25fbb}" symbol="2" label="P1 - OV"/>
+          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'CAR' " key="{8e76d890-660e-4919-aa8a-645469b5141c}" symbol="3" label="P2 - Auto"/>
+          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'BIC' " key="{8e76d890-660e-4919-aa8a-645469b5141c}" symbol="4" label="P2 - Fiets"/>
+          <rule filter="&quot;Package&quot; = 'P2' and  &quot;Type&quot;  =  'PT' " key="{2ea21f23-bcc2-4a8f-80e5-c4fcee913a7b}" symbol="5" label="P2 - OV"/>
+          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'CAR' " key="{44a0658a-ae53-4ab3-a354-07f974db378b}" symbol="6" label="P3 - Auto"/>
+          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'BIC' " key="{44a0658a-ae53-4ab3-a354-07f974db378b}" symbol="7" label="P3 - Fiets"/>
+          <rule filter="&quot;Package&quot; = 'P3' and  &quot;Type&quot;  =  'PT' " key="{a2e8b549-173a-47c0-9d33-9be0bbebdf8d}" symbol="8" label="P3 - OV"/>
+          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'CAR' " key="{10b7aa5f-d0ea-4696-94c0-89e74ea5796e}" symbol="9" label="P4 - Auto"/>
+          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'BIC' " key="{10b7aa5f-d0ea-4696-94c0-89e74ea5796e}" symbol="10" label="P4 - Fiets"/>
+          <rule filter="&quot;Package&quot; = 'P4' and  &quot;Type&quot;  =  'PT' " key="{a4d57a81-3a0c-4b11-a7d6-551aa63f33e6}" symbol="11" label="P4 - OV"/>
+          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'CAR' " key="{c9ccc02f-6b18-4227-8ef4-3b396876e0f7}" symbol="12" label="P5 - Auto"/>
+          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'BIC' " key="{c9ccc02f-6b18-4227-8ef4-3b396876e0f7}" symbol="13" label="P5 - Fiets"/>
+          <rule filter="&quot;Package&quot; = 'P5' and  &quot;Type&quot;  =  'PT' " key="{997e79d1-3878-4b82-978e-55ced728d60f}" symbol="14" label="P5 - OV"/>
         </rules>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="255,0,0,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="245,103,103,255"/>
+              <prop k="color" v="255,0,0,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="255,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@0@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="227,26,28,255"/>
+                  <prop k="color" v="255,0,0,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
                   <prop k="name" v="gpsicons/car.svg"/>
                   <prop k="offset" v="0,0"/>
@@ -1363,26 +1350,22 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="255,0,0,255"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="246,34,33,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
+              <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="255,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
-              <prop k="point_on_surface" v="0"/>
+              <prop k="point_on_surface" v="1"/>
               <symbol alpha="1" clip_to_extent="1" type="marker" name="@1@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
@@ -1392,7 +1375,7 @@ def my_form_open(dialog, layer, feature):
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1406,22 +1389,18 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="10">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="0,0,255,255"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="0,0,255,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
+              <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,255,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
@@ -1435,7 +1414,7 @@ def my_form_open(dialog, layer, feature):
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1446,65 +1425,35 @@ def my_form_open(dialog, layer, feature):
                   <prop k="vertical_anchor_point" v="1"/>
                 </layer>
               </symbol>
-            </layer>
-            <layer pass="0" class="SimpleFill" locked="0">
-              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="131,181,255,255"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
-              <prop k="outline_width_unit" v="MM"/>
-              <prop k="style" v="b_diagonal"/>
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="11">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="0,0,255,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="131,181,255,255"/>
+              <prop k="color" v="0,0,255,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="0,0,255,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@11@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@11@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="255,0,0,255"/>
+                  <prop k="color" v="0,0,0,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
-                  <prop k="name" v="./OVblue.svg"/>
+                  <prop k="name" v="../infra/OVblue.svg"/>
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1517,41 +1466,24 @@ def my_form_open(dialog, layer, feature):
               </symbol>
             </layer>
           </symbol>
-          <symbol alpha="0.960784" clip_to_extent="1" type="fill" name="12">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="97,11,11,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="12">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="194,101,88,255"/>
+              <prop k="color" v="97,11,11,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="1"/>
-              <prop k="outline_width_unit" v="Pixel"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="97,11,11,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
+              <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="0.960784" clip_to_extent="1" type="marker" name="@12@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@12@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
                   <prop k="color" v="97,11,11,255"/>
@@ -1573,82 +1505,72 @@ def my_form_open(dialog, layer, feature):
               </symbol>
             </layer>
           </symbol>
-          <symbol alpha="0.960784" clip_to_extent="1" type="fill" name="13">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="97,11,11,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="13">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="color" v="97,11,11,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="1"/>
-              <prop k="outline_width_unit" v="Pixel"/>
-              <prop k="style" v="horizontal"/>
-            </layer>
-          </symbol>
-          <symbol alpha="0.960784" clip_to_extent="1" type="fill" name="14">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="97,11,11,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-            <layer pass="0" class="SimpleFill" locked="0">
-              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="194,101,88,255"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="97,11,11,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="0.960784" clip_to_extent="1" type="marker" name="@14@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@13@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="255,0,0,255"/>
+                  <prop k="color" v="97,11,11,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
-                  <prop k="name" v="./OVbrown.svg"/>
+                  <prop k="name" v="shopping/shopping_bicycle.svg"/>
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
+                  <prop k="outline_width" v="0"/>
+                  <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="outline_width_unit" v="MM"/>
+                  <prop k="scale_method" v="diameter"/>
+                  <prop k="size" v="10"/>
+                  <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="size_unit" v="MM"/>
+                  <prop k="vertical_anchor_point" v="1"/>
+                </layer>
+              </symbol>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="14">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="97,11,11,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="97,11,11,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="b_diagonal"/>
+            </layer>
+            <layer pass="0" class="CentroidFill" locked="0">
+              <prop k="point_on_all_parts" v="1"/>
+              <prop k="point_on_surface" v="1"/>
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@14@1">
+                <layer pass="0" class="SvgMarker" locked="0">
+                  <prop k="angle" v="0"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="horizontal_anchor_point" v="1"/>
+                  <prop k="name" v="../infra/OVbrown.svg"/>
+                  <prop k="offset" v="0,0"/>
+                  <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1662,49 +1584,32 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="255,0,0,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="245,103,103,255"/>
+              <prop k="color" v="255,0,0,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="255,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@2@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@2@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="255,0,0,255"/>
+                  <prop k="color" v="0,0,0,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
-                  <prop k="name" v="./OVred.svg"/>
+                  <prop k="name" v="../infra/OVred.svg"/>
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1718,40 +1623,23 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="107,13,194,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="167,135,197,255"/>
+              <prop k="color" v="107,13,194,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="107,13,194,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@3@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@3@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
                   <prop k="color" v="107,13,194,255"/>
@@ -1774,81 +1662,71 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="138,43,226,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="138,43,226,255"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="offset" v="0,0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="1"/>
-              <prop k="outline_width_unit" v="Pixel"/>
-              <prop k="style" v="horizontal"/>
-            </layer>
-          </symbol>
-          <symbol alpha="1" clip_to_extent="1" type="fill" name="5">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="138,43,226,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-            <layer pass="0" class="SimpleFill" locked="0">
-              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="167,135,197,255"/>
+              <prop k="color" v="107,13,194,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="107,13,194,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@5@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@4@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="107,13,194,255"/>
+                  <prop k="color" v="138,43,226,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
-                  <prop k="name" v="./OVpurple.svg"/>
+                  <prop k="name" v="shopping/shopping_bicycle.svg"/>
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
+                  <prop k="outline_width" v="0"/>
+                  <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="outline_width_unit" v="MM"/>
+                  <prop k="scale_method" v="diameter"/>
+                  <prop k="size" v="10"/>
+                  <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="size_unit" v="MM"/>
+                  <prop k="vertical_anchor_point" v="1"/>
+                </layer>
+              </symbol>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="5">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="107,13,194,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="107,13,194,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="b_diagonal"/>
+            </layer>
+            <layer pass="0" class="CentroidFill" locked="0">
+              <prop k="point_on_all_parts" v="1"/>
+              <prop k="point_on_surface" v="1"/>
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@5@1">
+                <layer pass="0" class="SvgMarker" locked="0">
+                  <prop k="angle" v="0"/>
+                  <prop k="color" v="0,0,0,255"/>
+                  <prop k="horizontal_anchor_point" v="1"/>
+                  <prop k="name" v="../infra/OVpurple.svg"/>
+                  <prop k="offset" v="0,0"/>
+                  <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+                  <prop k="offset_unit" v="MM"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1862,40 +1740,23 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="6">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="63,125,59,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="127,210,121,255"/>
+              <prop k="color" v="63,125,59,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="63,125,59,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@6@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@6@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
                   <prop k="color" v="63,125,59,255"/>
@@ -1918,40 +1779,23 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="7">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="63,125,59,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="127,210,121,255"/>
+              <prop k="color" v="63,125,59,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="63,125,59,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@7@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@7@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
                   <prop k="color" v="63,125,59,255"/>
@@ -1960,7 +1804,7 @@ def my_form_open(dialog, layer, feature):
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -1974,49 +1818,32 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="8">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="63,125,59,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="127,210,121,255"/>
+              <prop k="color" v="63,125,59,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="63,125,59,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@8@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@8@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
-                  <prop k="color" v="63,125,59,255"/>
+                  <prop k="color" v="0,0,0,255"/>
                   <prop k="horizontal_anchor_point" v="1"/>
-                  <prop k="name" v="./OVgreen.svg"/>
+                  <prop k="name" v="../infra/OVgreen.svg"/>
                   <prop k="offset" v="0,0"/>
                   <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="offset_unit" v="MM"/>
-                  <prop k="outline_color" v="0,0,0,255"/>
+                  <prop k="outline_color" v="255,255,255,255"/>
                   <prop k="outline_width" v="0"/>
                   <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
                   <prop k="outline_width_unit" v="MM"/>
@@ -2030,40 +1857,23 @@ def my_form_open(dialog, layer, feature):
             </layer>
           </symbol>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="9">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="0"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="Pixel"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="0,0,255,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.5"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="Pixel"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="131,181,255,255"/>
+              <prop k="color" v="0,0,255,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
-              <prop k="outline_color" v="0,0,0,255"/>
-              <prop k="outline_style" v="no"/>
-              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_color" v="0,0,255,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.5"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="style" v="b_diagonal"/>
             </layer>
             <layer pass="0" class="CentroidFill" locked="0">
               <prop k="point_on_all_parts" v="1"/>
               <prop k="point_on_surface" v="1"/>
-              <symbol alpha="1" clip_to_extent="1" type="marker" name="@9@2">
+              <symbol alpha="1" clip_to_extent="1" type="marker" name="@9@1">
                 <layer pass="0" class="SvgMarker" locked="0">
                   <prop k="angle" v="0"/>
                   <prop k="color" v="0,0,255,255"/>
@@ -2097,9 +1907,9 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/blendMode" value="0"/>
         <property key="labeling/bufferBlendMode" value="0"/>
         <property key="labeling/bufferColorA" value="255"/>
-        <property key="labeling/bufferColorB" value="227"/>
-        <property key="labeling/bufferColorG" value="206"/>
-        <property key="labeling/bufferColorR" value="166"/>
+        <property key="labeling/bufferColorB" value="255"/>
+        <property key="labeling/bufferColorG" value="255"/>
+        <property key="labeling/bufferColorR" value="255"/>
         <property key="labeling/bufferDraw" value="false"/>
         <property key="labeling/bufferJoinStyle" value="128"/>
         <property key="labeling/bufferNoFill" value="false"/>
@@ -2144,7 +1954,7 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/maxNumLabels" value="2000"/>
         <property key="labeling/mergeLines" value="false"/>
         <property key="labeling/minFeatureSize" value="0"/>
-        <property key="labeling/multilineAlign" value="0"/>
+        <property key="labeling/multilineAlign" value="4294967295"/>
         <property key="labeling/multilineHeight" value="1"/>
         <property key="labeling/namedStyle" value="Normal"/>
         <property key="labeling/obstacle" value="true"/>
@@ -2234,8 +2044,8 @@ def my_form_open(dialog, layer, feature):
       </customproperties>
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
-      <layerTransparency>19</layerTransparency>
-      <displayfield>id</displayfield>
+      <layerTransparency>23</layerTransparency>
+      <displayfield>ShortName</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -2300,16 +2110,17 @@ def my_form_open(dialog, layer, feature):
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions default="-1"/>
-      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="&quot;id&quot;" sortOrder="0">
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
         <columns>
           <column width="-1" hidden="0" type="field" name="id"/>
-          <column width="436" hidden="0" type="field" name="InfrProj"/>
-          <column width="198" hidden="0" type="field" name="Modality"/>
+          <column width="-1" hidden="0" type="field" name="InfrProj"/>
+          <column width="-1" hidden="0" type="field" name="Package"/>
+          <column width="-1" hidden="0" type="field" name="Modality"/>
+          <column width="-1" hidden="0" type="field" name="PackProj"/>
+          <column width="-1" hidden="0" type="field" name="Type"/>
+          <column width="-1" hidden="0" type="field" name="ShortName"/>
+          <column width="-1" hidden="0" type="field" name="Descriptio"/>
           <column width="-1" hidden="1" type="actions"/>
-          <column width="100" hidden="0" type="field" name="Type"/>
-          <column width="19" hidden="0" type="field" name="Package"/>
-          <column width="100" hidden="0" type="field" name="ShortName"/>
-          <column width="62" hidden="0" type="field" name="PackProj"/>
         </columns>
       </attributetableconfig>
       <editform>.</editform>
@@ -2350,7 +2161,7 @@ def my_form_open(dialog, layer, feature):
         <default field="ShortName" expression=""/>
         <default field="Descriptio" expression=""/>
       </defaults>
-      <previewExpression>COALESCE( "InfrProj", '&lt;NULL>' )</previewExpression>
+      <previewExpression>COALESCE( "ShortName", '&lt;NULL>' )</previewExpression>
     </maplayer>
     <maplayer minimumScale="inf" maximumScale="1e+08" type="raster" hasScaleBasedVisibilityFlag="0">
       <extent>
@@ -2360,26 +2171,26 @@ def my_form_open(dialog, layer, feature):
         <ymax>20037508.33999999985098839</ymax>
       </extent>
       <id>OpenStreetMap20180924145017200</id>
-      <datasource>&lt;GDAL_WMS>&#xd;&#xd;
-  &lt;Service name="TMS">&#xd;&#xd;
-    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xd;
-  &lt;/Service>&#xd;&#xd;
-  &lt;DataWindow>&#xd;&#xd;
-    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xd;
-    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xd;
-    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xd;
-    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xd;
-    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xd;
-    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xd;
-    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xd;
-    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xd;
-  &lt;/DataWindow>&#xd;&#xd;
-  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xd;
-  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xd;
-  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xd;
-  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xd;
-  &lt;Cache />&#xd;&#xd;
-&lt;/GDAL_WMS>&#xd;&#xd;
+      <datasource>&lt;GDAL_WMS>&#xd;&#xd;&#xd;
+  &lt;Service name="TMS">&#xd;&#xd;&#xd;
+    &lt;ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png&lt;/ServerUrl>&#xd;&#xd;&#xd;
+  &lt;/Service>&#xd;&#xd;&#xd;
+  &lt;DataWindow>&#xd;&#xd;&#xd;
+    &lt;UpperLeftX>-20037508.34&lt;/UpperLeftX>&#xd;&#xd;&#xd;
+    &lt;UpperLeftY>20037508.34&lt;/UpperLeftY>&#xd;&#xd;&#xd;
+    &lt;LowerRightX>20037508.34&lt;/LowerRightX>&#xd;&#xd;&#xd;
+    &lt;LowerRightY>-20037508.34&lt;/LowerRightY>&#xd;&#xd;&#xd;
+    &lt;TileLevel>19&lt;/TileLevel>&#xd;&#xd;&#xd;
+    &lt;TileCountX>1&lt;/TileCountX>&#xd;&#xd;&#xd;
+    &lt;TileCountY>1&lt;/TileCountY>&#xd;&#xd;&#xd;
+    &lt;YOrigin>top&lt;/YOrigin>&#xd;&#xd;&#xd;
+  &lt;/DataWindow>&#xd;&#xd;&#xd;
+  &lt;Projection>EPSG:3857&lt;/Projection>&#xd;&#xd;&#xd;
+  &lt;BlockSizeX>256&lt;/BlockSizeX>&#xd;&#xd;&#xd;
+  &lt;BlockSizeY>256&lt;/BlockSizeY>&#xd;&#xd;&#xd;
+  &lt;BandsCount>3&lt;/BandsCount>&#xd;&#xd;&#xd;
+  &lt;Cache />&#xd;&#xd;&#xd;
+&lt;/GDAL_WMS>&#xd;&#xd;&#xd;
 </datasource>
       <keywordList>
         <value></value>
@@ -2387,7 +2198,7 @@ def my_form_open(dialog, layer, feature):
       <layername>OpenStreetMap</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
+          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs</proj4>
           <srsid>3857</srsid>
           <srid>3857</srid>
           <authid>EPSG:3857</authid>
@@ -2429,14 +2240,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>552229.0000000111758709</ymax>
       </extent>
       <id>Treinstations20180924143846273</id>
-      <datasource>./Treinstations.shp</datasource>
+      <datasource>../treinstations/Treinstations.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Treinstations</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -2554,7 +2365,7 @@ def my_form_open(dialog, layer, feature):
               <prop k="angle" v="0"/>
               <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
-              <prop k="name" v="./Logo_NS.svg"/>
+              <prop k="name" v="../treinstations/Logo_NS.svg"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MM"/>
@@ -2894,14 +2705,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>577408.63100000098347664</ymax>
       </extent>
       <id>bebouwdgebieden201810021527159522506</id>
-      <datasource>./Bebouwdgebieden.shp</datasource>
+      <datasource>../bebouwdgebieden/Bebouwdgebieden.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Bebouwdgebieden</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3191,14 +3002,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>621876.30000000004656613</ymax>
       </extent>
       <id>gemeenten2018100215271595310990</id>
-      <datasource>./Gemeenten.shp</datasource>
+      <datasource>../gemeenten/Gemeenten.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Gemeenten</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3504,14 +3315,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>577256.89899999997578561</ymax>
       </extent>
       <id>groen201810021527159521392</id>
-      <datasource>./Groen.shp</datasource>
+      <datasource>../groen/Groen.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Groen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -3801,14 +3612,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>552369.51100000005681068</ymax>
       </extent>
       <id>spoorwegen2018100215271595124246</id>
-      <datasource>./Spoorwegen.shp</datasource>
+      <datasource>../spoorwegen/Spoorwegen.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Spoorwegen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -4118,14 +3929,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>625000</ymax>
       </extent>
       <id>water2018100215271595225642</id>
-      <datasource>./Water.shp</datasource>
+      <datasource>../water/Water.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Water</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -4414,14 +4225,14 @@ def my_form_open(dialog, layer, feature):
         <ymax>580044.86518750002142042</ymax>
       </extent>
       <id>wegen2018100215271595218851</id>
-      <datasource>./Wegen.shp</datasource>
+      <datasource>../wegen/Wegen.shp</datasource>
       <keywordList>
         <value></value>
       </keywordList>
       <layername>Wegen</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
+          <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs</proj4>
           <srsid>2517</srsid>
           <srid>28992</srid>
           <authid>EPSG:28992</authid>
@@ -4790,7 +4601,6 @@ def my_form_open(dialog, layer, feature):
       <LayerSnappingList type="QStringList">
         <value>Housing_Projects20180906013549130</value>
         <value>Housing_Projects_Total20180925142458441</value>
-        <value>Infrastructure_Investments20181002174821220</value>
         <value>Treinstations20180924143846273</value>
         <value>bebouwdgebieden201810021527159522506</value>
         <value>gemeenten2018100215271595310990</value>
@@ -4798,6 +4608,7 @@ def my_form_open(dialog, layer, feature):
         <value>spoorwegen2018100215271595124246</value>
         <value>water2018100215271595225642</value>
         <value>wegen2018100215271595218851</value>
+        <value>Infrastructure_Projects20181017151804280</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
         <value>disabled</value>
@@ -4823,7 +4634,7 @@ def my_form_open(dialog, layer, feature):
         <value>1</value>
         <value>1</value>
         <value>1</value>
-        <value>1</value>
+        <value>2</value>
       </LayerSnappingToleranceUnitList>
       <LayerSnapToList type="QStringList">
         <value>to_vertex_and_segment</value>

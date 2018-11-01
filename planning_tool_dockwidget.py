@@ -602,7 +602,7 @@ class IndicatorsChartDocked(QtGui.QDockWidget, FORM_BASE, QgsMapTool):
 
         # open the QGIS project file
         scenario_open = False
-        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII_5.qgs')
+        scenario_file = os.path.join(os.path.dirname(__file__),'data', 'project_file','RegionalGamesIII.qgs')
 
 
         # check if file exists
