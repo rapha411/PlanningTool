@@ -1,5 +1,5 @@
 # Regional Game Mobiele Stad – User Guide
-Raphael Sulzer (raphaelsulzer@gmx.de)
+Raphael Sulzer (raphaelsulzer@gmx.de)  
 Gustavo Arciniegas (geocolconsultant@gmail.com)
 
 ## Introduction
