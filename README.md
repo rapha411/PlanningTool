@@ -1,4 +1,4 @@
-# Regional Game Mobiele Stad plugin – User Guide
+# Regional Game Mobiele Stad – User Guide
 Raphael Sulzer (raphaelsulzer@gmx.de)
 Gustavo Arciniegas (geocolconsultant@gmail.com)
 
